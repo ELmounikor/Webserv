@@ -6,7 +6,7 @@
 #    By: mel-kora <mel-kora@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/30 14:02:35 by mel-kora          #+#    #+#              #
-#    Updated: 2023/03/30 14:29:54 by mel-kora         ###   ########.fr        #
+#    Updated: 2023/03/30 18:10:55 by mel-kora         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,6 @@ INCS		=	lib.hpp\
 				#more files
 SRCS		=	main.cpp\
 				#more files
-OBJS		=	${SRCS:.c=.o}
 OBJS		= 	${SRCS:.cpp=.o}
 CC			= 	@c++
 RM			= 	@rm -rf
@@ -34,7 +33,7 @@ all : $(NAME)
 	@echo "\033[1;93m	                              MANDATORY   \033[0m"
 
 $(NAME) : $(INCS) $(OBJS)
-	@$(CC) $(CFLAGS) $(OBJS) -lmlx -framework OpenGL -framework AppKit -o $(NAME)
+	@$(CC) $(CPPFLAGS) $(OBJS) -o $(NAME)
 	@echo "\033[1;96m\n	----> files created \033[0m"
 
 clean:
