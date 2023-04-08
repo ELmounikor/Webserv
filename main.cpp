@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 14:13:21 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/03/30 17:59:54 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/04/08 16:58:50 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,9 @@ void	ft_exit(std::string msg)
 
 int	main(int ac, char **av)
 {
-	std::string	content;
-	
 	if (ac != 2)
 		ft_exit("Either too little or too much arguments 👽");
-	std::ifstream conf_file(av[1]);
-	if (!conf_file.is_open())
-		ft_exit("Cannot open configuration file 👽");
-	std::getline(conf_file, content, '\0');
+	Configuration conf(av[1]);
 	//db arak lkhdma ><
 	return 0;
 }

@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:16:09 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/03/31 16:17:20 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/04/08 16:56:42 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 class Configuration
 {
 	public:
-		Configuration(std::string content);
+		Configuration(std::string file_name);
 };
 
 #endif

@@ -6,14 +6,16 @@
 #    By: mel-kora <mel-kora@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/30 14:02:35 by mel-kora          #+#    #+#              #
-#    Updated: 2023/03/30 18:10:55 by mel-kora         ###   ########.fr        #
+#    Updated: 2023/04/08 16:56:20 by mel-kora         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		=	webserv
 INCS		=	lib.hpp\
+				Parsing/Configuration.hpp\
 				#more files
 SRCS		=	main.cpp\
+				Parsing/Configuration.cpp\
 				#more files
 OBJS		= 	${SRCS:.cpp=.o}
 CC			= 	@c++
