@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-kora <mel-kora@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 14:13:21 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/04/08 16:58:50 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/04/09 18:15:46 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lib.hpp"
+#include "server/server.hpp"
 
 void	ft_exit(std::string msg)
 {
@@ -20,9 +21,13 @@ void	ft_exit(std::string msg)
 
 int	main(int ac, char **av)
 {
-	if (ac != 2)
-		ft_exit("Either too little or too much arguments 👽");
-	Configuration conf(av[1]);
+	//if (ac != 2)
+	//	ft_exit("Either too little or too much arguments 👽");
+	(void) ac;
+	(void) av;
+	//Configuration conf(av[1]);
 	//db arak lkhdma ><
+	server("HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: \
+	12\n\nHello world!");
 	return 0;
 }
