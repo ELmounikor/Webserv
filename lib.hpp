@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lib.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 14:13:32 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/04/09 17:37:58 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/04/10 17:55:57 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 # include <cstdio>
 # include <sys/socket.h>
 # include <netinet/in.h>
+# include <vector>
+# include <map>
 # include "Parsing/Configuration.hpp"
 # define PORT 8080
 void	ft_exit(std::string msg);
