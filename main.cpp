@@ -6,12 +6,11 @@
 /*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 14:13:21 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/04/09 18:15:46 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/04/11 16:02:46 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lib.hpp"
-#include "server/server.hpp"
+#include "Webserv.hpp"
 
 void	ft_exit(std::string msg)
 {
@@ -27,7 +26,8 @@ int	main(int ac, char **av)
 	(void) av;
 	//Configuration conf(av[1]);
 	//db arak lkhdma ><
-	server("HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: \
+	server b;
+	b.process("HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: \
 	12\n\nHello world!");
 	return 0;
 }
