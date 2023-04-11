@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+         #
+#    By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/30 14:02:35 by mel-kora          #+#    #+#              #
-#    Updated: 2023/04/09 18:14:05 by sennaama         ###   ########.fr        #
+#    Updated: 2023/04/11 10:34:46 by mel-kora         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,6 +17,8 @@ INCS		=	lib.hpp\
 				#more files
 SRCS		=	main.cpp\
 				Parsing/Configuration.cpp\
+				Parsing/server_params.cpp\
+				Parsing/location_params.cpp\
 				server/server.cpp\
 				#more files
 OBJS		= 	${SRCS:.cpp=.o}

@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:16:16 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/04/10 17:59:53 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/04/11 17:25:26 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,11 +82,12 @@ void	Configuration::parse_server_block(std::string block)
 		{
 			end = start;
 			start = block.substr(start, block.find("\n") - start + 1).find("{") + 1;
-			std::string location_match = trim_spaces(block.substr(end, start - end));
+			std::string location_match = get_valid_path(trim_spaces(block.substr(end, start - end)));
 			parse_location_block(server, location_match, get_block(block, start, end));
 		}
 		start = ++end;
 	}
+	this->servers.push_back(server);//after checking it
 }
 
 std::string	Configuration::parse_server_line(Server &serv, std::string line)
@@ -95,7 +96,6 @@ std::string	Configuration::parse_server_line(Server &serv, std::string line)
 	std::string	server_parameters[] = {"root", "listen", "host", "body_size", "server_name", "methods", "index", "error_page", "location"};
 	size_t		start = 0, end = 0;
 
-	(void) serv;
 	while (start < line.length() && isspace(line[start]))
 		start++;
 	if (start == line.length())
@@ -113,28 +113,28 @@ std::string	Configuration::parse_server_line(Server &serv, std::string line)
 	switch (i)
 	{
 		case 0:
-			// get_root(serv, argument);
+			get_root(serv, argument);
 			break;
 		case 1:
-			// get_port(serv, argument);
+			get_port(serv, argument);
 			break;
 		case 2:
-			// get_host(serv, argument);
+			get_host(serv, argument);
 			break;
 		case 3:
-			// get_body_size(serv, argument);
+			get_body_size(serv, argument);
 			break;
 		case 4:
-			// get_server_name(serv, argument);
+			get_server_name(serv, argument);
 			break;
 		case 5:
-			// get_methods(serv, argument);
+			get_methods(serv, argument);
 			break;
 		case 6:
-			// get_index(serv, argument);
+			get_index(serv, argument);
 			break;
 		case 7:
-			// get_error_page(serv, argument);
+			get_error_page(serv, argument);
 			break;
 		case 8:
 			break;
@@ -149,14 +149,13 @@ void	Configuration::parse_location_block(Server	&serv, std::string location_matc
 	Location	location;
 	size_t		start = 0, end = 0;
 
-	(void) serv;
-	(void) location_match;
 	while (start < block.length())
 	{
 		end = block.find("\n");
 		parse_location_line(location, block.substr(start, end - start));
 		start = ++end;
 	}
+	serv.locations[location_match] = location;
 }
 
 void	Configuration::parse_location_line(Location &location, std::string line)
@@ -165,7 +164,6 @@ void	Configuration::parse_location_line(Location &location, std::string line)
 	std::string	location_parameters[] = {"autoindex", "root", "methods", "index", "upload", "return", "cgi"};
 	size_t		start = 0, end = 0;
 
-	(void) location;
 	while (start < line.length() && isspace(line[start]))
 		start++;
 	if (start == line.length())
@@ -175,6 +173,8 @@ void	Configuration::parse_location_line(Location &location, std::string line)
 		end++;
 	parameter = line.substr(start, end - start + 1);
 	argument = trim_spaces(line.substr(end, line.size() - end));
+	if (argument == "")
+		ft_exit("No argument provided for " + parameter);
 	if (argument[argument.size() - 1] == ';')
 		argument = argument.substr(0, argument.size() - 1);
 	int i = 0;
@@ -183,27 +183,39 @@ void	Configuration::parse_location_line(Location &location, std::string line)
 	switch (i)
 	{
 		case 0:
-			// get_location_autoindex(location, argument);
+			get_location_autoindex(location, argument);
 			break;
 		case 1:
-			// get_location_root(location, argument);
+			get_location_root(location, argument);
 			break;
 		case 2:
-			// get_location_methods(location, argument);
+			get_location_methods(location, argument);
 			break;
 		case 3:
-			// get_location_index(location, argument);
+			get_location_index(location, argument);
 			break;
 		case 4:
-			// get_location_upload(location, argument);
+			get_location_upload(location, argument);
 			break;
 		case 5:
-			// get_location_return(location, argument);
+			get_location_return(location, argument);
 			break;
 		case 6:
-			// get_location_cgi(location, argument);
+			get_location_cgi(location, argument);
 			break;
 		default:
 			ft_exit("Bad location parameter");
 	}
+}
+
+std::string get_valid_path(std::string path)
+{
+	size_t	start = 0, end = path.size();
+	if (end == 0)
+		ft_exit("Path is missing");
+	while (start < end && !isspace(path[start]))
+		start++;
+	if (start < end)
+		ft_exit("invalid space character in path");
+	return (path);
 }
