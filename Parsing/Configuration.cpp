@@ -6,11 +6,17 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:16:16 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/04/11 17:25:26 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/04/12 16:05:14 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Configuration.hpp"
+
+Location::Location(): autoindex(-1), root("")
+{}
+
+Server::Server(): root(""), host(""), port(-1), body_size(-1)
+{}
 
 Configuration::Configuration(std::string file_name)
 {
@@ -41,7 +47,7 @@ std::string get_block(std::string content, size_t &start, size_t &end)
 	while (start < content.length() && isspace(content[start]))
 		start++;
 	if (start == content.length() || content[start] != '{')
-		ft_exit("Bad input 👿");
+		ft_exit("Bad input detected 🤖");
 	end = start++;
 	open_brackets++;
 	while (++end < content.length() && open_brackets)
@@ -52,7 +58,7 @@ std::string get_block(std::string content, size_t &start, size_t &end)
 			open_brackets--;
 	}
 	if (open_brackets)
-		ft_exit("Unclosed block 🤖");
+		ft_exit("Unclosed block detected 🤖");
 	return (content.substr(start, end - start));
 }
 
@@ -64,7 +70,7 @@ void	Configuration::parse_content(std::string content)
 	{
 		start = content.find("server") + 7;
 		if (trim_spaces(content.substr(end, start - end - 6)) != "")
-			ft_exit("Something's fishy 🐡");
+			ft_exit("Something's fishy detected 🤖");
 		parse_server_block(get_block(content, start, end));
 		start = end;
 	}
@@ -87,13 +93,13 @@ void	Configuration::parse_server_block(std::string block)
 		}
 		start = ++end;
 	}
-	this->servers.push_back(server);//after checking it
+	this->servers.push_back(server_checker(server));
 }
 
 std::string	Configuration::parse_server_line(Server &serv, std::string line)
 {
-	std::string	parameter, argument;
 	std::string	server_parameters[] = {"root", "listen", "host", "body_size", "server_name", "methods", "index", "error_page", "location"};
+	std::string	parameter, argument;
 	size_t		start = 0, end = 0;
 
 	while (start < line.length() && isspace(line[start]))
@@ -139,7 +145,7 @@ std::string	Configuration::parse_server_line(Server &serv, std::string line)
 		case 8:
 			break;
 		default:
-			ft_exit("Bad server parameter");
+			ft_exit("Bad server parameter detected 🤖");
 	}
 	return (parameter);
 }
@@ -160,8 +166,8 @@ void	Configuration::parse_location_block(Server	&serv, std::string location_matc
 
 void	Configuration::parse_location_line(Location &location, std::string line)
 {
-	std::string	parameter, argument;
 	std::string	location_parameters[] = {"autoindex", "root", "methods", "index", "upload", "return", "cgi"};
+	std::string	parameter, argument;
 	size_t		start = 0, end = 0;
 
 	while (start < line.length() && isspace(line[start]))
@@ -204,7 +210,7 @@ void	Configuration::parse_location_line(Location &location, std::string line)
 			get_location_cgi(location, argument);
 			break;
 		default:
-			ft_exit("Bad location parameter");
+			ft_exit("Bad location parameter detected 🤖");
 	}
 }
 
@@ -212,10 +218,10 @@ std::string get_valid_path(std::string path)
 {
 	size_t	start = 0, end = path.size();
 	if (end == 0)
-		ft_exit("Path is missing");
+		ft_exit("Missing Path detected 🤖");
 	while (start < end && !isspace(path[start]))
 		start++;
 	if (start < end)
-		ft_exit("invalid space character in path");
+		ft_exit("Invalid space character in path detected 🤖");
 	return (path);
 }
