@@ -6,7 +6,7 @@
 /*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:59:15 by sennaama          #+#    #+#             */
-/*   Updated: 2023/04/11 16:56:06 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/04/12 14:36:56 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ Client& Client::operator=(const Client& obj)
         request = obj.request;
         client_socket = obj.client_socket;
     }
+    return (*this);
 }
 Client::~Client(){}
 
