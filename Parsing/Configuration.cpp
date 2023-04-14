@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:16:16 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/04/12 16:05:14 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/04/14 16:27:26 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,7 +161,8 @@ void	Configuration::parse_location_block(Server	&serv, std::string location_matc
 		parse_location_line(location, block.substr(start, end - start));
 		start = ++end;
 	}
-	serv.locations[location_match] = location;
+	if (serv.locations.find(location_match) == serv.locations.end())
+		serv.locations[location_match] = location;
 }
 
 void	Configuration::parse_location_line(Location &location, std::string line)

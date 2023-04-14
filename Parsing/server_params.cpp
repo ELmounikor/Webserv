@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 10:26:41 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/04/12 14:40:27 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/04/14 16:38:33 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,11 +159,13 @@ void	get_error_page(Server &serv, std::string argument)
 		start = end;
 	}
 	if (errpage_codes.size() == 0)
-		ft_exit ("Invalid error page code detected 🤖");
+		ft_exit("Invalid error page code detected 🤖");
 	path = get_valid_path(argument.substr(start, argument.size() - start));
 	std::vector<long>::iterator i = errpage_codes.begin();
 	while (i != errpage_codes.end())
 	{
+		if (serv.error_pages.find(*i) != serv.error_pages.end())
+			ft_exit("Duplicate error page code detected 🤖");
 		serv.error_pages[*i] = path;
 		i++;
 	}
