@@ -6,14 +6,14 @@
 /*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:59:15 by sennaama          #+#    #+#             */
-/*   Updated: 2023/04/12 14:36:56 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/04/14 17:46:03 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
-Client::Client():response(""),request(""),client_socket(0){}
+Client::Client():response(""),request(""),client_socket(0),recv(-1),send(-1){}
 Client::Client(std::string response, std::string request, int client_socket):\
-        response(response),request(request),client_socket(client_socket){}
+        response(response),request(request),client_socket(client_socket),recv(-1),send(-1){}
 
 Client::Client(const Client& obj)
 {
@@ -62,4 +62,24 @@ int Client::getClientSocket()
 void    Client::setCLientSocket(int client_socket)
 {
     this->client_socket = client_socket;
+}
+
+int Client::getRecv()
+{
+    return (recv);
+}
+
+void    Client::setRecv(int recv)
+{
+    this->recv = recv;
+}
+
+int Client::getSend()
+{
+    return (send);
+}
+
+void	Client::setSend(int send)
+{
+    this->send = send;
 }
