@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 14:27:50 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/04/15 00:23:02 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/04/15 16:15:09 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	print_config(Configuration config)
 	while (i != config.servers.end())
 	{
 		std::cout << "***************** Server " << server_id << " info: *****************\n";
-		std::cout << "* listening on :" << (*i).host << ':' << (*i).port << "\n";
+		std::cout << "* listening on " << (*i).host << ':' << (*i).port << "\n";
 		if ((*i).server_names.size() > 0)
 		{
 			std::cout << "* server names:\n";
@@ -65,7 +65,7 @@ void	print_config(Configuration config)
 			std::cout << "* error pages:\n";
 			print_map((*i).error_pages);
 		}
-		std::cout << "* client max body size :" << (*i).body_size << "\n";
+		std::cout << "* client max body size: " << (*i).body_size << "\n";
 		if ((*i).locations.size() > 0)
 		{
 			std::map<std::string, Location>::iterator j = (*i).locations.begin();
@@ -73,12 +73,43 @@ void	print_config(Configuration config)
 			while (j != (*i).locations.end())
 			{
 				std::cout << "* location '" << (*j).first << "' info:\n";
-				std::cout << (*j).second << "\n";
+				std::cout << (*j).second;
 				j++;
 			}
 		}
 		i++;
 		server_id++;
 	}
-	
+}
+
+std::ostream	&operator<<( std::ostream &output, const Location &location)
+{
+	output << " - Autoindex: " << location.autoindex << "\n";
+	output << " - Root: " << location.root << "\n";
+	output << " - HTTP methods: \n";
+	if (location.methods.size() == 0)
+		std::cout << "-->(none)\n";
+	else
+		print_vector(location.methods);
+	if (location.indexes.size() > 0)
+	{
+		output << " - Indexes: \n";
+		print_vector(location.indexes);
+	}
+	if (location.uploads.size() > 0)
+	{
+		output << " - Uploads: \n";
+		print_vector(location.uploads);
+	}
+	if (location.returns.size() > 0)
+	{
+		output << " - Returns: \n";
+		print_map(location.returns);
+	}
+	if (location.returns.size() > 0)
+	{
+		output << " - CGI: \n";
+		print_map(location.returns);
+	}
+	return (output);
 }

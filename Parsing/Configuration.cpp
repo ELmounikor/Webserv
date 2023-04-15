@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:16:16 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/04/15 01:49:00 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/04/15 16:09:28 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ std::string	trim_spaces(std::string input)
 {
 	size_t i = 0, j = input.size() - 1;
 
-	while (i < input.length() && isspace(input[i]))
+	while (i < input.size() && isspace(input[i]))
 		i++;
 	while (j >= 0 && isspace(input[j]))
 		j--;
@@ -44,13 +44,13 @@ std::string get_block(std::string content, size_t &start, size_t &end)
 {
 	int	open_brackets = 0;
 	
-	while (start < content.length() && isspace(content[start]))
+	while (start < content.size() && isspace(content[start]))
 		start++;
-	if (start == content.length() || content[start] != '{')
+	if (start == content.size() || content[start] != '{')
 		ft_exit("Bad input detected 🤖");
 	end = start++;
 	open_brackets++;
-	while (++end < content.length() && open_brackets)
+	while (++end < content.size() && open_brackets)
 	{
 		if (content[end] == '{')
 			open_brackets++;
@@ -59,36 +59,45 @@ std::string get_block(std::string content, size_t &start, size_t &end)
 	}
 	if (open_brackets)
 		ft_exit("Unclosed block detected 🤖");
-	return (content.substr(start, end - start));
+	return (content.substr(start, end - start - 1));
 }
 
 void	Configuration::parse_content(std::string content)
 {
-	size_t	start = 0, end = 0;
+	size_t	tmp, end = 0;
 
-	while (start < content.length())
+	while (trim_spaces(content) != "")
 	{
-		start = content.find("server") + 7;
-		if (trim_spaces(content.substr(end, start - end - 7)) != "")
+		end = content.find("server") + 7;
+		if (trim_spaces(content.substr(0, end - 7)) != "")
 			ft_exit("Something's fishy detected 🤖");
-		parse_server_block(get_block(content, start, end));
-		start = end;
+		parse_server_block(get_block(content, end, tmp));
+		content = content.substr(tmp, content.size());
 	}
 }
 
 void	Configuration::parse_server_block(std::string block)
 {
 	Server	server;
-	size_t	start = 0, end = 0;
+	size_t	start, end = 0;
 
-	while (start < block.length())
+	while (trim_spaces(block) != "")
 	{
+		start = 0;
 		end = block.find("\n");
-		if (parse_server_line(server, block.substr(start, end - start)) == "location")
+		if (parse_server_line(server, block.substr(0, end)) == "location")
 		{
+			while (start < block.size() && isspace(block[start]))
+				start++;
+			while (start < block.size() && !isspace(block[start]))
+				start++;
+			while (start < block.size() && isspace(block[start]))
+				start++;
 			end = start;
-			start = block.substr(start, block.find("\n") - start + 1).find("{") + 1;
-			std::string location_match = get_valid_path(trim_spaces(block.substr(end, start - end)));
+			while (end < block.size() && !isspace(block[end]))
+				end++;
+			std::string location_match = get_valid_path(block.substr(start, end - start));
+			start = end;
 			parse_location_block(server, location_match, get_block(block, start, end));
 		}
 		block = block.substr(++end, block.size());
@@ -102,12 +111,12 @@ std::string	Configuration::parse_server_line(Server &serv, std::string line)
 	std::string	parameter, argument;
 	size_t		start = 0, end = 0;
 
-	while (start < line.length() && isspace(line[start]))
+	while (start < line.size() && isspace(line[start]))
 		start++;
-	if (start == line.length())
+	if (start == line.size())
 		return ("");
 	end = start;
-	while (end < line.length() && !isspace(line[end]))
+	while (end < line.size() && !isspace(line[end]))
 		end++;
 	parameter = line.substr(start, end - start);
 	argument = trim_spaces(line.substr(end, line.size() - end));
@@ -153,12 +162,12 @@ std::string	Configuration::parse_server_line(Server &serv, std::string line)
 void	Configuration::parse_location_block(Server	&serv, std::string location_match, std::string block)
 {
 	Location	location;
-	size_t		start = 0, end = 0;
+	size_t		end = 0;
 
-	while (start < block.length())
+	while (trim_spaces(block) != "")
 	{
 		end = block.find("\n");
-		parse_location_line(location, block.substr(start, end - start));
+		parse_location_line(location, block.substr(0, end));
 		block = block.substr(++end, block.size());
 	}
 	if (serv.locations.find(location_match) == serv.locations.end())
@@ -171,12 +180,12 @@ void	Configuration::parse_location_line(Location &location, std::string line)
 	std::string	parameter, argument;
 	size_t		start = 0, end = 0;
 
-	while (start < line.length() && isspace(line[start]))
+	while (start < line.size() && isspace(line[start]))
 		start++;
-	if (start == line.length())
+	if (start == line.size())
 		return ;
 	end = start;
-	while (end < line.length() && !isspace(line[end]))
+	while (end < line.size() && !isspace(line[end]))
 		end++;
 	parameter = line.substr(start, end - start);
 	argument = trim_spaces(line.substr(end, line.size() - end));
@@ -225,32 +234,4 @@ std::string get_valid_path(std::string path)
 	if (start < end)
 		ft_exit("Invalid space character in path detected 🤖");
 	return (path);
-}
-
-std::ostream	&operator<<( std::ostream &output, const Location &location)
-{
-	output << " - Autoindex: " << location.autoindex << "\n";
-	output << " - Root: " << location.root << "\n";
-	output << " - HTTP methods: \n"; print_vector(location.methods);
-	if (location.indexes.size() > 0)
-	{
-		output << " - Indexes: \n";
-		print_vector(location.indexes);
-	}
-	if (location.uploads.size() > 0)
-	{
-		output << " - Uploads: \n";
-		print_vector(location.uploads);
-	}
-	if (location.returns.size() > 0)
-	{
-		output << " - Returns: \n";
-		print_map(location.returns);
-	}
-	if (location.returns.size() > 0)
-	{
-		output << " - CGI: \n";
-		print_map(location.returns);
-	}
-	return (output);
 }
