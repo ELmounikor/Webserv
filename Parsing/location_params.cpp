@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 10:25:59 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/04/12 14:24:06 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/04/15 01:47:21 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,10 @@ void	get_location_methods(Location &location, std::string argument)
 		while (end < argument.size() && !isspace(argument[end]))
 			end++;
 		int i = 0;
-		std::string token = argument.substr(start, end - start + 1);
-		while (i < allowed_methods->size() && token != allowed_methods[i])
+		std::string token = argument.substr(start, end - start);
+		while (i < 3 && token != allowed_methods[i])
 			i++;
-		if (i < allowed_methods->size())
+		if (i < 3)
 		{
 			std::vector<std::string>::iterator j = location.methods.begin();
 			while (j != location.methods.end() && token != *j)
@@ -68,8 +68,7 @@ void	get_location_index(Location &location, std::string argument)
 	{
 		while (end < argument.size() && !isspace(argument[end]))
 			end++;
-		int i = 0;
-		std::string token = argument.substr(start, end - start + 1);
+		std::string token = argument.substr(start, end - start);
 		location.indexes.push_back(token);
 		while (end < argument.size() && isspace(argument[end]))
 			end++;
@@ -93,9 +92,9 @@ void	get_location_return(Location &location, std::string argument)
 		ft_exit ("Duplicate redirection in a single location detected 🤖");
 	while (end < argument.size() && !isspace(argument[end]))
 		end++;
-	std::string token = argument.substr(start, end - start + 1);
+	std::string token = argument.substr(start, end - start);
 	redirection_code = strtol(token.c_str(), &terminator, 10);
-	if (terminator || !isdigit(token[0]))
+	if (terminator == NULL || !isdigit(token[0]))
 		ft_exit("Invalid redirection page code detected 🤖");
 	while (end < argument.size() && isspace(argument[end]))
 		end++;
@@ -111,7 +110,7 @@ void	get_location_cgi(Location &location, std::string argument)
 		ft_exit ("Duplicate CGI in a single location detected 🤖");
 	while (end < argument.size() && !isspace(argument[end]))
 		end++;
-	extention = argument.substr(start, end - start + 1);
+	extention = argument.substr(start, end - start);
 	while (end < argument.size() && isspace(argument[end]))
 		end++;
 	location.cgi[extention] = get_valid_path(argument.substr(end, argument.size() - end));

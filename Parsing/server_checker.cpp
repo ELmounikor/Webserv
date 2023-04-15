@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 14:27:50 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/04/14 18:39:26 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/04/15 00:23:02 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,8 @@ Server	server_checker(Server &server)
 			}
 			if ((*j).second.methods.size() == 0)
 			{
-				if (server.methods.size() == 0)
-					ft_exit("Missing http methods detected 🤖");
+				// if (server.methods.size() == 0)
+				// 	ft_exit("Missing http methods detected 🤖");
 				(*j).second.methods = server.methods;
 			}
 			j++;
@@ -73,7 +73,7 @@ void	print_config(Configuration config)
 			while (j != (*i).locations.end())
 			{
 				std::cout << "* location '" << (*j).first << "' info:\n";
-				// std::cout << (*j).second << "\n";
+				std::cout << (*j).second << "\n";
 				j++;
 			}
 		}

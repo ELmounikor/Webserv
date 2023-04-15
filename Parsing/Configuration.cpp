@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:16:16 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/04/14 16:27:26 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/04/15 01:49:00 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,10 @@ void	Configuration::parse_content(std::string content)
 {
 	size_t	start = 0, end = 0;
 
-	while (end < content.length())
+	while (start < content.length())
 	{
 		start = content.find("server") + 7;
-		if (trim_spaces(content.substr(end, start - end - 6)) != "")
+		if (trim_spaces(content.substr(end, start - end - 7)) != "")
 			ft_exit("Something's fishy detected 🤖");
 		parse_server_block(get_block(content, start, end));
 		start = end;
@@ -91,7 +91,7 @@ void	Configuration::parse_server_block(std::string block)
 			std::string location_match = get_valid_path(trim_spaces(block.substr(end, start - end)));
 			parse_location_block(server, location_match, get_block(block, start, end));
 		}
-		start = ++end;
+		block = block.substr(++end, block.size());
 	}
 	this->servers.push_back(server_checker(server));
 }
@@ -109,7 +109,7 @@ std::string	Configuration::parse_server_line(Server &serv, std::string line)
 	end = start;
 	while (end < line.length() && !isspace(line[end]))
 		end++;
-	parameter = line.substr(start, end - start + 1);
+	parameter = line.substr(start, end - start);
 	argument = trim_spaces(line.substr(end, line.size() - end));
 	if (argument[argument.size() - 1] == ';')
 		argument = argument.substr(0, argument.size() - 1);
@@ -159,7 +159,7 @@ void	Configuration::parse_location_block(Server	&serv, std::string location_matc
 	{
 		end = block.find("\n");
 		parse_location_line(location, block.substr(start, end - start));
-		start = ++end;
+		block = block.substr(++end, block.size());
 	}
 	if (serv.locations.find(location_match) == serv.locations.end())
 		serv.locations[location_match] = location;
@@ -178,7 +178,7 @@ void	Configuration::parse_location_line(Location &location, std::string line)
 	end = start;
 	while (end < line.length() && !isspace(line[end]))
 		end++;
-	parameter = line.substr(start, end - start + 1);
+	parameter = line.substr(start, end - start);
 	argument = trim_spaces(line.substr(end, line.size() - end));
 	if (argument == "")
 		ft_exit("No argument provided for " + parameter);
@@ -225,4 +225,32 @@ std::string get_valid_path(std::string path)
 	if (start < end)
 		ft_exit("Invalid space character in path detected 🤖");
 	return (path);
+}
+
+std::ostream	&operator<<( std::ostream &output, const Location &location)
+{
+	output << " - Autoindex: " << location.autoindex << "\n";
+	output << " - Root: " << location.root << "\n";
+	output << " - HTTP methods: \n"; print_vector(location.methods);
+	if (location.indexes.size() > 0)
+	{
+		output << " - Indexes: \n";
+		print_vector(location.indexes);
+	}
+	if (location.uploads.size() > 0)
+	{
+		output << " - Uploads: \n";
+		print_vector(location.uploads);
+	}
+	if (location.returns.size() > 0)
+	{
+		output << " - Returns: \n";
+		print_map(location.returns);
+	}
+	if (location.returns.size() > 0)
+	{
+		output << " - CGI: \n";
+		print_map(location.returns);
+	}
+	return (output);
 }

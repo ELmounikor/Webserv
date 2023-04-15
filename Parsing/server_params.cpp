@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 10:26:41 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/04/14 16:38:33 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/04/15 01:48:16 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	get_root(Server &serv, std::string argument)
 
 void	get_port(Server &serv, std::string argument)
 {
-	size_t	start = 0, end = 0;
+	size_t	start = 0;
 	long	port;
 	char	*terminator;
 	
@@ -35,7 +35,7 @@ void	get_port(Server &serv, std::string argument)
 		start = 0;
 	argument = argument.substr(start, argument.size() - start);
 	port = strtol(argument.c_str(), &terminator, 10);
-	if (terminator || !isdigit(argument[0]) || port > 65535)
+	if (terminator == NULL || !isdigit(argument[0]) || port > 65535)
 		ft_exit("Invalid port detected 🤖");
 	serv.port = port;
 }
@@ -50,13 +50,16 @@ void	get_host(Server &serv, std::string argument)
 		ft_exit("Duplicate host in a single server detected 🤖");
 	while (start < argument.size())
 	{
-		while (end < argument.size() && argument[end] != '.')
+		while (end < argument.size() && isdigit(argument[end]) && argument[end] != '.')
 			end++;
 		std::string token = argument.substr(start, end - start);
 		byte = strtol(token.c_str(), &terminator, 10);
 		number_of_bytes++;
-		if (terminator || !isdigit(token[0]) || byte > 255 || number_of_bytes > 4)
+		if (terminator == NULL ||!isdigit(token[0]) || byte > 255 || number_of_bytes > 4)
+		{
+			std::cout << (terminator == NULL) << !isdigit(token[0]) <<  number_of_bytes << "->" << byte << "\n";
 			ft_exit("Invalid host address detected 🤖");
+		}
 		start = ++end;
 	}
 	serv.host = argument;
@@ -64,15 +67,15 @@ void	get_host(Server &serv, std::string argument)
 
 void	get_body_size(Server &serv, std::string argument)
 {
-	long	body_size;
+	long	body_size_max;
 	char	*terminator;
 	
-	if (body_size != -1)
+	if (serv.body_size != -1)
 		ft_exit("Duplicate client body size limit detected 🤖");
-	body_size = strtol(argument.c_str(), &terminator, 10);
-	if (terminator || !isdigit(argument[0]))
+	body_size_max = strtol(argument.c_str(), &terminator, 10);
+	if (terminator == NULL || !isdigit(argument[0]))
 		ft_exit("Invalid client body size limit detected 🤖");
-	serv.body_size = body_size;
+	serv.body_size = body_size_max;
 }
 
 void	get_server_name(Server &serv, std::string argument)
@@ -83,8 +86,7 @@ void	get_server_name(Server &serv, std::string argument)
 	{
 		while (end < argument.size() && !isspace(argument[end]))
 			end++;
-		int i = 0;
-		std::string token = argument.substr(start, end - start + 1);
+		std::string token = argument.substr(start, end - start);
 		serv.server_names.push_back(token);
 		while (end < argument.size() && isspace(argument[end]))
 			end++;
@@ -102,10 +104,10 @@ void	get_methods(Server &serv, std::string argument)
 		while (end < argument.size() && !isspace(argument[end]))
 			end++;
 		int i = 0;
-		std::string token = argument.substr(start, end - start + 1);
-		while (i < allowed_methods->size() && token != allowed_methods[i])
+		std::string token = argument.substr(start, end - start);
+		while (i < 3 && token != allowed_methods[i])
 			i++;
-		if (i < allowed_methods->size())
+		if (i < 3)
 		{
 			std::vector<std::string>::iterator j = serv.methods.begin();
 			while (j != serv.methods.end() && token != *j)
@@ -129,8 +131,7 @@ void	get_index(Server &serv, std::string argument)
 	{
 		while (end < argument.size() && !isspace(argument[end]))
 			end++;
-		int i = 0;
-		std::string token = argument.substr(start, end - start + 1);
+		std::string token = argument.substr(start, end - start);
 		serv.indexes.push_back(token);
 		while (end < argument.size() && isspace(argument[end]))
 			end++;
@@ -149,8 +150,8 @@ void	get_error_page(Server &serv, std::string argument)
 	{
 		while (end < argument.size() && !isspace(argument[end]))
 			end++;
-		std::string token = argument.substr(start, end - start + 1);
-		if (!terminator && isdigit(token[0]))
+		std::string token = argument.substr(start, end - start);
+		if (terminator == NULL && isdigit(token[0]))
 			errpage_codes.push_back(strtol(token.c_str(), &terminator, 10));
 		else
 			break;

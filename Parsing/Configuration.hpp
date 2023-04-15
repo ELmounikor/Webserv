@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:16:09 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/04/14 16:19:55 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/04/15 00:28:56 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@ class Server
 	public:
 		std::string						root;
 		std::string						host;
-		unsigned int					port;
-		unsigned long long				body_size;
+		int								port;
+		long long						body_size;
 		std::vector<std::string>		methods;
 		std::vector<std::string>		indexes;
 		std::vector<std::string>		server_names;
@@ -54,22 +54,31 @@ class Configuration
 		std::string	parse_server_line(Server &serv, std::string line);
 };
 
-std::string	get_valid_path(std::string path);
-Server		server_checker(Server &server);
-void		print_config(Configuration config);
+std::ostream	&operator<<( std::ostream &output, const Location &location);
+std::string		get_valid_path(std::string path);
+Server			server_checker(Server &server);
+void			print_config(Configuration config);
 
 template <class T> void print_vector(T container)
 {
-	typename T::iterator i;
-	for (i = container.begin() ; i < container.end() ; i++)
+	typename T::iterator i = container.begin();
+
+	while (i != container.end())
+	{
 		std::cout << "-->" << *i << "\n";
+		i++;
+	}
 }
 
 template <class T> void print_map(T container)
 {
-	typename T::iterator i;
-	for (i = container.begin() ; i < container.end() ; i++)
+	typename T::iterator i = container.begin();
+
+	while (i != container.end())
+	{
 		std::cout << "-->" << (*i).first << " : " << (*i).second << "\n";
+		i++;
+	}
 }
 
 /*server params extractors*/
