@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 10:26:41 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/04/15 14:42:04 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/04/16 00:15:19 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,7 @@ void	get_host(Server &serv, std::string argument)
 		byte = strtol(token.c_str(), &terminator, 10);
 		number_of_bytes++;
 		if (terminator == NULL ||!isdigit(token[0]) || byte > 255 || number_of_bytes > 4)
-		{
-			std::cout << (terminator == NULL) << !isdigit(token[0]) <<  number_of_bytes << "->" << byte << "\n";
 			ft_exit("Invalid host address detected 🤖");
-		}
 		start = ++end;
 	}
 	serv.host = argument;
@@ -151,8 +148,9 @@ void	get_error_page(Server &serv, std::string argument)
 		while (end < argument.size() && !isspace(argument[end]))
 			end++;
 		std::string token = argument.substr(start, end - start);
-		if (terminator == NULL && isdigit(token[0]))
-			errpage_codes.push_back(strtol(token.c_str(), &terminator, 10));
+		long code = strtol(token.c_str(), &terminator, 10);
+		if (terminator && isdigit(token[0]))
+			errpage_codes.push_back(code);
 		else
 			break;
 		while (end < argument.size() && isspace(argument[end]))

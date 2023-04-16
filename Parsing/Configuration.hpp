@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:16:09 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/04/15 00:28:56 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/04/16 00:12:29 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ template <class T> void print_vector(T container)
 
 	while (i != container.end())
 	{
-		std::cout << "-->" << *i << "\n";
+		std::cout << "\t-->" << *i << "\n";
 		i++;
 	}
 }
@@ -76,7 +76,7 @@ template <class T> void print_map(T container)
 
 	while (i != container.end())
 	{
-		std::cout << "-->" << (*i).first << " : " << (*i).second << "\n";
+		std::cout << "\t-->" << (*i).first << " : " << (*i).second << "\n";
 		i++;
 	}
 }

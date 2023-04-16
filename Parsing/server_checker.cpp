@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 14:27:50 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/04/15 16:15:09 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/04/16 00:30:40 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ std::ostream	&operator<<( std::ostream &output, const Location &location)
 	output << " - Root: " << location.root << "\n";
 	output << " - HTTP methods: \n";
 	if (location.methods.size() == 0)
-		std::cout << "-->(none)\n";
+		std::cout << "\t-->(none)\n";
 	else
 		print_vector(location.methods);
 	if (location.indexes.size() > 0)
