@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 10:25:59 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/04/15 14:41:56 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/04/16 14:24:23 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,15 +103,15 @@ void	get_location_return(Location &location, std::string argument)
 
 void	get_location_cgi(Location &location, std::string argument)
 {
-	size_t			start = 0, end = 0;
+	size_t			end = 0;
 	std::string		extention;
 
 	if (location.cgi.size() > 0)
 		ft_exit ("Duplicate CGI in a single location detected 🤖");
 	while (end < argument.size() && !isspace(argument[end]))
 		end++;
-	extention = argument.substr(start, end - start);
+	extention = argument.substr(0, end);
 	while (end < argument.size() && isspace(argument[end]))
 		end++;
-	location.cgi[extention] = get_valid_path(argument.substr(end, argument.size() - end));
+	location.cgi[extention] = get_valid_path(argument.substr(end, argument.size()));
 }

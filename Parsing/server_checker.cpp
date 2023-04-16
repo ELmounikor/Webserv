@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 14:27:50 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/04/16 00:30:40 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/04/16 14:30:30 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,7 @@ Server	server_checker(Server &server)
 				(*j).second.root = server.root;
 			}
 			if ((*j).second.methods.size() == 0)
-			{
-				// if (server.methods.size() == 0)
-				// 	ft_exit("Missing http methods detected 🤖");
 				(*j).second.methods = server.methods;
-			}
 			j++;
 		}
 	}
@@ -87,29 +83,29 @@ std::ostream	&operator<<( std::ostream &output, const Location &location)
 	output << " - Autoindex: " << location.autoindex << "\n";
 	output << " - Root: " << location.root << "\n";
 	output << " - HTTP methods: \n";
-	if (location.methods.size() == 0)
-		std::cout << "\t-->(none)\n";
-	else
+	if (location.methods.size() > 0)
 		print_vector(location.methods);
+	else
+		std::cout << "\t-->(none)\n";
+	output << " - Indexes: \n";
 	if (location.indexes.size() > 0)
-	{
-		output << " - Indexes: \n";
 		print_vector(location.indexes);
-	}
+	else
+		std::cout << "\t-->(none)\n";
+	output << " - Uploads: \n";
 	if (location.uploads.size() > 0)
-	{
-		output << " - Uploads: \n";
 		print_vector(location.uploads);
-	}
+	else
+		std::cout << "\t-->(none)\n";
+	output << " - Returns: \n";
 	if (location.returns.size() > 0)
-	{
-		output << " - Returns: \n";
 		print_map(location.returns);
-	}
-	if (location.returns.size() > 0)
-	{
-		output << " - CGI: \n";
-		print_map(location.returns);
-	}
+	else
+		std::cout << "\t-->(none)\n";
+	output << " - CGI: \n";
+	if (location.cgi.size() > 0)
+		print_map(location.cgi);
+	else
+		std::cout << "\t-->(none)\n";
 	return (output);
 }
