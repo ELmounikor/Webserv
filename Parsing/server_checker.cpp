@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 14:27:50 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/04/16 14:30:30 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/04/17 01:12:23 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,18 +51,18 @@ void	print_config(Configuration config)
 	{
 		std::cout << "***************** Server " << server_id << " info: *****************\n";
 		std::cout << "* listening on " << (*i).host << ':' << (*i).port << "\n";
-		if ((*i).server_names.size() > 0)
+		if ((*i).server_names.size())
 		{
 			std::cout << "* server names:\n";
 			print_vector((*i).server_names);
 		}
-		if ((*i).error_pages.size() > 0)
+		if ((*i).error_pages.size())
 		{
 			std::cout << "* error pages:\n";
 			print_map((*i).error_pages);
 		}
 		std::cout << "* client max body size: " << (*i).body_size << "\n";
-		if ((*i).locations.size() > 0)
+		if ((*i).locations.size())
 		{
 			std::map<std::string, Location>::iterator j = (*i).locations.begin();
 
@@ -83,29 +83,40 @@ std::ostream	&operator<<( std::ostream &output, const Location &location)
 	output << " - Autoindex: " << location.autoindex << "\n";
 	output << " - Root: " << location.root << "\n";
 	output << " - HTTP methods: \n";
-	if (location.methods.size() > 0)
+	if (location.methods.size())
 		print_vector(location.methods);
 	else
 		std::cout << "\t-->(none)\n";
 	output << " - Indexes: \n";
-	if (location.indexes.size() > 0)
+	if (location.indexes.size())
 		print_vector(location.indexes);
 	else
 		std::cout << "\t-->(none)\n";
 	output << " - Uploads: \n";
-	if (location.uploads.size() > 0)
+	if (location.uploads.size())
 		print_vector(location.uploads);
 	else
 		std::cout << "\t-->(none)\n";
 	output << " - Returns: \n";
-	if (location.returns.size() > 0)
+	if (location.returns.size())
 		print_map(location.returns);
 	else
 		std::cout << "\t-->(none)\n";
 	output << " - CGI: \n";
-	if (location.cgi.size() > 0)
+	if (location.cgi.size())
 		print_map(location.cgi);
 	else
 		std::cout << "\t-->(none)\n";
 	return (output);
+}
+
+int	is_number(std::string input)
+{
+	size_t	i = 0;
+	
+	while (i < input.size() && isdigit(input[i]))
+		i++;
+	if (i == input.size())
+		return (1);
+	return (0);
 }

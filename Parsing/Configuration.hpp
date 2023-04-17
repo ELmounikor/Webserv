@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:16:09 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/04/16 00:12:29 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/04/17 01:14:18 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ std::ostream	&operator<<( std::ostream &output, const Location &location);
 std::string		get_valid_path(std::string path);
 Server			server_checker(Server &server);
 void			print_config(Configuration config);
+int				is_number(std::string input);
 
 template <class T> void print_vector(T container)
 {
