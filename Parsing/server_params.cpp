@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 10:26:41 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/04/17 01:17:23 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/04/18 01:39:32 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	get_port(Server &serv, std::string argument)
 		start = 0;
 	argument = argument.substr(start, argument.size());
 	port = strtol(argument.c_str(), NULL, 10);
-	if (!is_number(argument) || !isdigit(argument[start]) || port > 65535)
+	if (!is_number(argument) || port > 65535)
 		ft_exit("Invalid port detected 🤖");
 	serv.port = port;
 }
@@ -48,12 +48,12 @@ void	get_host(Server &serv, std::string argument)
 		ft_exit("Duplicate host in a single server detected 🤖");
 	while (start < argument.size())
 	{
-		while (end < argument.size() && isdigit(argument[end]) && argument[end] != '.')
+		while (end < argument.size() && isdigit(argument[end]))
 			end++;
 		std::string token = argument.substr(start, end - start);
 		byte = strtol(token.c_str(), NULL, 10);
 		number_of_bytes++;
-		if (!is_number(token) || !isdigit(token[0]) || byte > 255 || number_of_bytes > 4)
+		if (!is_number(token) || byte > 255 || (argument[end] != '.' && number_of_bytes < 4) || number_of_bytes > 4)
 			ft_exit("Invalid host address detected 🤖");
 		start = ++end;
 	}
@@ -67,7 +67,7 @@ void	get_body_size(Server &serv, std::string argument)
 	if (serv.body_size != -1)
 		ft_exit("Duplicate client body size limit detected 🤖");
 	body_size_max = strtol(argument.c_str(), NULL, 10);
-	if (!is_number(argument) || !isdigit(argument[0]))
+	if (!is_number(argument))
 		ft_exit("Invalid client body size limit detected 🤖");
 	serv.body_size = body_size_max;
 }
@@ -144,9 +144,9 @@ void	get_error_page(Server &serv, std::string argument)
 		while (end < argument.size() && !isspace(argument[end]))
 			end++;
 		std::string token = argument.substr(start, end - start);
-		long code = strtol(token.c_str(), NULL, 10);
-		if (is_number(token) && isdigit(token[0]))
+		if (is_number(token))
 		{
+			long code = strtol(token.c_str(), NULL, 10);
 			if (code < 300 || code > 599)
 				ft_exit("Error page code out of range (300-599)"); 
 			errpage_codes.push_back(code);

@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 10:25:59 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/04/17 01:18:54 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/04/18 01:37:01 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ void	get_location_return(Location &location, std::string argument)
 		end++;
 	std::string token = argument.substr(start, end - start);
 	redirection_code = strtol(token.c_str(), NULL, 10);
-	if (!is_number(token) || !isdigit(token[0]))
+	if (!is_number(token))
 		ft_exit("Invalid redirection page code detected 🤖");
 	while (end < argument.size() && isspace(argument[end]))
 		end++;

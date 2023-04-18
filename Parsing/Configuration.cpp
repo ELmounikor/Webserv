@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:16:16 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/04/16 00:12:02 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/04/17 18:21:27 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,9 +119,9 @@ std::string	Configuration::parse_server_line(Server &serv, std::string line)
 	while (end < line.size() && !isspace(line[end]))
 		end++;
 	parameter = line.substr(start, end - start);
-	argument = trim_spaces(line.substr(end, line.size() - end));
-	if (argument[argument.size() - 1] == ';')
-		argument = argument.substr(0, argument.size() - 1);
+	if (line[line.size() - 1] == ';')
+		line = line.substr(0, line.size() - 1);
+	argument = trim_spaces(line.substr(end, line.size()));
 	int i = 0;
 	while (i < 9 && parameter != server_parameters[i])
 		i++;
@@ -188,11 +188,11 @@ void	Configuration::parse_location_line(Location &location, std::string line)
 	while (end < line.size() && !isspace(line[end]))
 		end++;
 	parameter = line.substr(start, end - start);
+	if (line[line.size() - 1] == ';')
+		line = line.substr(0, line.size() - 1);
 	argument = trim_spaces(line.substr(end, line.size() - end));
 	if (argument == "")
 		ft_exit("No argument provided for " + parameter);
-	if (argument[argument.size() - 1] == ';')
-		argument = argument.substr(0, argument.size() - 1);
 	int i = 0;
 	while (i < 7 && parameter != location_parameters[i])
 		i++;
