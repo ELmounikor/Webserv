@@ -6,7 +6,7 @@
 /*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:22:51 by sennaama          #+#    #+#             */
-/*   Updated: 2023/04/12 17:00:12 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/04/15 23:36:29 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,73 +114,143 @@ server::~server(){}
 //     }
 // }
 
+// void server::process(const char *response)
+// {
+//     fd_set	master;
+//     fd_set	read_fds;
+//     int		listener;
+// 	int		newfd;
+// 	char	buf[256];
+// 	int     opt = true;
+// 	int		fdmax;
+	
+// 	FD_ZERO(&master);
+// 	FD_ZERO(&read_fds);
+// 	listener = server_socket;
+// 	if (setsockopt(server_socket, SOL_SOCKET, SO_REUSEADDR, (char *)&opt, sizeof(opt)) < 0 )  
+//         ft_exit("setsockopt");  
+//     if (bind(server_socket, (struct sockaddr *)&address, addrlen) < 0)
+//         ft_exit("bind");
+//     if (listen(server_socket, SOMAXCONN) < 0)
+//         ft_exit("listen");
+// 	FD_SET(listener, &master);
+// 	fdmax = listener;
+// 	while (true)
+// 	{
+// 		read_fds = master;
+// 		if (select(fdmax + 1, &read_fds, NULL, NULL, NULL) == -1)
+// 			std::cout<<"Error: select"<<std::endl;
+// 		for (int i = 0; i <= fdmax + 1; i++)
+// 		{
+// 			if (FD_ISSET(i, &read_fds))
+// 			{
+// 				if (i == listener)
+// 				{
+// 					addrlen = sizeof(address);
+//                     newfd = accept(listener, (struct sockaddr *)&address, (socklen_t*)&addrlen);
+// 					if (newfd == -1)
+// 						std::cout<<"Error:accept"<<std::endl;
+// 					else 
+// 					{
+// 						FD_SET(newfd, &master);
+// 						if (newfd > fdmax)
+// 							fdmax = newfd;
+// 						std::cout<<"New connection: "<< i << " " << inet_ntoa(address.sin_addr)<<" "<<ntohs(address.sin_port)<<std::endl;
+// 					}
+// 				}
+// 				else
+// 				{
+// 					if (recv(i, buf, sizeof(buf), 0) < 0)
+// 					{
+// 						std::cout<<"Error:recv" << i <<std::endl;
+// 						close(i);
+// 						FD_CLR(i, &master);
+// 					}
+// 					else
+// 					{
+// 						for (int j = 0; j <= fdmax; j++)
+// 						{
+// 							if (FD_ISSET(j, &master))
+// 							{
+// 								if (j != listener && j != i)
+// 									if (send(j, response, strlen(response), 0) < 0)
+// 										std::cout<<"Error: send"<< i <<std::endl;
+// 							}
+// 						}	
+// 					}
+// 				}
+// 			}
+// 		}
+// 	}
+    
+// }
+
 void server::process(const char *response)
 {
-    fd_set	master;
-    fd_set	read_fds;
-    int		listener;
-	int		newfd;
-	char	buf[256];
-	int     opt = true;
-	int		fdmax;
-	
-	FD_ZERO(&master);
-	FD_ZERO(&read_fds);
-	listener = server_socket;
-	if (setsockopt(server_socket, SOL_SOCKET, SO_REUSEADDR, (char *)&opt, sizeof(opt)) < 0 )  
-        ft_exit("setsockopt");  
+    fd_set read_fds;
+    int newfd;
+    char buf[10000];
+    int opt = true;
+    int fdmax = 0;
+
+    FD_ZERO(&read_fds);
+    if (setsockopt(server_socket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)
+    {
+        perror("setsockopt");
+        exit(1);
+    }
     if (bind(server_socket, (struct sockaddr *)&address, addrlen) < 0)
-        ft_exit("bind");
+    {
+        perror("bind");
+        exit(1);
+    }
     if (listen(server_socket, SOMAXCONN) < 0)
-        ft_exit("listen");
-	FD_SET(listener, &master);
-	fdmax = listener;
-	while (true)
-	{
-		read_fds = master;
-		if (select(fdmax + 1, &read_fds, NULL, NULL, NULL) == -1)
-			std::cout<<"Error: select"<<std::endl;
-		for (int i = 0; i <= fdmax + 1; i++)
-		{
-			if (FD_ISSET(i, &read_fds))
-			{
-				if (i == listener)
-				{
-					addrlen = sizeof(address);
-                    newfd = accept(listener, (struct sockaddr *)&address, (socklen_t*)&addrlen);
-					if (newfd == -1)
-						std::cout<<"Error:accept"<<std::endl;
-					else 
-					{
-						FD_SET(newfd, &master);
-						if (newfd > fdmax)
-							fdmax = newfd;
-						std::cout<<"New connection: "<< i << " " << inet_ntoa(address.sin_addr)<<" "<<ntohs(address.sin_port)<<std::endl;
-					}
-				}
-				else
-				{
-					if (recv(i, buf, sizeof(buf), 0) < 0)
-					{
-						std::cout<<"Error:recv" << i <<std::endl;
-						close(i);
-						FD_CLR(i, &master);
-					}
-					else
-					{
-						for (int j = 0; j <= fdmax; j++)
-						{
-							if (FD_ISSET(j, &master))
-							{
-								if (j != listener && j != i)
-									if (send(j, response, strlen(response), 0) < 0)
-										std::cout<<"Error: send"<< i <<std::endl;
-							}
-						}	
-					}
-				}
-			}
-		}
-	}
-    
+    {
+        perror("listen");
+        exit(1);
+    }
+    FD_SET(server_socket, &read_fds);
+    fdmax = server_socket;
+    while (true)
+    {
+        fd_set read_fds_copy = read_fds;
+        int num = select(fdmax + 1, &read_fds_copy, NULL, NULL, NULL);
+        for (int i = 0; i <= fdmax; i++)
+        {
+            if (FD_ISSET(i, &read_fds_copy))
+            {
+                if (i == server_socket)
+                {
+                    newfd = accept(server_socket, (struct sockaddr *)&address, (socklen_t *)&addrlen);
+                    std::cout << newfd << std::endl;
+                    FD_SET(newfd, &read_fds);
+                    if (newfd < 0)
+                    {
+                        std::cout << "Error:accept" << std::endl;
+                    }
+                    else if (newfd >= fdmax)
+                    {
+                        fdmax = newfd;
+                        std::cout << "Connection made" << std::endl;
+                    }
+                    std::cout << "New connection: " << i << " " << inet_ntoa(address.sin_addr) << " " << ntohs(address.sin_port) << std::endl;
+                }
+                else
+                {
+                    int l = recv(i, buf, 10000, 0);
+                    if (l <= 0)
+                    {
+                        close(i);
+                        FD_CLR(i, &read_fds);
+                    }
+                    else
+                    {
+                        std::cout << "Client with ID: " << i << " is disconnected." << std::endl;
+                        std::cout << buf << std::endl;
+                        send(i, response, sizeof(response), 0);
+                    }
+                }
+            }
+        }
+    }
 }

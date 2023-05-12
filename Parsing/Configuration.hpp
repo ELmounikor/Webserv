@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Configuration.hpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:16:09 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/04/17 01:14:18 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/05/12 18:26:13 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ class Location
 		std::map<std::string, std::string>	cgi;
 		Location();
 };
-
+ 
 class Server
 {
 	public:
