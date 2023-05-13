@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:22:51 by sennaama          #+#    #+#             */
-/*   Updated: 2023/04/15 23:36:29 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/05/13 15:52:49 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,7 +214,7 @@ void server::process(const char *response)
     while (true)
     {
         fd_set read_fds_copy = read_fds;
-        int num = select(fdmax + 1, &read_fds_copy, NULL, NULL, NULL);
+        // int num = select(fdmax + 1, &read_fds_copy, NULL, NULL, NULL);
         for (int i = 0; i <= fdmax; i++)
         {
             if (FD_ISSET(i, &read_fds_copy))

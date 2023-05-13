@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 14:27:50 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/04/17 01:12:23 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/05/13 16:05:08 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@ Server	server_checker(Server &server)
 {
 	if (server.host == "")
 		server.host = "0.0.0.0";
-	if (server.port == -1)
-		server.port = 80;
+	if (server.port.size() == 0)
+		server.port.push_back(80);
 	if (server.body_size == -1)
 		server.body_size = 1000000;
 	if (server.locations.size() > 0)
@@ -50,7 +50,12 @@ void	print_config(Configuration config)
 	while (i != config.servers.end())
 	{
 		std::cout << "***************** Server " << server_id << " info: *****************\n";
-		std::cout << "* listening on " << (*i).host << ':' << (*i).port << "\n";
+		if ((*i).port.size() == 1)
+			std::cout << "* listening on " << (*i).host << ':' << *((*i).port.begin()) << "\n";
+		else
+			std::cout << "* listening on " << (*i).host <<": ⏬\n";
+		if ((*i).port.size() > 1)
+			print_vector((*i).port);
 		if ((*i).server_names.size())
 		{
 			std::cout << "* server names:\n";

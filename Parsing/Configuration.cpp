@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:16:16 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/04/17 18:21:27 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/05/13 15:54:04 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 Location::Location(): autoindex(-1), root("")
 {}
 
-Server::Server(): root(""), host(""), port(-1), body_size(-1)
+Server::Server(): body_size(-1), root(""), host("") //, port(-1)
 {}
 
 Configuration::Configuration(std::string file_name)
@@ -115,6 +115,8 @@ std::string	Configuration::parse_server_line(Server &serv, std::string line)
 		start++;
 	if (start == line.size())
 		return ("");
+	if (line[start] == '#')
+		return ("comment");
 	end = start;
 	while (end < line.size() && !isspace(line[end]))
 		end++;
@@ -183,6 +185,8 @@ void	Configuration::parse_location_line(Location &location, std::string line)
 	while (start < line.size() && isspace(line[start]))
 		start++;
 	if (start == line.size())
+		return ;
+	if (line[start] == '#')
 		return ;
 	end = start;
 	while (end < line.size() && !isspace(line[end]))
