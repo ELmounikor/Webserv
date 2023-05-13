@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:16:09 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/05/13 15:43:14 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/05/13 16:42:24 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,10 @@ class Location
 class Server
 {
 	public:
+		int								port;
 		long long						body_size;
 		std::string						root;
 		std::string						host;
-		std::vector<int>				port;// should we handle this tho?
 		std::vector<std::string>		methods;
 		std::vector<std::string>		indexes;
 		std::vector<std::string>		server_names;
