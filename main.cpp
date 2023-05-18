@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 14:13:21 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/04/16 14:24:48 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/05/18 20:02:38 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,7 @@ int	main(int ac, char **av)
 {
 	if (ac != 2)
 		ft_exit("Either too little or too much arguments 👽");
-	Configuration	conf(av[1]);
-	print_config(conf);
-	// (void) ac;
-	// (void) av;
-	// server b;
-	// b.process("HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: \
-	// 12\n\nHello world!");
+	server s;
+	s.process(av[1]);
 	return 0;
 }

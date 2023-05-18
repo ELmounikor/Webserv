@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lib.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 14:13:32 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/04/15 00:25:09 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/05/18 17:33:21 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,10 @@
 # include <map>
 # include <vector>
 # include <iterator>
-# include "unistd.h"
 # include "Parsing/Configuration.hpp"
-# define PORT 8080
-
+# include <netinet/in.h>
+# include <sys/event.h>
+# include <unistd.h>
+# define MAX_EVENTS 20000
 void	ft_exit(std::string msg);
 #endif
