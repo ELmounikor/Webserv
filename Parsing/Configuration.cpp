@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:16:16 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/05/13 17:00:49 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/05/19 16:39:13 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 Location::Location(): autoindex(-1), root("")
 {}
 
-Server::Server(): port(-1), body_size(-1), root(""), host("")
+Server_info::Server_info(): port(-1), body_size(-1), root(""), host("")
 {}
 
 Configuration::Configuration(std::string file_name)
@@ -78,7 +78,7 @@ void	Configuration::parse_content(std::string content)
 
 void	Configuration::parse_server_block(std::string block)
 {
-	Server	server;
+	Server_info	server;
 	size_t	start, end = 0;
 
 	while (trim_spaces(block) != "")
@@ -105,7 +105,7 @@ void	Configuration::parse_server_block(std::string block)
 	this->servers.push_back(server_checker(server));
 }
 
-std::string	Configuration::parse_server_line(Server &serv, std::string line)
+std::string	Configuration::parse_server_line(Server_info &serv, std::string line)
 {
 	std::string	server_parameters[] = {"root", "listen", "host", "body_size", "server_name", "methods", "index", "error_page", "location"};
 	std::string	parameter, argument;
@@ -161,7 +161,7 @@ std::string	Configuration::parse_server_line(Server &serv, std::string line)
 	return (parameter);
 }
 
-void	Configuration::parse_location_block(Server	&serv, std::string location_match, std::string block)
+void	Configuration::parse_location_block(Server_info	&serv, std::string location_match, std::string block)
 {
 	Location	location;
 	size_t		end = 0;

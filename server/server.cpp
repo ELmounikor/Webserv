@@ -6,7 +6,7 @@
 /*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:22:51 by sennaama          #+#    #+#             */
-/*   Updated: 2023/05/19 13:01:14 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/05/19 17:19:08 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,7 +167,7 @@ void    server::process(char *file)
     const char *response ("HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: \
         12\n\nHello world!");
     Configuration	conf(file);
-	std::vector<Server>::iterator i = conf.servers.begin();
+	std::vector<Server_info>::iterator i = conf.servers.begin();
     while (i != conf.servers.end())
     {
 		listener_port((i)->port);

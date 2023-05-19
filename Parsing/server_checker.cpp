@@ -6,13 +6,13 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 14:27:50 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/05/13 17:01:22 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/05/19 16:39:35 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Configuration.hpp"
 
-Server	server_checker(Server &server)
+Server_info	server_checker(Server_info &server)
 {
 	if (server.host == "")
 		server.host = "0.0.0.0";
@@ -44,7 +44,7 @@ Server	server_checker(Server &server)
 
 void	print_config(Configuration config)
 {
-	std::vector<Server>::iterator i = config.servers.begin();
+	std::vector<Server_info>::iterator i = config.servers.begin();
 	int	server_id = 1;
 
 	while (i != config.servers.end())
