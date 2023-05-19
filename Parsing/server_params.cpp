@@ -6,20 +6,20 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 10:26:41 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/05/13 17:00:30 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/05/19 16:35:46 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Configuration.hpp"
 
-void	get_root(Server &serv, std::string argument)
+void	get_root(Server_info &serv, std::string argument)
 {
 	if (serv.root != "")
 		ft_exit("Duplicate root in a single server detected 🤖");
 	serv.root = get_valid_path(argument);
 }
 
-void	get_port(Server &serv, std::string argument)
+void	get_port(Server_info &serv, std::string argument)
 {
 	size_t	start = 0;
 	long	port;
@@ -39,7 +39,7 @@ void	get_port(Server &serv, std::string argument)
 	serv.port = port;
 }
 
-void	get_host(Server &serv, std::string argument)
+void	get_host(Server_info &serv, std::string argument)
 {
 	size_t	start = 0, end = 0;
 	long	byte, number_of_bytes = 0;
@@ -60,7 +60,7 @@ void	get_host(Server &serv, std::string argument)
 	serv.host = argument;
 }
 
-void	get_body_size(Server &serv, std::string argument)
+void	get_body_size(Server_info &serv, std::string argument)
 {
 	long	body_size_max;
 	
@@ -72,7 +72,7 @@ void	get_body_size(Server &serv, std::string argument)
 	serv.body_size = body_size_max;
 }
 
-void	get_server_name(Server &serv, std::string argument)
+void	get_server_name(Server_info &serv, std::string argument)
 {
 	size_t	start = 0, end = 0;
 
@@ -88,7 +88,7 @@ void	get_server_name(Server &serv, std::string argument)
 	}
 }
 
-void	get_methods(Server &serv, std::string argument)
+void	get_methods(Server_info &serv, std::string argument)
 {
 	std::string allowed_methods[] = {"GET", "POST", "DELETE"};
 	size_t	start = 0, end = 0;
@@ -117,7 +117,7 @@ void	get_methods(Server &serv, std::string argument)
 	}
 }
 
-void	get_index(Server &serv, std::string argument)
+void	get_index(Server_info &serv, std::string argument)
 {
 	size_t	start = 0, end = 0;
 
@@ -133,7 +133,7 @@ void	get_index(Server &serv, std::string argument)
 	}
 }
 
-void	get_error_page(Server &serv, std::string argument)
+void	get_error_page(Server_info &serv, std::string argument)
 {
 	size_t				start = 0, end = 0;
 	std::vector<long>	errpage_codes;

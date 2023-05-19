@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:16:09 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/05/13 16:42:24 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/05/19 16:37:30 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ class Location
 		Location();
 };
  
-class Server
+class Server_info
 {
 	public:
 		int								port;
@@ -39,24 +39,24 @@ class Server
 		std::vector<std::string>		server_names;
 		std::map<int, std::string>		error_pages;
 		std::map<std::string, Location>	locations;
-		Server();
+		Server_info();
 };
 
 class Configuration
 {
 	public:
-		std::vector<Server>	servers;
+		std::vector<Server_info>	servers;
 		Configuration(std::string conf_file_name);
 		void		parse_content(std::string content);
 		void		parse_server_block(std::string block);
-		void		parse_location_block(Server &serv, std::string location_match, std::string block);
+		void		parse_location_block(Server_info &serv, std::string location_match, std::string block);
 		void		parse_location_line(Location &location, std::string line);
-		std::string	parse_server_line(Server &serv, std::string line);
+		std::string	parse_server_line(Server_info &serv, std::string line);
 };
 
 std::ostream	&operator<<( std::ostream &output, const Location &location);
 std::string		get_valid_path(std::string path);
-Server			server_checker(Server &server);
+Server_info		server_checker(Server_info &server);
 void			print_config(Configuration config);
 int				is_number(std::string input);
 
@@ -83,14 +83,14 @@ template <class T> void print_map(T container)
 }
 
 /*server params extractors*/
-void	get_root(Server &serv, std::string argument);
-void	get_port(Server &serv, std::string argument);
-void	get_host(Server &serv, std::string argument);
-void	get_body_size(Server &serv, std::string argument);
-void	get_server_name(Server &serv, std::string argument);
-void	get_methods(Server &serv, std::string argument);
-void	get_index(Server &serv, std::string argument);
-void	get_error_page(Server &serv, std::string argument);
+void	get_root(Server_info &serv, std::string argument);
+void	get_port(Server_info &serv, std::string argument);
+void	get_host(Server_info &serv, std::string argument);
+void	get_body_size(Server_info &serv, std::string argument);
+void	get_server_name(Server_info &serv, std::string argument);
+void	get_methods(Server_info &serv, std::string argument);
+void	get_index(Server_info &serv, std::string argument);
+void	get_error_page(Server_info &serv, std::string argument);
 
 /*location params extractors*/
 void	get_location_autoindex(Location &location, std::string argument);

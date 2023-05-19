@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:22:51 by sennaama          #+#    #+#             */
-/*   Updated: 2023/05/18 21:56:10 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/05/19 16:38:52 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,7 +184,7 @@ void    server::process(char *file)
     const char *response ("HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: \
         12\n\nHello world!");
     Configuration	conf(file);
-	std::vector<Server>::iterator i = conf.servers.begin();
+	std::vector<Server_info>::iterator i = conf.servers.begin();
     while (i != conf.servers.end())
     {
         std::cout << "port:" << (i)->port << std::endl;
