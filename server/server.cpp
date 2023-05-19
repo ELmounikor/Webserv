@@ -6,23 +6,14 @@
 /*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:22:51 by sennaama          #+#    #+#             */
-/*   Updated: 2023/05/18 21:56:10 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/05/19 13:01:14 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.hpp"
 #include <arpa/inet.h>
 
-server::server():clients()
-{
-	// if ((server_socket = socket(AF_INET, SOCK_STREAM, 0)) == 0)
-    //     ft_exit("socket");
-	// addrlen = sizeof(address);
-	// address.sin_family = AF_INET;
-    // address.sin_addr.s_addr = INADDR_ANY;
-    // address.sin_port = htons(8080);
-	// memset(address.sin_zero, '\0', sizeof address.sin_zero);
-}
+server::server():clients(){}
 
 server::~server(){}
 
@@ -107,15 +98,8 @@ void    server::multiplixing(const char *response)
     struct kevent event[MAX_EVENTS];
     client_len = sizeof(serv_addr);
     kq = kqueue();
-    //addEvent(kq, socket_server, EVFILT_READ);
-    size_t j = 0;
-    while (j < listeners.size())
-    {
-        //std::cout << "port:" << listeners[j] << std::endl;
-		//listener_port((i)->port);
+    for (size_t j = 0; j < listeners.size(); j++)
         addEvent(kq, listeners[j], EVFILT_READ);
-	    j++;
-    }
     while(true)
     {
         new_events = kevent(kq, NULL, 0, event, MAX_EVENTS, NULL);
@@ -124,7 +108,6 @@ void    server::multiplixing(const char *response)
             perror("kevent");
             exit(1);
         }
-        std::cout<<"dsf"<<std::endl;
         for (int i = 0; i < new_events; i++)
         {
             std::cout<<"new event: "<<new_events<<std::endl;
@@ -187,10 +170,8 @@ void    server::process(char *file)
 	std::vector<Server>::iterator i = conf.servers.begin();
     while (i != conf.servers.end())
     {
-        std::cout << "port:" << (i)->port << std::endl;
 		listener_port((i)->port);
 	    i++;
     }
-    std::cout<<"sdf"<<std::endl;
     multiplixing(response);
 }
