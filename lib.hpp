@@ -6,7 +6,7 @@
 /*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 14:13:32 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/05/18 17:33:21 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/05/21 20:39:20 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 # include <netinet/in.h>
 # include <sys/event.h>
 # include <unistd.h>
+#   include "request/request.hpp"
 # define MAX_EVENTS 20000
 void	ft_exit(std::string msg);
 #endif

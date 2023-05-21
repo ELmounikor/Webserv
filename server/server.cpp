@@ -6,7 +6,7 @@
 /*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:22:51 by sennaama          #+#    #+#             */
-/*   Updated: 2023/05/19 17:19:08 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/05/21 20:46:23 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ server::~server(){}
 void    server::addEvent(int kq, int fd, int fileter)
 {
     struct kevent events[1];
-    EV_SET(&events[0], fd, fileter, EV_ADD, 0, 0, NULL);
+    EV_SET(&events[0], fd, fileter, EV_ADD | EV_CLEAR, 0, 0, NULL);
     if (kevent(kq, events, 1, NULL, 0, NULL) < 0)
     {
         perror("addEvent");
@@ -92,6 +92,22 @@ void    server::listener_port(int port)
     listeners.push_back(socket_server);
 }
 
+int     ft_exist(struct kevent *event,int new_events, int client)
+{
+    for (int e = 0; e < new_events; e++)
+    {
+        int event_ident = event[e].ident;
+        if (client == event_ident)
+        {
+            if (event[e].filter ==  EVFILT_READ)
+                return (1);
+            else if (event[e].filter ==  EVFILT_WRITE)
+                return (0);
+        }
+    }
+    return (-1);
+}
+
 void    server::multiplixing(const char *response)
 {
     int client_len, socket_client, kq, new_events;
@@ -123,40 +139,58 @@ void    server::multiplixing(const char *response)
                     {
                         perror("Accept socket error");
                     }
+                    Client *new_client = new Client(socket_client);
+                    clients.push_back(new_client);
                     addEvent(kq, socket_client, EVFILT_READ);
                 }
                 else
                 {
-                    char buf[1024];
-                    size_t bytes_read = recv(event_fd, buf, sizeof(buf), 0);
-                    if (bytes_read <= 0)
+                    for (std::vector<Client *>::iterator j = clients.begin(); j != clients.end();)
                     {
-                        if (bytes_read < 0)
-                            std::cout<<"client read error\n";
-                        else if (bytes_read == 0)
+                        if (ft_exist(event, new_events, (*j)->socket_client) == 1)
                         {
-                            DeleteEvent(kq, socket_client, EVFILT_READ);
-                            close(event_fd);
+                            char buf[1024];
+                            size_t bytes_read = recv((*j)->socket_client, buf, sizeof(buf), 0);
+                            if (bytes_read <= 0)
+                            {
+                                std::cout<<"client read error\n";
+                                DeleteEvent(kq, (*j)->socket_client, EVFILT_READ);
+                                close((*j)->socket_client);
+                                delete *j;
+                                clients.erase(j);
+                            }
+                            else
+                            {
+                                //std::cout<<"-"<<buf<<"-"<<std::endl;
+                                (*j)->req->request_parse(buf);
+                                addEvent(kq, (*j)->socket_client, EVFILT_WRITE);
+                                DisableEvent(kq, (*j)->socket_client, EVFILT_READ);
+                                ++j;
+                            }
                         }
-                    }
-                    else
-                    {
-                        std::cout<<buf<<std::endl;
-                        addEvent(kq, socket_client, EVFILT_WRITE);
-                        DisableEvent(kq, socket_client, EVFILT_READ);
+                        else
+                            ++j;
                     }
                 }
             }
             else if (event[i].filter == EVFILT_WRITE)
             {
-                std::cout << "Received data from client with ID: " << event_fd << std::endl;
-                if (send(event_fd, response, strlen(response), 0) == -1)
+                for (std::vector<Client *>::iterator j = clients.begin(); j != clients.end();)
                 {
-                    std::cout<<"client send error\n";
-                    close(event_fd);
+                    if (ft_exist(event, new_events, (*j)->socket_client) == 0)  
+                    {
+                        if (send((*j)->socket_client, response, strlen(response), 0) == -1)
+                        {
+                            std::cout<<"client send error\n";
+                        }
+                        DisableEvent(kq, (*j)->socket_client, EVFILT_WRITE);
+                        close((*j)->socket_client);
+                        delete *j;
+                        clients.erase(j);
+                    }
+                    else 
+                        ++j;
                 }
-                DisableEvent(kq, socket_client, EVFILT_WRITE);
-                close(event_fd);
             }
         }
     }
@@ -175,3 +209,4 @@ void    server::process(char *file)
     }
     multiplixing(response);
 }
+ 

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+         #
+#    By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/30 14:02:35 by mel-kora          #+#    #+#              #
-#    Updated: 2023/04/15 00:24:31 by mel-kora         ###   ########.fr        #
+#    Updated: 2023/05/21 20:36:55 by sennaama         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,11 +14,13 @@ NAME		=	webserv
 INCS		=	lib.hpp\
 				server/server.hpp\
 				Client/Client.hpp\
+				request/request.hpp\
 				Parsing/Configuration.hpp\
 				#more files
 SRCS		=	main.cpp\
 				server/server.cpp\
 				Client/Client.cpp\
+				request/request.cpp\
 				Parsing/Configuration.cpp\
 				Parsing/server_params.cpp\
 				Parsing/location_params.cpp\

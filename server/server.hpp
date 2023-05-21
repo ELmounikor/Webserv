@@ -6,7 +6,7 @@
 /*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:25:56 by sennaama          #+#    #+#             */
-/*   Updated: 2023/05/18 21:40:25 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/05/20 17:43:55 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,12 @@
 
 class server
 {
-    private:
+    public:
         std::vector<Client *> clients;
         struct sockaddr_in  serv_addr;
         //int                 addrlen;
         int                 socket_server;
         std::vector<int>    listeners;
-    public:
         server();
 		~server();
         void    process(char *file);
