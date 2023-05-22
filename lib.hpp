@@ -6,7 +6,7 @@
 /*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 14:13:32 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/05/21 20:39:20 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/05/22 11:08:57 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define    WEBSERV_HPP
 # include <iostream>
 # include <fstream>
+# include <sstream>
 # include <cstring>
 # include <cstdlib>
 # include <cstdio>

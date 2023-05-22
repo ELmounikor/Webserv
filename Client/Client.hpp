@@ -6,7 +6,7 @@
 /*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:59:12 by sennaama          #+#    #+#             */
-/*   Updated: 2023/05/21 20:42:46 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/05/22 14:58:51 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ class Client
 {
 	public:
 		std::string resp;
-		request		*req;
+		request		req;
 		int			socket_client;
 		int 		recv;
 		int			send;
