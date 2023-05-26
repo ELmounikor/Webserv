@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 12:13:15 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/05/26 19:08:43 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/05/26 19:25:00 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,16 @@ Response::Response()
 
 void	Response::check_param(request req, Configuration conf)
 {
-	print_request(req);
+	// print_request(req);
+	// print_config(conf);
 	if (req.status_code == -1 && req.method == "" && req.path == "" && req.version == "" && req.header.size() == 0)
 		return ;
-	print_config(conf);
+	(void)  conf;
 }
 
 void	Response::get_response(void){
-	
+	if	(this->status_code / 100 != 2)
+	{
+		
+	}
 }
