@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+         #
+#    By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/30 14:02:35 by mel-kora          #+#    #+#              #
-#    Updated: 2023/05/21 20:36:55 by sennaama         ###   ########.fr        #
+#    Updated: 2023/05/25 13:49:52 by mel-kora         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,12 +15,14 @@ INCS		=	lib.hpp\
 				server/server.hpp\
 				Client/Client.hpp\
 				request/request.hpp\
+				Response/Response.hpp\
 				Parsing/Configuration.hpp\
 				#more files
 SRCS		=	main.cpp\
 				server/server.cpp\
 				Client/Client.cpp\
 				request/request.cpp\
+				Response/Response.cpp\
 				Parsing/Configuration.cpp\
 				Parsing/server_params.cpp\
 				Parsing/location_params.cpp\

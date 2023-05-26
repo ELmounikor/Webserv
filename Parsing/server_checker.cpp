@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 14:27:50 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/05/19 16:39:35 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/05/25 16:42:44 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,30 +83,15 @@ std::ostream	&operator<<( std::ostream &output, const Location &location)
 	output << " - Autoindex: " << location.autoindex << "\n";
 	output << " - Root: " << location.root << "\n";
 	output << " - HTTP methods: \n";
-	if (location.methods.size())
-		print_vector(location.methods);
-	else
-		std::cout << "\t-->(none)\n";
+	print_vector(location.methods);
 	output << " - Indexes: \n";
-	if (location.indexes.size())
-		print_vector(location.indexes);
-	else
-		std::cout << "\t-->(none)\n";
+	print_vector(location.indexes);
 	output << " - Uploads: \n";
-	if (location.uploads.size())
-		print_vector(location.uploads);
-	else
-		std::cout << "\t-->(none)\n";
+	print_vector(location.uploads);
 	output << " - Returns: \n";
-	if (location.returns.size())
-		print_map(location.returns);
-	else
-		std::cout << "\t-->(none)\n";
+	print_map(location.returns);
 	output << " - CGI: \n";
-	if (location.cgi.size())
-		print_map(location.cgi);
-	else
-		std::cout << "\t-->(none)\n";
+	print_map(location.cgi);
 	return (output);
 }
 

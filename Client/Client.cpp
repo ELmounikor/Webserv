@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:59:15 by sennaama          #+#    #+#             */
-/*   Updated: 2023/05/21 20:41:57 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/05/25 13:59:19 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
 //Client::Client():response(""),request(""),client_socket(0),recv(-1),send(-1){}
-Client::Client(int client_socket):resp(),req(),socket_client(client_socket),recv(-1),send(-1){}
+Client::Client(int client_socket): req(), res(this->req),socket_client(client_socket),recv(-1),send(-1){}
 
 // Client::Client(const Client& obj)
 // {

@@ -3,31 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   lib.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 14:13:32 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/05/22 11:08:57 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/05/25 15:49:57 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef     WEBSERV_HPP
 # define    WEBSERV_HPP
-# include <iostream>
-# include <fstream>
-# include <sstream>
-# include <cstring>
-# include <cstdlib>
-# include <cstdio>
-# include <sys/socket.h>
-# include <netinet/in.h>
-# include <map>
-# include <vector>
-# include <iterator>
-# include "Parsing/Configuration.hpp"
-# include <netinet/in.h>
-# include <sys/event.h>
-# include <unistd.h>
-#   include "request/request.hpp"
-# define MAX_EVENTS 20000
-void	ft_exit(std::string msg);
+# include   <map>
+# include   <vector>
+# include   <cstdio>
+# include   <cstring>
+# include   <cstdlib>
+# include   <fstream>
+# include   <sstream>
+# include   <iostream>
+# include   <iterator>
+# include   <unistd.h>
+# include   <sys/event.h>
+# include   <sys/socket.h>
+# include   <netinet/in.h>
+# include   "request/request.hpp"
+# include   "Response/Response.hpp"
+# include   "Parsing/Configuration.hpp"
+# define    MAX_EVENTS 20000
+void        ft_exit(std::string msg);
 #endif

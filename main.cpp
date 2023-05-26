@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 14:13:21 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/05/22 14:24:51 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/05/25 13:32:36 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,9 @@ void	ft_exit(std::string msg)
 
 int	main(int ac, char **av)
 {
-	//(void)av;
 	if (ac != 2)
 		ft_exit("Either too little or too much arguments 👽");
 	server s;
 	s.process(av[1]);
-	//request c;
-	//c.request_parse("");
 	return 0;
 }

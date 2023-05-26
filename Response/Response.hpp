@@ -1,28 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   request.hpp                                        :+:      :+:    :+:   */
+/*   Response.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/21 18:20:01 by sennaama          #+#    #+#             */
-/*   Updated: 2023/05/25 13:41:55 by mel-kora         ###   ########.fr       */
+/*   Created: 2023/05/25 12:12:52 by mel-kora          #+#    #+#             */
+/*   Updated: 2023/05/26 14:51:44 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef REQUEST_HPP
-# define REQUEST_HPP
+#ifndef Response_HPP
+# define Response_HPP
 # include "../lib.hpp"
-class request
+
+class request;
+class Response
 {
-    public:
-        int			status_code;
-        std::string	method;
-        std::string	path;
-	    std::string	version;
-        std::map<std::string, std::string> header;
-        request();
-        void request_parse(std::string buf);
-        ~request();
+	public:
+		int			status_code;
+		std::string	location;
+		Response(request req);
 };
 #endif
