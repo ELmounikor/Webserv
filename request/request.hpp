@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/21 18:20:01 by sennaama          #+#    #+#             */
-/*   Updated: 2023/05/25 13:41:55 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/05/26 16:08:41 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ class request
         std::map<std::string, std::string> header;
         request();
         void request_parse(std::string buf);
+        void print_request();
         ~request();
 };
 #endif

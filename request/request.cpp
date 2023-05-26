@@ -6,13 +6,29 @@
 /*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/21 20:11:15 by sennaama          #+#    #+#             */
-/*   Updated: 2023/05/24 18:26:54 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/05/26 16:04:23 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "request.hpp"
 
 request::request():status_code(-1), method(""),path(""),version(""){}
+
+std::string trim(std::string str) {
+
+    size_t pos = str.find_first_not_of(" \t\r\n");
+    if (pos != std::string::npos) {
+        str.erase(0, pos);
+    }
+
+    pos = str.find_last_not_of(" \t\r\n");
+    if (pos != std::string::npos) {
+        str.erase(pos + 1);
+    }
+
+    return str;
+}
+
 
 int countcharacter(std::string str, char c)
 {
@@ -33,7 +49,19 @@ void request::request_parse(std::string buf)
 
    // std::cout<<"---------------"<<std::endl;
     //std::cout<<buf;
-   /// buf = "GET / HTTP/1.1\nHost : localhost:8080 \nUser-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:109.0) Gecko/20100101 Firefox/113.0 \nAccept: text/html,application/xhtml+xml, application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8\nAccept-Language: en-US,en;q=0.5\nAccept-Encoding: gzip, deflate, br\nConnection: keep-alive\nUpgrade-Insecure-Requests: 1\nSec-Fetch-Dest: document\nSec-Fetch-Mode: navigate\nSec-Fetch-Site: none\nSec-Fetch-User: ?1\n";
+    // buf = "GET / HTTP/1.1\n"
+    //     "Host: localhost:8080\r\n"
+    //     "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:109.0) Gecko/20100101 Firefox/113.0\r\n"
+    //     "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8\r\n"
+    //     "Accept-Language: en-US,en;q=0.5\r\n"
+    //     "Accept-Encoding: gzip, deflate, br\r\n"
+    //     "Connection: keep-alive\r\n"
+    //     "Upgrade-Insecure-Requests: 1\r\n"
+    //     "Sec-Fetch-Dest: document\r\n"
+    //     "Sec-Fetch-Mode: navigate\r\n"
+    //     "Sec-Fetch-Site: none\r\n"
+    //     "Sec-Fetch-User: ?1\r\n"
+    //     "\r\n";
     std::istringstream s(buf);
     if (getline(s, line))
     {
@@ -46,50 +74,68 @@ void request::request_parse(std::string buf)
                 (version != "HTTP/1.1"))
             {
                 status_code = 400;
-                //std::cout<<"\nBAD REQUEST\n"<<std::endl;
                 std::cout << "Version: " << version << "\nMethod: " << method << "\nPath: " << path << std::endl;
                 return ;
             }
-            std::cout << "Method: " << method << std::endl;
-            std::cout << "Path: " << path << std::endl;
-            std::cout << "Version: " << version << std::endl;
         }
         else 
         {
             status_code = 400;
-            //std::cout<<"\nBAD REQUEST\n"<<std::endl;
             return ;
         }
     }
-    while (getline(s, line))
+    while (std::getline(s, line) && !line.empty() && line != "\r")
     {
-        std::istringstream sq(line);
-        if (std::getline(sq, key, ':') && std::getline(sq >> std::ws, value))
+        size_t pos = line.find(':');
+        if (pos != std::string::npos) 
         {
-            //sq >> value;
-			// std::cout<<key<<"="<<std::endl;
-			// if (key.find(" ") != std::string::npos)
-			// {
-			// 	status_code = 400;
-            // 	std::cout<<"\nBAD REQUEST\n"<<std::endl;
-            // 	return ;
-			// }
-			// if (value.find_first_not_of(" ") != 0)
-			// {
-			// 	status_code = 400;
-            // 	std::cout<<"\nBAD REQUEST\n"<<std::endl;
-            // 	return ;
-			// }
-            value.erase(0, value.find_first_not_of(" "));
-            //std::cout << "key : " << key << ", Value : " << value << std::endl;
-            header[key] = value;
+            key = line.substr(0, pos);
+            for (size_t i = 0; i < key.length(); i++) 
+            {
+                if (std::isspace(key[i])) 
+                {
+                    status_code = 400;
+                    return ;
+                }
+            }
+            value = line.substr(pos + 2);
+            
+            if (value.find_first_not_of(" ") > 1 || value[value.length() - 1] != '\r')
+            {
+                status_code = 400;
+                return ;
+            }
+            header[key] = trim(value);
+            
+        }
+        else 
+        {
+            status_code = 400;
+            return ;
         }
     }
-    // std::cout<<"-----------------------"<<std::endl;
-    // std::map<std::string, std::string>::iterator iter;
-    // for (iter = header.begin(); iter != header.end(); ++iter) {
-    //     std::cout << "key : " << iter->first << " => value : " << iter->second << std::endl;
-    // }
+    if (line != "\r")
+    {
+        status_code = 400;
+        return ;
+    }
+    //print_request();    
 }
 
-request::~request(){}
+request::~request(){}  
+
+void request::print_request()
+{
+    if (status_code == 400)
+    {
+        std::cout<<"\nBAD REQUEST\n"<<std::endl;
+        return;
+    }
+    std::cout << "Method: " << method << std::endl;
+    std::cout << "Path: " << path << std::endl;
+    std::cout << "Version: " << version << std::endl;
+    std::map<std::string, std::string>::iterator iter;
+    for (iter = header.begin(); iter != header.end(); ++iter) {
+       std::cout << iter->first <<" : " << iter->second << std::endl;
+    }
+}                                                                                                 
