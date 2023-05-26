@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:16:16 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/05/19 16:39:13 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/05/26 17:13:48 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ Location::Location(): autoindex(-1), root("")
 
 Server_info::Server_info(): port(-1), body_size(-1), root(""), host("")
 {}
+
+Configuration::Configuration(){}
 
 Configuration::Configuration(std::string file_name)
 {

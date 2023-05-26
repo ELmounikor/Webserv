@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:59:12 by sennaama          #+#    #+#             */
-/*   Updated: 2023/05/25 15:26:03 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/05/26 17:14:27 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ class Client
 		int			send;
 	
 		//Client();
-		Client(int client_socket);
+		Client(int client_socket, Configuration conf);
 		//Client(const Client& obj);
 		//Client& operator=(const Client& obj);
 		~Client();

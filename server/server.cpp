@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:22:51 by sennaama          #+#    #+#             */
-/*   Updated: 2023/05/25 14:07:09 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/05/26 17:10:34 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,7 +139,7 @@ void    server::multiplixing(const char *response)
                     {
                         perror("Accept socket error");
                     }
-                    Client *new_client = new Client(socket_client);
+                    Client *new_client = new Client(socket_client, conf);
                     clients.push_back(new_client);
                     addEvent(kq, socket_client, EVFILT_READ);
                 }
@@ -200,7 +200,7 @@ void    server::process(char *file)
 {
     const char *response ("HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: \
         12\n\nHello world!");
-    Configuration	conf(file);
+    this->conf = Configuration(file);
 	std::vector<Server_info>::iterator i = conf.servers.begin();
     while (i != conf.servers.end())
     {

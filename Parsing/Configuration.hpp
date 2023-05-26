@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:16:09 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/05/25 16:49:45 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/05/26 17:13:25 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ class Configuration
 {
 	public:
 		std::vector<Server_info>	servers;
+		Configuration();
 		Configuration(std::string conf_file_name);
 		void		parse_content(std::string content);
 		void		parse_server_block(std::string block);
