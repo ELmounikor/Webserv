@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 12:12:52 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/05/26 17:12:36 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/05/26 18:14:20 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ class Response
 		std::string	reason_phrase;
 		std::string	host;
 		std::string	path;
-		Response(request req, Configuration conf);
+		Response();
+		void	check_param(request req, Configuration conf);
 		void	get_response(void);
 };
 

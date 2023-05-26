@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:22:51 by sennaama          #+#    #+#             */
-/*   Updated: 2023/05/26 17:10:34 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/05/26 18:44:30 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,7 +139,7 @@ void    server::multiplixing(const char *response)
                     {
                         perror("Accept socket error");
                     }
-                    Client *new_client = new Client(socket_client, conf);
+                    Client *new_client = new Client(socket_client);
                     clients.push_back(new_client);
                     addEvent(kq, socket_client, EVFILT_READ);
                 }
@@ -163,6 +163,7 @@ void    server::multiplixing(const char *response)
                             {
                                 //std::cout<<"-"<<buf<<"-"<<std::endl;
                                 (*j)->req.request_parse(buf);
+                                (*j)->res.check_param((*j)->req, conf);
                                 addEvent(kq, (*j)->socket_client, EVFILT_WRITE);
                                 DisableEvent(kq, (*j)->socket_client, EVFILT_READ);
                                 ++j;
