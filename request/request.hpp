@@ -6,7 +6,7 @@
 /*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/21 18:20:01 by sennaama          #+#    #+#             */
-/*   Updated: 2023/05/22 14:39:42 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/05/26 16:00:58 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ class request
         std::map<std::string, std::string> header;
         request();
         void request_parse(std::string buf);
+        void print_request();
         ~request();
        
 };

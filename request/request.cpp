@@ -6,7 +6,7 @@
 /*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/21 20:11:15 by sennaama          #+#    #+#             */
-/*   Updated: 2023/05/25 21:00:06 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/05/26 16:04:23 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,18 +74,13 @@ void request::request_parse(std::string buf)
                 (version != "HTTP/1.1"))
             {
                 status_code = 400;
-                //std::cout<<"\nBAD REQUEST\n"<<std::endl;
                 std::cout << "Version: " << version << "\nMethod: " << method << "\nPath: " << path << std::endl;
                 return ;
             }
-            std::cout << "Method: " << method << std::endl;
-            std::cout << "Path: " << path << std::endl;
-            std::cout << "Version: " << version << std::endl;
         }
         else 
         {
             status_code = 400;
-            //std::cout<<"\nBAD REQUEST\n"<<std::endl;
             return ;
         }
     }
@@ -100,16 +95,14 @@ void request::request_parse(std::string buf)
                 if (std::isspace(key[i])) 
                 {
                     status_code = 400;
-                    //std::cout<<"\nBAD REQUEST\n"<<std::endl;
                     return ;
                 }
             }
             value = line.substr(pos + 2);
             
-            if (value.find_first_not_of(" ") > 1)
+            if (value.find_first_not_of(" ") > 1 || value[value.length() - 1] != '\r')
             {
                 status_code = 400;
-                //std::cout<<"\nBAD REQUEST\n"<<std::endl;
                 return ;
             }
             header[key] = trim(value);
@@ -118,19 +111,31 @@ void request::request_parse(std::string buf)
         else 
         {
             status_code = 400;
-            //std::cout<<"\nBAD REQUEST\n"<<std::endl;
             return ;
         }
     }
-    //if (status_code == 400 && header.empty())
-    //{
-    //    std::cout<<"+++bad request"<<std::endl;
-    //}
+    if (line != "\r")
+    {
+        status_code = 400;
+        return ;
+    }
+    //print_request();    
+}
+
+request::~request(){}  
+
+void request::print_request()
+{
+    if (status_code == 400)
+    {
+        std::cout<<"\nBAD REQUEST\n"<<std::endl;
+        return;
+    }
+    std::cout << "Method: " << method << std::endl;
+    std::cout << "Path: " << path << std::endl;
+    std::cout << "Version: " << version << std::endl;
     std::map<std::string, std::string>::iterator iter;
     for (iter = header.begin(); iter != header.end(); ++iter) {
        std::cout << iter->first <<" : " << iter->second << std::endl;
     }
-    std::cout<<"-----------------------"<<std::endl;
-}
-
-request::~request(){}                                                                                                    
+}                                                                                                 
