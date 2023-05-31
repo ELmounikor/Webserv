@@ -6,7 +6,7 @@
 /*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 12:12:52 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/05/26 18:14:20 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/05/31 18:27:16 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ class Response
 		std::string	host;
 		std::string	path;
 		Response();
-		void	check_param(request req, Configuration conf);
+		void	check_param(const request &req, Configuration conf);
 		void	get_response(void);
 };
 

@@ -6,7 +6,7 @@
 /*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/21 20:11:15 by sennaama          #+#    #+#             */
-/*   Updated: 2023/05/31 16:16:42 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/05/31 18:55:04 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ void request::request_parse(std::string buf)
 {
     std::string line;
     std::string key, value;
+    std::string name_file = "body_file";
 
    // std::cout<<"---------------"<<std::endl;
     //std::cout<<buf;
@@ -128,6 +129,24 @@ void request::request_parse(std::string buf)
     {
         status_code = 400;
         return ;
+    }
+    else
+    {
+        if (method == "GET")
+        {
+            status_code = 400;
+            return;
+        }
+        // else if (method == "POST")
+        // {
+        //     //std::cout<<"bodyyyy"<<std::endl;
+        //     body_file.open(name_file);
+        //     if (!body_file.is_open()) 
+        //         return ;
+        //     s >> line;
+        //     body_file << line;
+        //     body_file.close();
+        // }
     }
     //print_request();    
 }
