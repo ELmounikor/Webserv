@@ -6,7 +6,7 @@
 /*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/21 20:11:15 by sennaama          #+#    #+#             */
-/*   Updated: 2023/05/26 18:37:06 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/05/31 16:16:42 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void request::request_parse(std::string buf)
     std::string key, value;
 
    // std::cout<<"---------------"<<std::endl;
-    std::cout<<buf;
+    //std::cout<<buf;
     // buf = "GET / HTTP/1.1\n"
     //     "Host: localhost:8080\r\n"
     //     "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:109.0) Gecko/20100101 Firefox/113.0\r\n"
@@ -84,6 +84,16 @@ void request::request_parse(std::string buf)
             return ;
         }
     }
+    if (method == "POST")
+    {
+        if ((buf.find("Content-Length") == std::string::npos && buf.find("Transfer-Encoding") == std::string::npos)
+            || (buf.find("Content-Length") != std::string::npos && buf.find("Transfer-Encoding") != std::string::npos))
+        {
+            status_code = 400;
+            return ;
+        }
+    }
+        
     while (std::getline(s, line) && !line.empty() && line != "\r")
     {
         size_t pos = line.find(':');

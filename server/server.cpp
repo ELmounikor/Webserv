@@ -6,7 +6,7 @@
 /*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:22:51 by sennaama          #+#    #+#             */
-/*   Updated: 2023/05/26 18:44:30 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/05/31 16:16:33 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,7 +149,7 @@ void    server::multiplixing(const char *response)
                     {
                         if (ft_exist(event, new_events, (*j)->socket_client) == 1)
                         {
-                            char buf[1024];
+                            char buf[6000];
                             size_t bytes_read = recv((*j)->socket_client, buf, sizeof(buf), 0);
                             if (bytes_read <= 0)
                             {
@@ -163,6 +163,7 @@ void    server::multiplixing(const char *response)
                             {
                                 //std::cout<<"-"<<buf<<"-"<<std::endl;
                                 (*j)->req.request_parse(buf);
+                                //(*j)->req.print_request();
                                 (*j)->res.check_param((*j)->req, conf);
                                 addEvent(kq, (*j)->socket_client, EVFILT_WRITE);
                                 DisableEvent(kq, (*j)->socket_client, EVFILT_READ);
