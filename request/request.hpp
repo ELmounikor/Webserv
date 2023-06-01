@@ -6,7 +6,7 @@
 /*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/21 18:20:01 by sennaama          #+#    #+#             */
-/*   Updated: 2023/05/31 18:57:26 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/06/01 12:51:57 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ class request
         std::ofstream   body_file;
         std::map<std::string, std::string> header;
         request();
-        void request_parse(std::string buf);
+        void request_parse(std::string buf, int socket_client);
         void print_request();
         ~request();
 };

@@ -6,7 +6,7 @@
 /*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/21 20:11:15 by sennaama          #+#    #+#             */
-/*   Updated: 2023/05/31 18:55:04 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/06/01 13:22:54 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,14 @@ int countcharacter(std::string str, char c)
     return count;
 }
 
-void request::request_parse(std::string buf)
+void request::request_parse(std::string buf, int socket_client)
 {
     std::string line;
     std::string key, value;
-    std::string name_file = "body_file";
+    std::stringstream st;
+    st << socket_client;
+    st >> key;
+    std::string name_file = "body_file_" + key;
 
    // std::cout<<"---------------"<<std::endl;
     //std::cout<<buf;
@@ -132,12 +135,12 @@ void request::request_parse(std::string buf)
     }
     else
     {
-        if (method == "GET")
-        {
-            status_code = 400;
-            return;
-        }
-        // else if (method == "POST")
+        // if (method == "GET")
+        // {
+        //     status_code = 400;
+        //     return;
+        // }
+        // if (method == "POST")
         // {
         //     //std::cout<<"bodyyyy"<<std::endl;
         //     body_file.open(name_file);

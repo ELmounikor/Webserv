@@ -6,7 +6,7 @@
 /*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:22:51 by sennaama          #+#    #+#             */
-/*   Updated: 2023/05/31 18:53:29 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/06/01 13:23:19 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,7 +162,7 @@ void    server::multiplixing(const char *response)
                             else
                             {
                                 //std::cout<<"-"<<buf<<"-"<<std::endl;
-                                (*j)->req.request_parse(buf);
+                                (*j)->req.request_parse(buf, (*j)->socket_client);
                                 //(*j)->req.print_request();
                                 (*j)->res.check_param((*j)->req, conf);
                                 addEvent(kq, (*j)->socket_client, EVFILT_WRITE);
