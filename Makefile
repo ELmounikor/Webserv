@@ -6,7 +6,7 @@
 #    By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/30 14:02:35 by mel-kora          #+#    #+#              #
-#    Updated: 2023/05/25 13:49:52 by mel-kora         ###   ########.fr        #
+#    Updated: 2023/06/07 13:30:48 by mel-kora         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,6 +16,7 @@ INCS		=	lib.hpp\
 				Client/Client.hpp\
 				request/request.hpp\
 				Response/Response.hpp\
+				Response/Methods.hpp\
 				Parsing/Configuration.hpp\
 				#more files
 SRCS		=	main.cpp\
@@ -23,6 +24,8 @@ SRCS		=	main.cpp\
 				Client/Client.cpp\
 				request/request.cpp\
 				Response/Response.cpp\
+				Response/Methods.cpp\
+				Response/Attributes.cpp\
 				Parsing/Configuration.cpp\
 				Parsing/server_params.cpp\
 				Parsing/location_params.cpp\

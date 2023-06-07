@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 10:26:41 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/05/19 16:35:46 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/06 17:10:42 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ void	get_host(Server_info &serv, std::string argument)
 	
 	if (serv.host != "")
 		ft_exit("Duplicate host in a single server detected 🤖");
+	if (argument == "localhost")
+		argument = "127.0.0.1";
 	while (start < argument.size())
 	{
 		while (end < argument.size() && isdigit(argument[end]))
@@ -147,8 +149,8 @@ void	get_error_page(Server_info &serv, std::string argument)
 		if (is_number(token))
 		{
 			long code = strtol(token.c_str(), NULL, 10);
-			if (code < 300 || code > 599)
-				ft_exit("Error page code out of range (300-599)"); 
+			if (code < 400 || code > 599)
+				ft_exit("Error code out of range (500-599)"); 
 			errpage_codes.push_back(code);
 		}
 		else
@@ -158,7 +160,7 @@ void	get_error_page(Server_info &serv, std::string argument)
 		start = end;
 	}
 	if (errpage_codes.size() == 0)
-		ft_exit("Invalid error page code detected 🤖");
+		ft_exit("Invalid error code detected 🤖");
 	path = get_valid_path(argument.substr(start, argument.size() - start));
 	std::vector<long>::iterator i = errpage_codes.begin();
 	while (i != errpage_codes.end())

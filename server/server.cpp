@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:22:51 by sennaama          #+#    #+#             */
-/*   Updated: 2023/05/26 18:44:30 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/05/28 18:22:31 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,7 +163,7 @@ void    server::multiplixing(const char *response)
                             {
                                 //std::cout<<"-"<<buf<<"-"<<std::endl;
                                 (*j)->req.request_parse(buf);
-                                (*j)->res.check_param((*j)->req, conf);
+                                (*j)->res.response_fetch((*j)->req, conf);
                                 addEvent(kq, (*j)->socket_client, EVFILT_WRITE);
                                 DisableEvent(kq, (*j)->socket_client, EVFILT_READ);
                                 ++j;

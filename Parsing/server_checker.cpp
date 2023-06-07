@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 14:27:50 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/05/25 16:42:44 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/05/28 18:13:44 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ Server_info	server_checker(Server_info &server)
 			j++;
 		}
 	}
+	else
+		ft_exit("Missing location block detected 🤖");
 	return (server);
 }
 
