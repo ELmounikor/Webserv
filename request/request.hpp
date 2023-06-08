@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/21 18:20:01 by sennaama          #+#    #+#             */
-/*   Updated: 2023/05/26 16:08:41 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/08 16:16:16 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,14 @@
 class request
 {
     public:
-        int			status_code;
-        std::string	method;
-        std::string	path;
-	    std::string	version;
+        int             status_code;
+        std::string     method;
+        std::string     path;
+	    std::string     version;
+        std::ofstream   body_file;
         std::map<std::string, std::string> header;
         request();
-        void request_parse(std::string buf);
+        void request_parse(std::string buf, int socket_client);
         void print_request();
         ~request();
 };

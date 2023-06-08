@@ -6,12 +6,12 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 14:13:32 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/05/28 17:03:26 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/08 16:23:56 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef     WEBSERV_HPP
-# define    WEBSERV_HPP
+#ifndef     LIB_WERBSERV_HPP
+# define    LIB_WERBSERV_HPP
 # include   <map>
 # include   <vector>
 # include   <cstdio>

@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/07 13:00:51 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/08 12:05:11 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/08 16:33:12 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,16 +44,16 @@ void	Response::get_server(Configuration conf)
 	}
 }
 
-void	Response::get_location(request req, Configuration conf)
+void	Response::get_location(request &req, Configuration conf)
 {
 	if (req.header.find("host") != req.header.end())
 	{
 		get_host_nd_port(req.header["host"]);
 		get_server(conf);
 		if (!server)
-			server = &*(conf.servers.begin());
+			server = &(*(conf.servers.begin()));
 		
 	}
 	else
-		server = &*(conf.servers.begin());
+		server = &(*(conf.servers.begin()));
 }

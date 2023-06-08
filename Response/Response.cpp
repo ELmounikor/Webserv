@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 12:13:15 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/08 12:11:03 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/08 16:32:53 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ std::string	Response::get_http_message(void){
 	}
 }
 
-std::string	Response::get_error_response(request req){
+std::string	Response::get_error_response(request &req){
 	return (get_status_line(req) + CRLF + "<!DOCTYPE html>\
 	<style>@import url('https://fonts.googleapis.com/css?family=Press Start 2P');	html, body {	width: 100%;	height: 100%;	margin: 0;	} 	* {	font-family: 'Press Start 2P', cursive;	box-sizing: border-box;	}	#app {	padding: 1rem;	background: black;	display: flex;	height: 100%;	justify-content: center;	align-items: center;	color: #5bd6ff;	text-shadow: 0px 0px 10px;	font-size: 6rem;	flex-direction: column;	}	#app .txt {	font-size: 1.8rem;	}	@keyframes blink {	0% {opacity: 0;}	49% {opacity: 0;}	50% {opacity: 1;}	100% {opacity: 1;}	}	.blink {	animation-name: blink;	animation-duration: 1s;	animation-iteration-count: infinite;	}</style>\
 	<html>\
@@ -129,7 +129,7 @@ void	Response::get_response(request &req){
 	}
 }
 
-std::string	Response::get_status_line(request req){
+std::string	Response::get_status_line(request &req){
 	return (req.version + SP + std::to_string(status_code) + SP + get_http_message());
 }
 

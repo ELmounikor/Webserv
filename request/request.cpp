@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/21 20:11:15 by sennaama          #+#    #+#             */
-/*   Updated: 2023/05/28 19:36:27 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/08 16:15:59 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,17 @@ int countcharacter(std::string str, char c)
     return count;
 }
 
-void request::request_parse(std::string buf)
+void request::request_parse(std::string buf, int socket_client)
 {
     std::string line;
     std::string key, value;
+    std::stringstream st;
+    st << socket_client;
+    st >> key;
+    std::string name_file = "body_file_" + key;
 
    // std::cout<<"---------------"<<std::endl;
-    // std::cout<<buf;
+    //std::cout<<buf;
     // buf = "GET / HTTP/1.1\n"
     //     "Host: localhost:8080\r\n"
     //     "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:109.0) Gecko/20100101 Firefox/113.0\r\n"
@@ -74,7 +78,7 @@ void request::request_parse(std::string buf)
                 (version != "HTTP/1.1") || (!check_request_uri(path)))
             {
                 status_code = 400;
-                // std::cout << "Version: " << version << "\nMethod: " << method << "\nPath: " << path << std::endl;
+                std::cout << "Version: " << version << "\nMethod: " << method << "\nPath: " << path << std::endl;
                 return ;
             }
         }
@@ -84,6 +88,16 @@ void request::request_parse(std::string buf)
             return ;
         }
     }
+    if (method == "POST")
+    {
+        if ((buf.find("Content-Length") == std::string::npos && buf.find("Transfer-Encoding") == std::string::npos)
+            || (buf.find("Content-Length") != std::string::npos && buf.find("Transfer-Encoding") != std::string::npos))
+        {
+            status_code = 400;
+            return ;
+        }
+    }
+        
     while (std::getline(s, line) && !line.empty() && line != "\r")
     {
         size_t pos = line.find(':');
@@ -119,6 +133,24 @@ void request::request_parse(std::string buf)
         status_code = 400;
         return ;
     }
+    else
+    {
+        // if (method == "GET")
+        // {
+        //     status_code = 400;
+        //     return;
+        // }
+        // if (method == "POST")
+        // {
+        //     //std::cout<<"bodyyyy"<<std::endl;
+        //     body_file.open(name_file);
+        //     if (!body_file.is_open()) 
+        //         return ;
+        //     s >> line;
+        //     body_file << line;
+        //     body_file.close();
+        // }
+    }
     //print_request();    
 }
 
@@ -134,6 +166,8 @@ void request::print_request()
     std::cout << "Method: " << method << std::endl;
     std::cout << "Path: " << path << std::endl;
     std::cout << "Version: " << version << std::endl;
-	std::cout << "header : \n";
-	print_map(header);
-}                                                                                                 
+    std::map<std::string, std::string>::iterator iter;
+    for (iter = header.begin(); iter != header.end(); ++iter) {
+       std::cout << iter->first <<" : " << iter->second << std::endl;
+    }
+}
