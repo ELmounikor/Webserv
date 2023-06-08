@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:16:16 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/05/26 17:13:48 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/08 09:58:58 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,40 @@
 Location::Location(): autoindex(-1), root("")
 {}
 
+Location &Location::operator=(const Location& rhs)
+{
+	if (this != &rhs)
+	{
+		this->cgi = rhs.cgi;
+		this->root = rhs.root;
+		this->indexes = rhs.indexes;
+		this->methods = rhs.methods;
+		this->returns = rhs.returns;
+		this->uploads = rhs.uploads;
+		this->autoindex = rhs.autoindex;
+	}
+	return (*this);
+}
+
 Server_info::Server_info(): port(-1), body_size(-1), root(""), host("")
 {}
+
+Server_info &Server_info::operator=(const Server_info& rhs)
+{
+	if (this != &rhs)
+	{
+		this->host = rhs.host;
+		this->port = rhs.port;
+		this->root = rhs.root;
+		this->indexes = rhs.indexes;
+		this->methods = rhs.methods;
+		this->body_size = rhs.body_size;
+		this->locations = rhs.locations;
+		this->error_pages = rhs.error_pages;
+		this->server_names = rhs.server_names;
+	}
+	return (*this);
+}
 
 Configuration::Configuration(){}
 

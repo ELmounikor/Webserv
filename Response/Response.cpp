@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 12:13:15 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/07 13:24:13 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/08 12:11:03 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ Response::Response()
 void	Response::response_fetch(request &req, Configuration conf)
 {
 	status_code = req.status_code;
-	get_location(req);
+	get_location(req, conf);
 	if (req.status_code == -1 && req.method == "" && req.path == "" && req.version == "" && req.header.size() == 0)
 		return ;
 	if (status_code == -1)
@@ -32,9 +32,13 @@ void	Response::response_fetch(request &req, Configuration conf)
 			status_code = 414;
 		else if (req.header.find("Content-Length") == req.header.end())
 			status_code = 411;
+		else if (strtol(req.header["Content-Length"].c_str(), NULL, 10) > server->body_size)
+			status_code = 413;
+		else if (location && std::find(location->methods.begin(), location->methods.end(), req.method) == location->methods.end())
+			status_code = 405;
 	}
 	if (status_code != -1)
-		get_error_response();
+		get_error_response(req);
 	else
 	{
 		get_response(req);
@@ -44,7 +48,7 @@ void	Response::response_fetch(request &req, Configuration conf)
 		}
 		else 
 		{
-			//send chunk of response	
+			//send response
 		}
 	}
 }
@@ -89,8 +93,8 @@ std::string	Response::get_http_message(void){
 	}
 }
 
-std::string	Response::get_error_response(void){
-	return (get_status_line() + CRLF + "<!DOCTYPE html>\
+std::string	Response::get_error_response(request req){
+	return (get_status_line(req) + CRLF + "<!DOCTYPE html>\
 	<style>@import url('https://fonts.googleapis.com/css?family=Press Start 2P');	html, body {	width: 100%;	height: 100%;	margin: 0;	} 	* {	font-family: 'Press Start 2P', cursive;	box-sizing: border-box;	}	#app {	padding: 1rem;	background: black;	display: flex;	height: 100%;	justify-content: center;	align-items: center;	color: #5bd6ff;	text-shadow: 0px 0px 10px;	font-size: 6rem;	flex-direction: column;	}	#app .txt {	font-size: 1.8rem;	}	@keyframes blink {	0% {opacity: 0;}	49% {opacity: 0;}	50% {opacity: 1;}	100% {opacity: 1;}	}	.blink {	animation-name: blink;	animation-duration: 1s;	animation-iteration-count: infinite;	}</style>\
 	<html>\
 		<head>\
@@ -125,8 +129,8 @@ void	Response::get_response(request &req){
 	}
 }
 
-std::string	Response::get_status_line(void){
-	return ("HTTP/1.1" + ' ' + std::to_string(status_code) + ' ' + get_http_message());
+std::string	Response::get_status_line(request req){
+	return (req.version + SP + std::to_string(status_code) + SP + get_http_message());
 }
 
 int	check_request_uri(std::string request_uri){

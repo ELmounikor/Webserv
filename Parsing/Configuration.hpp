@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:16:09 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/05/26 17:13:25 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/08 10:59:23 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ class Location
 		std::map<int, std::string>			returns;
 		std::map<std::string, std::string>	cgi;
 		Location();
+		Location &operator=(const Location& rhs);
 };
  
 class Server_info
@@ -40,6 +41,7 @@ class Server_info
 		std::map<int, std::string>		error_pages;
 		std::map<std::string, Location>	locations;
 		Server_info();
+		Server_info &operator=(const Server_info& rhs);
 };
 
 class Configuration
@@ -60,6 +62,7 @@ std::string		get_valid_path(std::string path);
 Server_info		server_checker(Server_info &server);
 void			print_config(Configuration config);
 int				is_number(std::string input);
+int				is_ip_address(std::string host);
 
 template <class T> void print_vector(T container)
 {

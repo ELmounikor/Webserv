@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 10:26:41 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/06 17:10:42 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/08 11:51:30 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,9 @@ void	get_port(Server_info &serv, std::string argument)
 	
 	if (serv.port != -1)
 		ft_exit("Duplicate port in a single server detected 🤖");
-	while (start < argument.size() && argument[start] != ':')
-		start++;
-	if (start != argument.size())
+	start = argument.find(":");
+	if (start != 0)
 		get_host(serv, argument.substr(0, start++));
-	else
-		start = 0;
 	argument = argument.substr(start, argument.size());
 	port = strtol(argument.c_str(), NULL, 10);
 	if (!is_number(argument) || port > 65535)
@@ -39,26 +36,33 @@ void	get_port(Server_info &serv, std::string argument)
 	serv.port = port;
 }
 
-void	get_host(Server_info &serv, std::string argument)
+int	is_ip_address(std::string host)
 {
 	size_t	start = 0, end = 0;
 	long	byte, number_of_bytes = 0;
 	
+	while (start < host.size())
+	{
+		while (end < host.size() && isdigit(host[end]))
+			end++;
+		std::string token = host.substr(start, end - start);
+		byte = strtol(token.c_str(), NULL, 10);
+		number_of_bytes++;
+		if (!is_number(token) || byte > 255 || (host[end] != '.' && number_of_bytes < 4) || number_of_bytes > 4)
+			return (0);
+		start = ++end;
+	}
+	return (1);
+}
+
+void	get_host(Server_info &serv, std::string argument)
+{
 	if (serv.host != "")
 		ft_exit("Duplicate host in a single server detected 🤖");
 	if (argument == "localhost")
 		argument = "127.0.0.1";
-	while (start < argument.size())
-	{
-		while (end < argument.size() && isdigit(argument[end]))
-			end++;
-		std::string token = argument.substr(start, end - start);
-		byte = strtol(token.c_str(), NULL, 10);
-		number_of_bytes++;
-		if (!is_number(token) || byte > 255 || (argument[end] != '.' && number_of_bytes < 4) || number_of_bytes > 4)
-			ft_exit("Invalid host address detected 🤖");
-		start = ++end;
-	}
+	if (!is_ip_address(argument))
+		ft_exit("Invalid host address detected 🤖");
 	serv.host = argument;
 }
 
