@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:16:16 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/08 09:58:58 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/09 19:38:17 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,8 @@ void	Configuration::parse_server_block(std::string block)
 			while (end < block.size() && !isspace(block[end]))
 				end++;
 			std::string location_match = get_valid_path(block.substr(start, end - start));
+			if (location_match[0] != '/')
+				location_match = "/" + location_match;
 			start = end;
 			parse_location_block(server, location_match, get_block(block, start, end));
 		}

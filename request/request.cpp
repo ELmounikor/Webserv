@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/21 20:11:15 by sennaama          #+#    #+#             */
-/*   Updated: 2023/06/08 16:15:59 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/09 19:22:06 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ void request::request_parse(std::string buf, int socket_client)
             sq >> version;
             if ((method.empty() || path.empty() || version.empty()) ||\
                (method != "GET" && method != "POST" && method != "DELETE") || \
-                (version != "HTTP/1.1") || (!check_request_uri(path)))
+                (version != "HTTP/1.1"))
             {
                 status_code = 400;
                 std::cout << "Version: " << version << "\nMethod: " << method << "\nPath: " << path << std::endl;

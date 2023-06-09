@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 12:12:52 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/08 16:32:33 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/09 19:24:55 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,4 @@ class	Response
 		std::string	get_http_message(void);
 		std::string	get_body(void);
 };
-
-int	check_request_uri(std::string request_uri);
 #endif

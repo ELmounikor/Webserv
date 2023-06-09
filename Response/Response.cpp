@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 12:13:15 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/08 16:32:53 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/09 19:41:36 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,22 @@
 
 Response::Response()
 {
+}
+
+
+int	check_request_uri(std::string request_uri){
+	std::string	allowed_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ._~:/?#[]@!$&'()*+,;=%";
+	unsigned long i = 0, j;
+	while (i < request_uri.size())
+	{
+		j = 0;
+		while (j < allowed_chars.size() && request_uri[i] != allowed_chars[j])
+			j++;
+		if (j != allowed_chars.size())
+			return (0);
+		i++;
+	}
+	return(1);
 }
 
 void	Response::response_fetch(request &req, Configuration conf)
@@ -24,7 +40,7 @@ void	Response::response_fetch(request &req, Configuration conf)
 		return ;
 	if (status_code == -1)
 	{
-		if (req.header.find("host") == req.header.end())
+		if (req.header.find("host") == req.header.end() || !check_request_uri(req.path))
 			status_code = 400;
 		else if (req.header.find("Transfer-Encoding") != req.header.end() && req.header["Transfer-Encoding"] != "chunked")
 			status_code = 501;
@@ -88,6 +104,8 @@ std::string	Response::get_http_message(void){
 			return ("Internal Server Error");
 		case 501:
 			return ("Not Implemented");
+		case 502:
+			return ("Bad Gateway");
 		default:
 			return ("Unsupported HTTP response status codes ⛔️");
 	}
@@ -131,19 +149,4 @@ void	Response::get_response(request &req){
 
 std::string	Response::get_status_line(request &req){
 	return (req.version + SP + std::to_string(status_code) + SP + get_http_message());
-}
-
-int	check_request_uri(std::string request_uri){
-	std::string	allowed_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ._~:/?#[]@!$&'()*+,;=%";
-	unsigned long i = 0, j;
-	while (i < request_uri.size())
-	{
-		j = 0;
-		while (j < allowed_chars.size() && request_uri[i] != allowed_chars[j])
-			j++;
-		if (j != allowed_chars.size())
-			return (0);
-		i++;
-	}
-	return(1);
 }
