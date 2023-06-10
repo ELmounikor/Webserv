@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 12:12:52 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/09 19:24:55 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/10 16:32:37 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ class	Response
 		int			port;
 		std::string	host;
 		std::string body;
+		std::string	to_fetch;
+		std::string	location_name;
 		Location	*location;
 		Server_info	*server;
 		Response();
@@ -35,9 +37,11 @@ class	Response
 		void		get_host_nd_port(std::string value);
 		void		get_server(Configuration conf);
 		void		get_response(request &req);
+		void		print_response_attr(void);
 		std::string	get_error_response(request &req);
 		std::string	get_status_line(request &req);
 		std::string	get_http_message(void);
 		std::string	get_body(void);
 };
+
 #endif
