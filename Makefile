@@ -6,7 +6,7 @@
 #    By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/30 14:02:35 by mel-kora          #+#    #+#              #
-#    Updated: 2023/06/08 16:11:39 by mel-kora         ###   ########.fr        #
+#    Updated: 2023/06/10 22:34:24 by mel-kora         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,6 +23,7 @@ SRCS		=	main.cpp\
 				server/server.cpp\
 				Client/Client.cpp\
 				request/request.cpp\
+				Response/Status.cpp\
 				Response/Methods.cpp\
 				Response/Response.cpp\
 				Response/Attributes.cpp\

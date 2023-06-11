@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:22:51 by sennaama          #+#    #+#             */
-/*   Updated: 2023/06/08 15:58:36 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/11 13:23:18 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,7 +163,7 @@ void    server::multiplixing(const char *response)
                             {
                                 //std::cout<<"-"<<buf<<"-"<<std::endl;
                                 (*j)->req.request_parse(buf, (*j)->socket_client);
-                                //(*j)->req.print_request();
+                                // (*j)->req.print_request();
                                 (*j)->res.response_fetch((*j)->req, conf);
                                 addEvent(kq, (*j)->socket_client, EVFILT_WRITE);
                                 DisableEvent(kq, (*j)->socket_client, EVFILT_READ);
@@ -211,4 +211,3 @@ void    server::process(char *file)
     }
     multiplixing(response);
 }
- 

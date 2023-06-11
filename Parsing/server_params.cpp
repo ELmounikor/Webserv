@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 10:26:41 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/08 11:51:30 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/10 23:23:47 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,12 @@ void	get_port(Server_info &serv, std::string argument)
 	
 	if (serv.port != -1)
 		ft_exit("Duplicate port in a single server detected 🤖");
-	start = argument.find(":");
-	if (start != 0)
+	start = argument.find(':');
+	if (start < argument.size())
+	{
 		get_host(serv, argument.substr(0, start++));
-	argument = argument.substr(start, argument.size());
+		argument = argument.substr(start, argument.size());
+	}
 	port = strtol(argument.c_str(), NULL, 10);
 	if (!is_number(argument) || port > 65535)
 		ft_exit("Invalid port detected 🤖");

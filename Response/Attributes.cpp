@@ -6,26 +6,26 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/07 13:00:51 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/10 16:11:38 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/11 15:31:49 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Response.hpp"
 
-void	Response::get_host_nd_port(std::string value)
+void	Response::get_host_nd_port(std::string host_value)
 {
 	size_t	start = 0;
 
 	port = 80;
-	start = value.find(":");
-	if (start != 0)
+	start = host_value.find(':');
+	if (start < host_value.size())
 	{
-		host = value.substr(0, start++);
-		value = value.substr(start, value.size());
-		port = strtol(value.c_str(), NULL, 10);
+		host = host_value.substr(0, start++);
+		host_value = host_value.substr(start, host_value.size());
+		port = strtol(host_value.c_str(), NULL, 10);
 	}
 	else
-		host = value;
+		host = host_value;
 	if (host == "localhost")
 		host = "127.0.0.1";
 }
@@ -102,10 +102,10 @@ std::string	get_next_option(std::string request_uri)
 }
 
 void	Response::get_location(request &req, Configuration conf)
-{
-	if (req.status_code == -1 && req.header.find("host") != req.header.end())
+{	
+	if (req.status_code == -1 && req.header.find("Host") != req.header.end())
 	{
-		get_host_nd_port(req.header["host"]);
+		get_host_nd_port(req.header["Host"]);
 		get_server(conf);
 		std::string request_uri = req.path;
 		if (request_uri.size() == 0 || request_uri[0] != '/')
@@ -140,4 +140,27 @@ void	Response::get_location(request &req, Configuration conf)
 	}
 	else
 		server = &(*(conf.servers.begin()));
+}
+
+void	Response::print_response_attr(void)
+{
+	std::cout << "\033[0;96m*** Responding to " << host << ":" << port << " ***\033[0m" << std::endl;
+	std::cout << "- status: " << status_code << SP + get_http_message() << std::endl;
+	std::cout << "- url: " << location_name + to_fetch + "\n";
+	if (server)
+	{
+		std::cout << "- server_info: \n";
+		std::cout << " * server names:\n";
+		print_vector(server->server_names);
+		std::cout << " * error pages:\n";
+		print_map(server->error_pages);
+		std::cout << " * client max body size: " << server->body_size << "\n";
+	}
+	else
+		std::cout << "- no server\n";
+	if (location)
+		std::cout << "- location '" << location_name << "' info:\n" << location;
+	else
+		std::cout << "- no location\n";
+	std::cout << "\033[0;96m*** END ***\033[0m" << std::endl;
 }

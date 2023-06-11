@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 14:27:50 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/05/28 18:13:44 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/10 22:46:26 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ Server_info	server_checker(Server_info &server)
 	if (server.locations.size() > 0)
 	{
 		std::map<std::string, Location>::iterator j = server.locations.begin();
-
+		
 		while (j != server.locations.end())
 		{
 			if ((*j).second.autoindex == -1)
@@ -53,21 +53,14 @@ void	print_config(Configuration config)
 	{
 		std::cout << "***************** Server " << server_id << " info: *****************\n";
 		std::cout << "* listening on " << (*i).host << ':' << (*i).port << "\n";
-		if ((*i).server_names.size())
-		{
-			std::cout << "* server names:\n";
-			print_vector((*i).server_names);
-		}
-		if ((*i).error_pages.size())
-		{
-			std::cout << "* error pages:\n";
-			print_map((*i).error_pages);
-		}
+		std::cout << "* server names:\n";
+		print_vector((*i).server_names);
+		std::cout << "* error pages:\n";
+		print_map((*i).error_pages);
 		std::cout << "* client max body size: " << (*i).body_size << "\n";
 		if ((*i).locations.size())
 		{
 			std::map<std::string, Location>::iterator j = (*i).locations.begin();
-
 			while (j != (*i).locations.end())
 			{
 				std::cout << "* location '" << (*j).first << "' info:\n";

@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 12:13:15 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/10 16:38:17 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/11 15:40:45 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 Response::Response()
 {
 }
-
 
 int	check_request_uri(std::string request_uri)
 {
@@ -35,30 +34,33 @@ int	check_request_uri(std::string request_uri)
 
 void	Response::response_fetch(request &req, Configuration conf)
 {
-	status_code = req.status_code;
-	get_location(req, conf);
 	if (req.status_code == -1 && req.method == "" && req.path == "" && req.version == "" && req.header.size() == 0)
 		return ;
+	status_code = req.status_code;
+	get_location(req, conf);
+	print_response_attr();
+	exit(2) ;
 	if (status_code == -1)
 	{
-		if (req.header.find("host") == req.header.end() || !check_request_uri(req.path))
+		if (req.header.find("Host") == req.header.end() || !check_request_uri(req.path))
 			status_code = 400;
 		else if (req.header.find("Transfer-Encoding") != req.header.end() && req.header["Transfer-Encoding"] != "chunked")
 			status_code = 501;
 		else if (req.path.size() > 2048)
 			status_code = 414;
-		else if (req.header.find("Content-Length") == req.header.end())
-			status_code = 411;
-		else if (strtol(req.header["Content-Length"].c_str(), NULL, 10) > server->body_size)
-			status_code = 413;
 		else if (location && std::find(location->methods.begin(), location->methods.end(), req.method) == location->methods.end())
 			status_code = 405;
+		// else if ( > server->body_size)
+		// 	status_code = 413;
 	}
 	if (status_code != -1)
 		get_error_response(req);
 	else
 	{
-		get_response(req);
+		if (location->returns.size() > 0)
+			get_redirection_response(req);
+		else
+			get_response(req);
 		if (status_code / 100 != 2 || status_code / 100 != 3)
 		{
 			//send error
@@ -70,52 +72,45 @@ void	Response::response_fetch(request &req, Configuration conf)
 	}
 }
 
-std::string	Response::get_http_message(void)
+void	Response::get_response(request &req)
 {
-	switch (status_code)
+	if (req.method == "GET")
 	{
-		case 200:
-			return ("OK");
-		case 201:
-			return ("Created");
-		case 204:
-			return ("No Content");
-		case 301:
-			return ("Moved Permanently");
-		case 400:
-			return ("Bad Request");
-		case 401:
-			return ("Unauthorized");
-		case 403:
-			return ("Forbidden");
-		case 404:
-			return ("Not Found");
-		case 405:
-			return ("Method Not Allowed");
-		case 409:
-			return ("Conflict");
-		case 410:
-			return ("Gone");
-		case 411:
-			return ("Length Required");
-		case 413:
-			return ("Payload Too Large");
-		case 414:
-			return ("URI Too Long");
-		case 500:
-			return ("Internal Server Error");
-		case 501:
-			return ("Not Implemented");
-		case 502:
-			return ("Bad Gateway");
-		default:
-			return ("Unsupported HTTP response status codes ⛔️");
+		Get res;
+		res.implement_method(*this);
+	}
+	else if (req.method == "DELETE")
+	{
+		Delete res;
+		res.implement_method(*this);
+	}
+	else if (req.method == "POST")
+	{
+		Post res;
+		res.implement_method(*this);
 	}
 }
 
-std::string	Response::get_error_response(request &req)
+void	Response::get_error_response(request &req)
 {
-	return (get_status_line(req) + CRLF + "<!DOCTYPE html>\
+	std::map<int, std::string>::iterator errp = server->error_pages.find(status_code);
+	if (server && errp != server->error_pages.end())
+	{
+		std::ifstream error_page((*errp).second);
+		if (error_page.is_open())
+		{
+			std::getline(error_page, body, '\0');
+			response_content = get_status_line(req) + CRLF + body;
+			return ;
+		}
+		else if (status_code != 403)
+		{
+			status_code = 403;
+			get_error_response(req);
+			return ;
+		}
+	}
+	response_content = get_status_line(req) + CRLF + "<!DOCTYPE html>\
 	<style>@import url('https://fonts.googleapis.com/css?family=Press Start 2P');	html, body {	width: 100%;	height: 100%;	margin: 0;	} 	* {	font-family: 'Press Start 2P', cursive;	box-sizing: border-box;	}	#app {	padding: 1rem;	background: black;	display: flex;	height: 100%;	justify-content: center;	align-items: center;	color: #5bd6ff;	text-shadow: 0px 0px 10px;	font-size: 6rem;	flex-direction: column;	}	#app .txt {	font-size: 1.8rem;	}	@keyframes blink {	0% {opacity: 0;}	49% {opacity: 0;}	50% {opacity: 1;}	100% {opacity: 1;}	}	.blink {	animation-name: blink;	animation-duration: 1s;	animation-iteration-count: infinite;	}</style>\
 	<html>\
 		<head>\
@@ -129,49 +124,23 @@ std::string	Response::get_error_response(request &req)
 				<div class=txt>" + get_http_message() + "<span class=blink>_</span></div>\
 			</div>\
 		</body>\
-	</html>");
+	</html>";
 }
 
-void	Response::get_response(request &req)
+void	Response::get_redirection_response(request &req)
 {
-	if (req.method == "GET")
+	status_code = (*location->returns.begin()).first;
+	std::string file = (*location->returns.begin()).second;
+	std::ifstream redirect_page(file);
+	if (redirect_page.is_open())
 	{
-		Get res;
-		res.implement_method(*this);
+		std::getline(redirect_page, body, '\0');
+		std::string location_header = "location: " + location_name + file;
+		response_content = get_status_line(req) + "\n" + location_header + CRLF + body;
 	}
-	else if (req.method == "POST")
+	else
 	{
-		Post res;
-		res.implement_method(*this);
+		status_code = 403;
+		get_error_response(req);
 	}
-	else if (req.method == "DELETE")
-	{
-		Delete res;
-		res.implement_method(*this);
-	}
-}
-
-std::string	Response::get_status_line(request &req)
-{
-	return (req.version + SP + std::to_string(status_code) + SP + get_http_message());
-}
-
-void	Response::print_response_attr(void)
-{
-	std::cout << "\033[0;96m***Responding to " << host << ":" << port << "***\033[0m" << std::endl;
-	std::cout << "- status: " << status_code << SP + get_http_message() << std::endl;
-	std::cout << "- url: " << location_name + to_fetch + "\n";
-	std::cout << "- server_info: \n";
-	if (server->server_names.size())
-	{
-		std::cout << " * server names:\n";
-		print_vector(server->server_names);
-	}
-	if (server->error_pages.size())
-	{
-		std::cout << " * error pages:\n";
-		print_map(server->error_pages);
-	}
-	std::cout << " * client max body size: " << server->body_size << "\n";
-	std::cout << "- location '" << location_name << "' info:\n" << location;
 }
