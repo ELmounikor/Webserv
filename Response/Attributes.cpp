@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/07 13:00:51 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/12 15:27:04 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/12 23:05:25 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,11 @@ void	Response::get_host_nd_port(std::string host_value)
 		host = "127.0.0.1";
 }
 
-void	search_by_servername(Response &res, Configuration conf, std::string server_name)
+Server_info	search_by_servername(Response &res, Configuration conf, std::string server_name)
 {
 	std::vector<Server_info>::iterator serv_i = conf.servers.begin();
 	std::vector<std::string>::iterator servname_i;
+	Server_info server;
 		
 	while (serv_i != conf.servers.end())
 	{
@@ -42,55 +43,52 @@ void	search_by_servername(Response &res, Configuration conf, std::string server_
 			servname_i = (*serv_i).server_names.begin();
 			while (servname_i != (*serv_i).server_names.end() && *servname_i != server_name)
 				servname_i++;
-			if (*servname_i == server_name)
-			{
-				res.server = &(*serv_i);
-				break ;
-			}
-			serv_i++;
+			if (servname_i != (*serv_i).server_names.end())
+				return (*serv_i);
 		}
+		serv_i++;
 	}
+	return (server);
 }
 
-void	Response::get_server(Configuration conf)
+Server_info	Response::get_server(request &req, Configuration conf)
 {
 	std::vector<Server_info>::iterator serv_i = conf.servers.begin();
+	Server_info server;
 	
-	if (host == "127.0.0.1")
+	if (req.status_code == -1 && req.header.find("Host") != req.header.end())
 	{
-		search_by_servername(*this, conf, "localhost");
-		if (server)
-			return ;
-	}
-	if (is_ip_address(host))
-	{
-		while (serv_i != conf.servers.end())
+		get_host_nd_port(req.header["Host"]);
+		if (host == "127.0.0.1")
 		{
-			if ((*serv_i).host == host && (*serv_i).port == port)
-			{
-				server = &(*serv_i);
-				return ;
-			}
-			serv_i++;
+			server = search_by_servername(*this, conf, "localhost");
+			if (server.port != -1)
+				return (server);
 		}
-		if (serv_i == conf.servers.end())
+		if (is_ip_address(host))
 		{
+			while (serv_i != conf.servers.end())
+			{
+				if ((*serv_i).host == host && (*serv_i).port == port)
+					return (*serv_i);
+				serv_i++;
+			}
 			serv_i = conf.servers.begin();
 			while (serv_i != conf.servers.end())
 			{
 				if ((*serv_i).host == "0.0.0.0" && (*serv_i).port == port)
-				{
-					server = &(*serv_i);
-					return ;
-				}
+					return (*serv_i);
 				serv_i++;
 			}
 		}
+		else
+			server = search_by_servername(*this, conf, host);
 	}
 	else
-		search_by_servername(*this, conf, host);
-	if (!server)
-		server = &(*(conf.servers.begin()));
+		status_code = 400;
+	if (server.port == -1)
+		return (*(conf.servers.begin()));
+	return (server);
 }
 
 std::string	get_next_option(std::string request_uri)
@@ -101,66 +99,61 @@ std::string	get_next_option(std::string request_uri)
 	return (request_uri);
 }
 
-void	Response::get_location(request &req, Configuration conf)
-{	
-	
-	if (req.status_code == -1 && req.header.find("Host") != req.header.end())
+Location	Response::get_location(request &req, Server_info server)
+{
+	Location location;
+	std::string request_uri = req.path;
+	if (request_uri.size() == 0 || request_uri[0] != '/')
+		request_uri = "/" + request_uri;
+	std::map<std::string, Location>::iterator location_i  = server.locations.find(request_uri);
+	if (location_i != server.locations.end())
 	{
-		get_host_nd_port(req.header["Host"]);
-		get_server(conf);
-		std::string request_uri = req.path;
-		if (request_uri.size() == 0 || request_uri[0] != '/')
-			request_uri = "/" + request_uri;
-		std::map<std::string, Location>::iterator location_i  = server->locations.find(request_uri);
-		if (location_i != server->locations.end())
-		{
-			location = &((*location_i).second);
-			return ;
-		}
-		if (request_uri[request_uri.size() - 1] == '/')
-			request_uri = request_uri.substr(0, request_uri.size() - 1);
-		while (request_uri.size() > 0)
-		{
-			std::string request_uri_copy = request_uri + "/";
-			std::map<std::string, Location>::iterator location_j  = server->locations.find(request_uri_copy);
-			location_i  = server->locations.find(request_uri);
-			if (location_j != server->locations.end())
-			{
-				location = &((*location_j).second);
-				return ;
-			}
-			else if (location_i != server->locations.end())
-			{
-				location = &((*location_i).second);
-				return ;
-			}
-			request_uri = get_next_option(request_uri);
-		}
+		location_name = (*location_i).first;
+		return ((*location_i).second);
 	}
-	else
+	if (request_uri[request_uri.size() - 1] == '/')
+		request_uri = request_uri.substr(0, request_uri.size() - 1);
+	while (1)
 	{
-		server = &(*(conf.servers.begin()));
-		status_code = 400;
+		std::string request_uri_copy = request_uri + "/";
+		std::map<std::string, Location>::iterator location_j  = server.locations.find(request_uri_copy);
+		location_i  = server.locations.find(request_uri);
+		if (location_j != server.locations.end())
+		{
+			location_name = (*location_j).first;
+			return ((*location_j).second);
+		}
+		else if (location_i != server.locations.end())
+		{
+			location_name = (*location_i).first;
+			return ((*location_i).second);
+		}
+		else if (request_uri.size() == 0)
+			return (location);
+		request_uri = get_next_option(request_uri);
 	}
+	return (location);
 }
 
-void	Response::print_response_attr(void)
+void	Response::print_response_attr(Server_info server, Location location)
 {
 	std::cout << "\033[0;96m*** Responding to " << host << ":" << port << " ***\033[0m" << std::endl;
 	std::cout << "- status: " << status_code << SP + get_status_message() << std::endl;
-	std::cout << "- url: " << location_name + to_fetch + "\n";
-	if (server)
+	std::cout << "- location_name: " << location_name + "\n";
+	if (server.port != -1)
 	{
-		std::cout << "- server_info: "<< server->host << ":" << server->port << "\n";
-		std::cout << " * server names:\n";
-		print_vector(server->server_names);
+		std::cout << "- server_info: "<< server.host << ":" << server.port << "\n";
+		std::cout << " * client max body size: " << server.body_size << "\n";
 		std::cout << " * error pages:\n";
-		print_map(server->error_pages);
-		std::cout << " * client max body size: " << server->body_size << "\n";
+		print_map(server.error_pages);
+		// std::cout << " * server names:\n";
+		// print_vector(server.server_names);
+		// std::cout << " * locations:\n";
+		// print_map(server.locations);
 	}
 	else
 		std::cout << "- no server\n";
-	if (location)
+	if (location.autoindex != -1)
 		std::cout << "- location '" << location_name << "' info:\n" << location;
 	else
 		std::cout << "- no location\n";

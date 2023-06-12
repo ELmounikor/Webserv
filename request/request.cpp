@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/21 20:11:15 by sennaama          #+#    #+#             */
-/*   Updated: 2023/06/09 19:22:06 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/12 20:48:03 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,4 +170,4 @@ void request::print_request()
     for (iter = header.begin(); iter != header.end(); ++iter) {
        std::cout << iter->first <<" : " << iter->second << std::endl;
     }
-}
+}                                                                                                 

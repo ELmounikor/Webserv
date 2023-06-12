@@ -6,13 +6,13 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:16:16 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/10 13:53:40 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/12 17:13:14 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Configuration.hpp"
 
-Location::Location(): autoindex(-1), root("")
+Location::Location(): autoindex(-1), root(""), indexes(), uploads(), methods(), returns(), cgi()
 {}
 
 Location &Location::operator=(const Location& rhs)
@@ -30,7 +30,7 @@ Location &Location::operator=(const Location& rhs)
 	return (*this);
 }
 
-Server_info::Server_info(): port(-1), body_size(-1), root(""), host("")
+Server_info::Server_info(): port(-1), body_size(-1), root(""), host(""), methods(), indexes(), server_names(), error_pages()
 {}
 
 Server_info &Server_info::operator=(const Server_info& rhs)

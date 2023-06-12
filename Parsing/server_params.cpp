@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 10:26:41 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/11 21:03:30 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/12 18:38:15 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ void	get_port(Server_info &serv, std::string argument)
 	port = strtol(argument.c_str(), NULL, 10);
 	if (!is_number(argument) || port > 65535)
 		ft_exit("Invalid port detected 🤖");
+	if (serv.host == "")
+		serv.host = "0.0.0.0";
 	serv.port = port;
 }
 

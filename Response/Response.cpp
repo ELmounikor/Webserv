@@ -6,13 +6,13 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 12:13:15 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/12 15:58:40 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/12 23:06:32 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Response.hpp"
 
-Response::Response()
+Response::Response(): status_code(-1), port(-1), host(""), body(""), location_name(""), response_content("")
 {
 }
 
@@ -37,35 +37,35 @@ void	Response::response_fetch(request &req, Configuration conf)
 	if (req.status_code == -1 && req.method == "" && req.path == "" && req.version == "" && req.header.size() == 0)
 		return ;
 	status_code = req.status_code;
-	get_location(req, conf);
+	Server_info server = get_server(req, conf);
+	Location location = get_location(req, server);
+	// print_response_attr(server, location);
+	// exit(2);
 	if (status_code == -1)
 	{
 		if (req.header.find("Transfer-Encoding") != req.header.end() && req.header["Transfer-Encoding"] != "chunked")
 			status_code = 501;
 		else if (req.header.find("Host") == req.header.end() || !check_request_uri(req.path))
 			status_code = 400;
-		else if (req.header.find("Content-Length") != req.header.end() && strtol(req.header["Content-Length"].c_str(), NULL, 10) > server->body_size)
+		else if (req.header.find("Content-Length") != req.header.end() && strtol(req.header["Content-Length"].c_str(), NULL, 10) > server.body_size)
 			status_code = 413;
 		else if (req.path.size() > 2048)
 			status_code = 414;
-		else if (!location)
+		else if (location.autoindex == -1)
 			status_code = 404;
-		else if (location->returns.size() > 0)
-			get_redirection_response(req);
-		else if (std::find(location->methods.begin(), location->methods.end(), req.method) == location->methods.end())
+		else if (location.returns.size() > 0)
+			get_redirection_response(req, server, location);
+		else if (std::find(location.methods.begin(), location.methods.end(), req.method) == location.methods.end())
 			status_code = 405;
 	}
 	else if (req.method == "POST" && req.header.find("Content-Length") == req.header.end())
 		status_code = 411;
-	if (status_code != -1)
-		get_error_response(req);
+	if (status_code / 100 != 2 && status_code / 100 != 3)
+		get_error_response(req, server);
 	else
 	{
-		if (location->returns.size() > 0)
-			get_redirection_response(req);
-		else
-			get_response(req);
-		if (status_code / 100 != 2 || status_code / 100 != 3)
+		get_response(req, server, location);
+		if (status_code / 100 != 2 && status_code / 100 != 3)
 		{
 			//send error
 		}
@@ -76,29 +76,29 @@ void	Response::response_fetch(request &req, Configuration conf)
 	} 
 }
 
-void	Response::get_response(request &req)
+void	Response::get_response(request &req, Server_info server, Location location)
 {
 	if (req.method == "GET")
 	{
 		Get res;
-		res.implement_method(*this);
+		res.implement_method(req, *this, server, location);
 	}
 	else if (req.method == "DELETE")
 	{
 		Delete res;
-		res.implement_method(*this);
+		res.implement_method(req, *this, server, location);
 	}
 	else if (req.method == "POST")
 	{
 		Post res;
-		res.implement_method(*this);
+		res.implement_method(req, *this, server, location);
 	}
 }
 
-void	Response::get_error_response(request &req)
+void	Response::get_error_response(request &req, Server_info server)
 {
-	std::map<int, std::string>::iterator errp = server->error_pages.find(status_code);
-	if (server && errp != server->error_pages.end())
+	std::map<int, std::string>::iterator errp = server.error_pages.find(status_code);
+	if (server.port != -1 && errp != server.error_pages.end())
 	{
 		std::ifstream error_page((*errp).second);
 		if (error_page.is_open())
@@ -110,7 +110,7 @@ void	Response::get_error_response(request &req)
 		// else if (status_code != 403)
 		// {
 		// 	status_code = 403;
-		// 	get_error_response(req);
+		// 	get_error_response(req, server);
 		// 	return ;
 		// }
 	}
@@ -131,10 +131,10 @@ void	Response::get_error_response(request &req)
 	response_content = get_status_line(req) + CRLF + body;
 }
 
-void	Response::get_redirection_response(request &req)
+void	Response::get_redirection_response(request &req, Server_info server, Location location)
 {
-	status_code = (*location->returns.begin()).first;
-	std::string file = (*location->returns.begin()).second;
+	status_code = (*location.returns.begin()).first;
+	std::string file = (*location.returns.begin()).second;
 	std::ifstream redirect_page(file);
 	if (location_name[location_name.size() - 1] != '/' && file[0] != '/')
 		location_name = location_name + "/";
@@ -147,6 +147,6 @@ void	Response::get_redirection_response(request &req)
 	else
 	{
 		status_code = 403;
-		get_error_response(req);
+		get_error_response(req, server);
 	}
 }

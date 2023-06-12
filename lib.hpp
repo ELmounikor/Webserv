@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 14:13:32 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/08 16:23:56 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/12 17:17:45 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@
 # include   <sys/socket.h>
 # include   <netinet/in.h>
 # include   "request/request.hpp"
-# include   "Response/Response.hpp"
 # include   "Parsing/Configuration.hpp"
+# include   "Response/Response.hpp"
 # define    MAX_EVENTS 20000
 void        ft_exit(std::string msg);
 #endif
