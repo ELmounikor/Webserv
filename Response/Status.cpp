@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 22:14:54 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/11 11:07:12 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/12 15:27:04 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 std::string	Response::get_status_line(request &req)
 {
-	return (req.version + SP + std::to_string(status_code) + SP + get_http_message());
+	return (req.version + SP + std::to_string(status_code) + SP + get_status_message());
 }
 
-std::string	Response::get_http_message(void)
+std::string	Response::get_status_message(void)
 {
 	switch (status_code)
 	{

@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 12:12:52 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/11 11:47:02 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/12 15:27:04 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ class	Response
 		void		get_redirection_response(request &req);
 		void		get_error_response(request &req);
 		std::string	get_status_line(request &req);
-		std::string	get_http_message(void);
+		std::string	get_status_message(void);
 };
 
 #endif

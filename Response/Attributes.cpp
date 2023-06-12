@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/07 13:00:51 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/11 15:31:49 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/12 15:27:04 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ std::string	get_next_option(std::string request_uri)
 
 void	Response::get_location(request &req, Configuration conf)
 {	
+	
 	if (req.status_code == -1 && req.header.find("Host") != req.header.end())
 	{
 		get_host_nd_port(req.header["Host"]);
@@ -133,23 +134,24 @@ void	Response::get_location(request &req, Configuration conf)
 				location = &((*location_i).second);
 				return ;
 			}
-			if (request_uri == "/")
-				status_code = 404;
 			request_uri = get_next_option(request_uri);
 		}
 	}
 	else
+	{
 		server = &(*(conf.servers.begin()));
+		status_code = 400;
+	}
 }
 
 void	Response::print_response_attr(void)
 {
 	std::cout << "\033[0;96m*** Responding to " << host << ":" << port << " ***\033[0m" << std::endl;
-	std::cout << "- status: " << status_code << SP + get_http_message() << std::endl;
+	std::cout << "- status: " << status_code << SP + get_status_message() << std::endl;
 	std::cout << "- url: " << location_name + to_fetch + "\n";
 	if (server)
 	{
-		std::cout << "- server_info: \n";
+		std::cout << "- server_info: "<< server->host << ":" << server->port << "\n";
 		std::cout << " * server names:\n";
 		print_vector(server->server_names);
 		std::cout << " * error pages:\n";
