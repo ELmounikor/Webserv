@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 12:13:15 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/13 16:47:09 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/13 17:16:43 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,8 @@ void	Response::response_fetch(request &req, Configuration conf)
 	}
 	else if (req.method == "POST" && req.header.find("Transfer-Encoding") != req.header.end() && req.header.find("Content-Length") == req.header.end())
 		status_code = 411;
-	// print_response_attr(server, location);
-	// exit(2);
+	print_response_attr(server, location);
+	exit(2);
 	if (status_code / 100 != 2 && status_code / 100 != 3)
 		get_error_response(req, server);
 	else
