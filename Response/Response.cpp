@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 12:13:15 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/13 17:16:43 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/13 21:07:01 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,7 @@ void	Response::response_fetch(request &req, Configuration conf)
 	}
 	else if (req.method == "POST" && req.header.find("Transfer-Encoding") != req.header.end() && req.header.find("Content-Length") == req.header.end())
 		status_code = 411;
-	print_response_attr(server, location);
-	exit(2);
-	if (status_code / 100 != 2 && status_code / 100 != 3)
+	if (status_code != -1)
 		get_error_response(req, server);
 	else
 		get_response(req, server, location);
@@ -70,19 +68,27 @@ void	Response::response_fetch(request &req, Configuration conf)
 
 void	Response::get_response(request &req, Server_info server, Location location)
 {
+	std::string target;
+	
+	if (location_name[location_name.size() - 1] == '/')
+		target = location.root + to_fetch;
+	else if (to_fetch != "")
+		target = location.root + "/" + to_fetch;
+	else
+		target = location.root;
 	if (req.method == "GET")
 	{
-		Get res;
+		Get res(target);
 		res.implement_method(req, *this, server, location);
 	}
 	else if (req.method == "DELETE")
 	{
-		Delete res;
+		Delete res(target);
 		res.implement_method(req, *this, server, location);
 	}
 	else if (req.method == "POST")
 	{
-		Post res;
+		Post res(target);
 		res.implement_method(req, *this, server, location);
 	}
 }
@@ -99,7 +105,7 @@ void	Response::get_error_response(request &req, Server_info server)
 			response_content = get_status_line(req) + CRLF + body;
 			return ;
 		}
-		// else if (status_code != 403)
+		// else if (file && status_code != 403)
 		// {
 		// 	status_code = 403;
 		// 	get_error_response(req, server);
@@ -130,6 +136,11 @@ void	Response::get_redirection_response(request &req, Server_info server, Locati
 	std::ifstream redirect_page(location.root + file);
 	if (location_name[location_name.size() - 1] != '/' && file[0] != '/')
 		file = "/" + file;
+	if (!redirect_page)
+	{
+		status_code = 404;
+		get_error_response(req, server);
+	}
 	if (redirect_page.is_open())
 	{
 		std::getline(redirect_page, body, '\0');
