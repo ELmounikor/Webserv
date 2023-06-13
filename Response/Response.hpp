@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 12:12:52 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/12 23:00:22 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/13 16:22:23 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ class	Response
 		int			port;
 		std::string	host;
 		std::string body;
+		std::string	to_fetch;
 		std::string	location_name;
 		std::string	response_content;
 		Response();

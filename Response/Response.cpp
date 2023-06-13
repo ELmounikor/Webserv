@@ -6,26 +6,25 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 12:13:15 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/12 23:06:32 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/13 16:47:09 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Response.hpp"
 
-Response::Response(): status_code(-1), port(-1), host(""), body(""), location_name(""), response_content("")
+Response::Response(): status_code(-1), port(-1), host(""), body(""), to_fetch(""), location_name(""), response_content("")
 {
 }
 
 int	check_request_uri(std::string request_uri)
 {
 	std::string	allowed_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ._~:/?#[]@!$&'()*+,;=%";
-	unsigned long i = 0, j;
+	size_t i = 0, j;
+	
 	while (i < request_uri.size())
 	{
-		j = 0;
-		while (j < allowed_chars.size() && request_uri[i] != allowed_chars[j])
-			j++;
-		if (j != allowed_chars.size())
+		j = allowed_chars.find(request_uri[i]);
+		if (j == allowed_chars.size())
 			return (0);
 		i++;
 	}
@@ -39,14 +38,12 @@ void	Response::response_fetch(request &req, Configuration conf)
 	status_code = req.status_code;
 	Server_info server = get_server(req, conf);
 	Location location = get_location(req, server);
-	// print_response_attr(server, location);
-	// exit(2);
 	if (status_code == -1)
 	{
-		if (req.header.find("Transfer-Encoding") != req.header.end() && req.header["Transfer-Encoding"] != "chunked")
-			status_code = 501;
-		else if (req.header.find("Host") == req.header.end() || !check_request_uri(req.path))
+		if (req.header.find("Host") == req.header.end() || !check_request_uri(req.path))
 			status_code = 400;
+		else if (req.header.find("Transfer-Encoding") != req.header.end() && req.header["Transfer-Encoding"] != "chunked")
+			status_code = 501;
 		else if (req.header.find("Content-Length") != req.header.end() && strtol(req.header["Content-Length"].c_str(), NULL, 10) > server.body_size)
 			status_code = 413;
 		else if (req.path.size() > 2048)
@@ -54,26 +51,21 @@ void	Response::response_fetch(request &req, Configuration conf)
 		else if (location.autoindex == -1)
 			status_code = 404;
 		else if (location.returns.size() > 0)
+		{
 			get_redirection_response(req, server, location);
+			return ;
+		}
 		else if (std::find(location.methods.begin(), location.methods.end(), req.method) == location.methods.end())
 			status_code = 405;
 	}
-	else if (req.method == "POST" && req.header.find("Content-Length") == req.header.end())
+	else if (req.method == "POST" && req.header.find("Transfer-Encoding") != req.header.end() && req.header.find("Content-Length") == req.header.end())
 		status_code = 411;
+	// print_response_attr(server, location);
+	// exit(2);
 	if (status_code / 100 != 2 && status_code / 100 != 3)
 		get_error_response(req, server);
 	else
-	{
 		get_response(req, server, location);
-		if (status_code / 100 != 2 && status_code / 100 != 3)
-		{
-			//send error
-		}
-		else 
-		{
-			//send response
-		}
-	} 
 }
 
 void	Response::get_response(request &req, Server_info server, Location location)
@@ -135,9 +127,9 @@ void	Response::get_redirection_response(request &req, Server_info server, Locati
 {
 	status_code = (*location.returns.begin()).first;
 	std::string file = (*location.returns.begin()).second;
-	std::ifstream redirect_page(file);
+	std::ifstream redirect_page(location.root + file);
 	if (location_name[location_name.size() - 1] != '/' && file[0] != '/')
-		location_name = location_name + "/";
+		file = "/" + file;
 	if (redirect_page.is_open())
 	{
 		std::getline(redirect_page, body, '\0');

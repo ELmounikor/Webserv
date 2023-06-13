@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 14:27:50 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/10 22:46:26 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/13 15:58:56 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,8 @@ int	is_number(std::string input)
 {
 	size_t	i = 0;
 	
+	if (input.size() == 0)
+		return (0);
 	while (i < input.size() && isdigit(input[i]))
 		i++;
 	if (i == input.size())

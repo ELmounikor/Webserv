@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/07 13:00:51 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/12 23:05:25 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/13 16:28:56 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,7 @@ Location	Response::get_location(request &req, Server_info server)
 		else if (request_uri.size() == 0)
 			return (location);
 		request_uri = get_next_option(request_uri);
+		to_fetch = req.path.substr(request_uri.size(), req.path.size());
 	}
 	return (location);
 }
@@ -139,6 +140,7 @@ void	Response::print_response_attr(Server_info server, Location location)
 {
 	std::cout << "\033[0;96m*** Responding to " << host << ":" << port << " ***\033[0m" << std::endl;
 	std::cout << "- status: " << status_code << SP + get_status_message() << std::endl;
+	std::cout << "- to_fetch: " << to_fetch << std::endl;
 	std::cout << "- location_name: " << location_name + "\n";
 	if (server.port != -1)
 	{
