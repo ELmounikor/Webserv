@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 14:13:32 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/12 17:17:45 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/15 14:03:04 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,9 @@
 # include   <iostream>
 # include   <iterator>
 # include   <unistd.h>
+# include   <dirent.h>
+# include   <sys/stat.h>
+# include   <sys/types.h>
 # include   <sys/event.h>
 # include   <sys/socket.h>
 # include   <netinet/in.h>

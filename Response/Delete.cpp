@@ -1,32 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Utils.cpp                                          :+:      :+:    :+:   */
+/*   Delete.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/13 18:12:02 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/15 14:06:01 by mel-kora         ###   ########.fr       */
+/*   Created: 2023/06/15 13:44:14 by mel-kora          #+#    #+#             */
+/*   Updated: 2023/06/15 14:14:13 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Response.hpp"
+#include "Methods.hpp"
 
-int check_path(std::string path)
+Delete::Delete(std::string target): Method(target)
+{}
+
+void	Delete::implement_method(Response &res, request &req, Server_info server, Location location)
 {
-	struct stat	buf;
-	if (stat(path.c_str(), &buf) != 0)
-		return (0);
-	if (S_ISDIR(buf.st_mode))
-	{
-		// DIR* dir = opendir(path);
-		// if (!dir)
-		// 	return (-1);
-		// closedir(path);
-		return (1);
-	}
-	std::ifstream file(path);
-	if (file.is_open())
-		return (2);
-	return (-1);
+	if (target_not_good(res, req, server))
+		return ;
+	(void) location;
 }
