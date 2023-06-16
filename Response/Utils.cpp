@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 18:12:02 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/15 14:06:01 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/16 19:32:31 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,14 @@ int check_path(std::string path)
 		return (0);
 	if (S_ISDIR(buf.st_mode))
 	{
-		// DIR* dir = opendir(path);
-		// if (!dir)
-		// 	return (-1);
-		// closedir(path);
-		return (1);
+		DIR* dir = opendir(path.c_str());
+		if (!dir)
+			return (-2);
+		closedir(dir);
+		return (2);
 	}
 	std::ifstream file(path);
 	if (file.is_open())
-		return (2);
+		return (1);
 	return (-1);
 }

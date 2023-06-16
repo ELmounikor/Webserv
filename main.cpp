@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 14:13:21 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/15 14:02:58 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/16 19:22:33 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,15 @@ std::string get_fake_res_from_fake_req(char **av)
 	Response		res;
 	
 	// print_config(conf);
-	std::cout << "\033[0;91 *************SENDING REQUEST *****************\n\033[0m";
+	std::cout << "\n*************SENDING REQUEST *****************\n\n";
 	// req.request_parse(av[2], 0);
 	req.method = "GET";
-	req.path = "/dir/li/3ajbek/wakha.css";
+	req.path = "/dir/li/3ajbek/ZZZ";
 	req.version = "HTTP/1.1";
 	req.header["Host"] = "localhost:7623";
 	req.status_code = -1;
 	req.print_request();
-	std::cout << "\033[0;91 *************GETTING RESPONSE ****************\n\033[0m";
+	std::cout << "\n*************GETTING RESPONSE ****************\n\n";
 	res.response_fetch(req, conf);
 	return (res.response_content);
 }
@@ -52,7 +52,7 @@ int	main(int ac, char **av)
 	}
 	catch(const std::exception& e)
 	{
-		std::cerr << e.what() << '\n';
+		std::cerr << e.what() << std::endl;
 	}
 	return (0);
 }

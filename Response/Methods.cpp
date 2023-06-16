@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 18:04:32 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/15 14:15:32 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/16 19:31:27 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,9 @@ Method::Method(std::string target): check(0), target(target)
 bool Method::target_not_good(Response &res, request &req, Server_info server)
 {
 	check = check_path(target);
-	if (check <= 0)
+	if (!check)
 	{
-		if (check < 0)
-			res.status_code = 403;
-		if (!check)
-			res.status_code = 404;
+		res.status_code = 404;
 		res.get_error_response(req, server);
 		return (1);
 	}

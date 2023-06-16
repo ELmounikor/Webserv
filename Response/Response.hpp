@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 12:12:52 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/14 17:39:22 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/16 19:33:14 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,8 @@ class	Response
 		void		print_response_attr(Server_info server, Location location);
 		void		get_error_response(request &req, Server_info server);
 		void		get_response(request &req, Server_info server, Location location);
-		void		get_redirection_response(request &req, Server_info server, Location location);
+		void		get_redirection_response(request &req, Location location, std::string file, int redirect_code);
+		void		get_file_response(request &req, Server_info server, std::string path);
 		Location	get_location(request &req, Server_info server);
 		Server_info	get_server(request &req, Configuration conf);
 		std::string	get_status_line(request &req);

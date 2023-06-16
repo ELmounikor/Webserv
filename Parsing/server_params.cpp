@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 10:26:41 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/13 16:03:21 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/16 18:51:34 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,7 +158,7 @@ void	get_error_page(Server_info &serv, std::string argument)
 		{
 			long code = strtol(token.c_str(), NULL, 10);
 			if (code < 400 || code > 599)
-				ft_exit("Error code out of range (500-599)"); 
+				ft_exit("Invalid HTTP error code detected 🤖"); 
 			errpage_codes.push_back(code);
 		}
 		else

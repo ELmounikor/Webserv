@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 12:13:15 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/15 14:10:22 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/16 19:37:49 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,9 @@ void	Response::response_fetch(request &req, Configuration conf)
 			status_code = 404;
 		else if (location.returns.size() > 0)
 		{
-			get_redirection_response(req, server, location);
+			int redirect_code = (*location.returns.begin()).first;
+			std::string file = (*location.returns.begin()).second;
+			get_redirection_response(req, location, file, redirect_code);
 			return ;
 		}
 		else if (std::find(location.methods.begin(), location.methods.end(), req.method) == location.methods.end())
@@ -129,23 +131,31 @@ void	Response::get_error_response(request &req, Server_info server)
 	response_content = get_status_line(req) + CRLF + body;
 }
 
-void	Response::get_redirection_response(request &req, Server_info server, Location location)
+void	Response::get_redirection_response(request &req, Location location, std::string file, int redirect_code)
 {
-	std::string file = (*location.returns.begin()).second;
 	std::ifstream redirect_page(location.root + file);
 	if (location_name[location_name.size() - 1] != '/' && file[0] != '/')
 		file = "/" + file;
-	if (!redirect_page)
-	{
-		status_code = 404;
-		get_error_response(req, server);
-	}
+	status_code = redirect_code;
+	std::string location_header = "Location: " + location_name + file;
 	if (redirect_page.is_open())
 	{
-		status_code = (*location.returns.begin()).first;
 		std::getline(redirect_page, body, '\0');
-		std::string location_header = "Location: " + location_name + file;
 		response_content = get_status_line(req) + "\n" + location_header + CRLF + body;
+	}
+	else
+		response_content = get_status_line(req) + "\n" + location_header + CRLF + body;
+}
+
+void Response::get_file_response(request &req, Server_info server, std::string path)
+{
+	std::ifstream file(path);
+	
+	if (file.is_open())
+	{
+		status_code = 200;
+		std::getline(file, body, '\0');
+		response_content = get_status_line(req) + CRLF + body;
 	}
 	else
 	{

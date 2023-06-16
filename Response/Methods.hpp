@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 18:04:19 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/15 14:15:43 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/16 19:23:56 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,6 @@ class Delete: public Method
 		void implement_method (Response &res, request &req, Server_info server, Location location);
 };
 
-int	check_path(std::string path);
-
+int		check_path(std::string path);
+void	get_file_response(Response &res, request &req, Server_info server, std::string path);
 #endif

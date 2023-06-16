@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 22:14:54 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/12 15:27:04 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/16 18:50:08 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,10 @@ std::string	Response::get_status_message(void)
 			return ("Moved Permanently");
 		case 302:
 			return ("Found");
+		case 307:
+			return ("Temporary Redirect");
+		case 308:
+			return ("Permanent Redirect");
 		case 400:
 			return ("Bad Request");
 		case 401:

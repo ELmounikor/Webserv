@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 10:25:59 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/11 11:26:01 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/16 19:07:48 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,8 +93,8 @@ void	get_location_return(Location &location, std::string argument)
 		end++;
 	std::string token = argument.substr(start, end - start);
 	redirection_code = strtol(token.c_str(), NULL, 10);
-	if (!is_number(token) || (redirection_code != 301 && redirection_code != 302))
-		ft_exit("Invalid http redirection code in location detected 🤖");
+	if (!is_number(token) || (redirection_code != 301 && redirection_code != 302 && redirection_code != 307 && redirection_code != 308))
+		ft_exit("Invalid HTTP redirection code in location detected 🤖");
 	while (end < argument.size() && isspace(argument[end]))
 		end++;
 	location.returns[redirection_code] = get_valid_path(argument.substr(end, argument.size() - end));
