@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 18:12:02 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/16 19:32:31 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/17 15:42:20 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,4 +29,10 @@ int check_path(std::string path)
 	if (file.is_open())
 		return (1);
 	return (-1);
+}
+
+std::string	get_extention(std::string file_name)
+{
+	size_t dot_pos = file_name.find('.');
+	return (file_name.substr(++dot_pos, file_name.size()));
 }

@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 12:12:52 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/16 19:33:14 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/17 16:04:48 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,17 +31,18 @@ class	Response
 		std::string	location_name;
 		std::string	response_content;
 		Response();
-		void		response_fetch(request &req, Configuration conf);
 		void		get_host_nd_port(std::string value);
-		void		print_response_attr(Server_info server, Location location);
+		void		response_fetch(request &req, Configuration conf);
+		void		get_auto_index_page_response(request &req, std::string dir_path);
 		void		get_error_response(request &req, Server_info server);
+		void		print_response_attr(Server_info server, Location location);
 		void		get_response(request &req, Server_info server, Location location);
+		void		get_file_response(request &req, Server_info server, Location location, std::string path);
 		void		get_redirection_response(request &req, Location location, std::string file, int redirect_code);
-		void		get_file_response(request &req, Server_info server, std::string path);
-		Location	get_location(request &req, Server_info server);
-		Server_info	get_server(request &req, Configuration conf);
-		std::string	get_status_line(request &req);
 		std::string	get_status_message(void);
+		std::string	get_status_line(request &req);
+		Server_info	get_server(request &req, Configuration conf);
+		Location	get_location(request &req, Server_info server);
 };
 
 #endif

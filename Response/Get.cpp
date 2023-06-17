@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 13:43:22 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/16 19:48:05 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/17 16:06:52 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ void	Get::implement_method(Response &res, request &req, Server_info server, Loca
 {
 	if (target_not_good(res, req, server))
 		return ;
-	std::cout << "TARGET =" + target +" \n";
 	if (check % 2 == 0)
 	{
 		if (req.path[req.path.size() - 1] != '/')
@@ -35,20 +34,22 @@ void	Get::implement_method(Response &res, request &req, Server_info server, Loca
 			while (i != location.indexes.end())
 			{
 				int current = check_path(target + *i);
-				if (current == 1)
-					res.get_file_response(req, server, target + *i);
-				else if (current)
-					res.get_redirection_response(req, location, target + *i, 301);
+				if (current)
+				{
+					if (current == 1)
+						res.get_file_response(req, server, location, target + *i);
+					else if (current)
+						res.get_redirection_response(req, location, target + *i, 301);
+					return ;
+				}
 				i++;
 			}
+			res.status_code = 404;
+			res.get_error_response(req, server);
 		}
 		else
-		{
-			std::vector<std::string> elements;
-			res.status_code = 200;
-			// get_auto_index_page(res, elements);
-		}
+			res.get_auto_index_page_response(req, target);
 	}
 	else
-		res.get_file_response(req, server, target);
+		res.get_file_response(req, server, location, target);
 }
