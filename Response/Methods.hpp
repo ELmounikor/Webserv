@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 18:04:19 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/17 15:42:26 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/17 20:23:42 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ class Method
 		std::string	target;
 		Method(std::string target);
 		bool			target_not_good(Response &res, request &req, Server_info server);
-		int				execute_cgi(Response &res, request &req, Server_info server, Location location);
 		virtual void	implement_method (Response &res, request &req, Server_info server, Location location) = 0;
 };
 
@@ -52,5 +51,6 @@ class Delete: public Method
 };
 
 int			check_path(std::string path);
+std::string	get_date(void);
 std::string	get_extention(std::string file_name);
 #endif

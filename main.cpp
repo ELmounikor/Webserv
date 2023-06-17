@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 14:13:21 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/16 19:22:33 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/17 20:02:31 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	ft_exit(std::string msg)
 	exit(1);
 }
 
-std::string get_fake_res_from_fake_req(char **av)
+void get_fake_res_from_fake_req(char **av)
 {
 	Configuration	conf(av[1]);
 	request			req;
@@ -36,15 +36,15 @@ std::string get_fake_res_from_fake_req(char **av)
 	req.print_request();
 	std::cout << "\n*************GETTING RESPONSE ****************\n\n";
 	res.response_fetch(req, conf);
-	return (res.response_content);
+	std::cout << res.response_content;
 }
 
 int	main(int ac, char **av)
 {
 	try
 	{
-		std::cout << get_fake_res_from_fake_req(av);
-		exit(0);
+		// get_fake_res_from_fake_req(av);
+		// exit(0);
 		if (ac != 2)
 			ft_exit("Either too little or too much arguments 👽");
 		server s;

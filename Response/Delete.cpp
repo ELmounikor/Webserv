@@ -6,11 +6,11 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 13:44:14 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/15 14:14:13 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/17 17:42:13 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Methods.hpp"
+#include "Response.hpp"
 
 Delete::Delete(std::string target): Method(target)
 {}

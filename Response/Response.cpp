@@ -6,13 +6,13 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 12:13:15 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/17 16:06:03 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/17 20:48:21 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Response.hpp"
 
-Response::Response(): status_code(-1), port(-1), host(""), body(""), to_fetch(""), location_name(""), response_content("")
+Response::Response(): is_finished(-1), status_code(-1), port(-1), host(""), body(""), to_fetch(""), location_name(""), response_content("")
 {
 }
 
@@ -35,6 +35,7 @@ void	Response::response_fetch(request &req, Configuration conf)
 {
 	if (req.status_code == -1 && req.method == "" && req.path == "" && req.version == "" && req.header.size() == 0)
 		return ;
+	is_finished = 0;
 	status_code = req.status_code;
 	Server_info server = get_server(req, conf);
 	Location location = get_location(req, server);
@@ -129,6 +130,7 @@ void	Response::get_error_response(request &req, Server_info server)
 		</body>\
 	</html>";
 	response_content = get_status_line(req) + CRLF + body;
+	is_finished = 1;
 }
 
 void	Response::get_redirection_response(request &req, Location location, std::string file, int redirect_code)
@@ -137,20 +139,18 @@ void	Response::get_redirection_response(request &req, Location location, std::st
 	if (location_name[location_name.size() - 1] != '/' && file[0] != '/')
 		file = "/" + file;
 	status_code = redirect_code;
-	std::string location_header = "Location: " + location_name + file;
+	header["Location"] = location_name + file;
 	if (redirect_page.is_open())
 	{
 		std::getline(redirect_page, body, '\0');
-		response_content = get_status_line(req) + "\n" + location_header + CRLF + body;
+		response_content = get_status_line(req) + "\n" + CRLF + body;
 	}
 	else
-		response_content = get_status_line(req) + "\n" + location_header + CRLF + body;
+		response_content = get_status_line(req) + "\n" + CRLF + body;
 }
-
 
 void Response::get_auto_index_page_response(request &req, std::string dir_path)
 {
-	
     DIR* dir = opendir(dir_path.c_str());
     struct dirent* element;
 	status_code = 200;
@@ -159,33 +159,51 @@ void Response::get_auto_index_page_response(request &req, std::string dir_path)
 	<html>\
 		<head>\
 			<meta http-equiv=content-type content=text/html; charset=UTF-8>\
-			<title>" + dir_path + "'s autoindex page" + "</title>\
+			<title>" + location_name + to_fetch + "'s autoindex page" + "</title>\
 		</head>\
 		<body>";
 	while ((element = readdir(dir)) != NULL)
 	{
-		body = body + "<div id=app>\
-		<a href=" + element->d_name + ((check_path(dir_path + element->d_name) % 2) ? "" : "/") +">" + \
-		element->d_name + ((check_path(dir_path + element->d_name) % 2) ? "" : "/")  + "</a>\
-		</div>";
+		body = body + "<a href=" + element->d_name + ((check_path(dir_path + element->d_name) % 2) ? "" : "/") +">" + \
+		element->d_name + ((check_path(dir_path + element->d_name) % 2) ? "" : "/")  + "</a><br>";
 	}	
 	body = body + "</body></html>";
 	closedir(dir);
-	response_content = get_status_line(req) + "\n" + CRLF + body;
+	response_content = get_status_line(req) + CRLF + body;
+	is_finished = 1;
 }
 
 void Response::get_file_response(request &req, Server_info server, Location location, std::string path)
 {
 	std::ifstream file(path);
 	
+	if (!check_path(path))
+	{
+		status_code = 404;
+		get_error_response(req, server);
+	}
 	if (file.is_open())
 	{
-		if (location.cgi.size() == 0)
+		std::string extention = get_extention(path);
+		std::map<std::string, std::string>::iterator i = location.cgi.begin();
+		while (i != location.cgi.end())
 		{
-			status_code = 200;
-			std::getline(file, body, '\0');
-			response_content = get_status_line(req) + CRLF + body;
+			if ((*i).first == extention)
+			{
+				if (access((*i).second.c_str(), X_OK))
+				{
+					status_code = 403;
+					get_error_response(req, server);
+				}
+				else
+					execute_cgi(req, (*i).second, path);
+				return ;
+			}
+			i++;
 		}
+		std::getline(file, body, '\0');
+		response_content = get_status_line(req) + CRLF + body;
+		is_finished = 1;
 	}
 	else
 	{

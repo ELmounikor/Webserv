@@ -6,11 +6,11 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 13:43:22 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/17 16:06:52 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/17 20:48:49 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Methods.hpp"
+#include "Response.hpp"
 
 Get::Get(std::string target): Method(target)
 {}
@@ -22,7 +22,7 @@ void	Get::implement_method(Response &res, request &req, Server_info server, Loca
 	if (check % 2 == 0)
 	{
 		if (req.path[req.path.size() - 1] != '/')
-			res.get_redirection_response(req, location, res.to_fetch + "/", 301);
+			res.get_redirection_response(req, location, req.path + "/", 301);
 		else if ((location.autoindex == 1 && check < 0) || (location.autoindex == 0 && location.indexes.size() == 0) )
 		{
 			res.status_code = 403;
@@ -37,9 +37,12 @@ void	Get::implement_method(Response &res, request &req, Server_info server, Loca
 				if (current)
 				{
 					if (current == 1)
+					{
+						res.status_code = 200;
 						res.get_file_response(req, server, location, target + *i);
+					}
 					else if (current)
-						res.get_redirection_response(req, location, target + *i, 301);
+						res.get_redirection_response(req, location, req.path + *i, 301);
 					return ;
 				}
 				i++;
@@ -48,8 +51,14 @@ void	Get::implement_method(Response &res, request &req, Server_info server, Loca
 			res.get_error_response(req, server);
 		}
 		else
+		{
+			res.status_code = 200;
 			res.get_auto_index_page_response(req, target);
+		}
 	}
 	else
+	{
+		res.status_code = 200;
 		res.get_file_response(req, server, location, target);
+	}
 }

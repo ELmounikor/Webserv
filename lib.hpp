@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 14:13:32 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/15 14:03:04 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/17 20:14:29 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define    LIB_WERBSERV_HPP
 # include   <map>
 # include   <vector>
+# include   <ctime>
 # include   <cstdio>
 # include   <cstring>
 # include   <cstdlib>

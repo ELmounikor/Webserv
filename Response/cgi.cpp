@@ -1,28 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Methods.cpp                                        :+:      :+:    :+:   */
+/*   cgi.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/06 18:04:32 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/17 17:32:20 by mel-kora         ###   ########.fr       */
+/*   Created: 2023/06/17 17:33:41 by mel-kora          #+#    #+#             */
+/*   Updated: 2023/06/17 19:15:03 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Methods.hpp"
+#include "Response.hpp"
 
-Method::Method(std::string target): check(0), target(target)
-{}
-
-bool Method::target_not_good(Response &res, request &req, Server_info server)
+void	Response::execute_cgi(request &req, std::string exec_path, std::string file_path)
 {
-	check = check_path(target);
-	if (!check)
-	{
-		res.status_code = 404;
-		res.get_error_response(req, server);
-		return (1);
-	}
-	return (0);
+	is_finished = 1;
+	(void) req;
+	(void) file_path;
+	(void) exec_path;
 }

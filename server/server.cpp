@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:22:51 by sennaama          #+#    #+#             */
-/*   Updated: 2023/06/17 15:44:23 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/17 20:01:10 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,7 @@ int     ft_exist(struct kevent *event,int new_events, int client)
 
 void    server::multiplixing(const char *response)
 {
+	(void) response;
 	int client_len, socket_client, kq, new_events;
 	struct kevent event[MAX_EVENTS];
 	client_len = sizeof(serv_addr);
@@ -181,11 +182,11 @@ void    server::multiplixing(const char *response)
 				{
 					if (ft_exist(event, new_events, (*j)->socket_client) == 0)  
 					{
-						if (send((*j)->socket_client, response, strlen(response), 0) == -1)
-						{
+						if (send((*j)->socket_client, (*j)->res.response_content.c_str(), 1024, 0) == -1)
 							std::cout<<"client send error\n";
-						}
-						if ((*j)->res.response_content.size() == 0)
+						else
+							(*j)->res.response_content = (*j)->res.response_content.substr(1024, (*j)->res.response_content.size());
+						if ((*j)->res.response_content.size() == 0 && (*j)->res.is_finished)
 						{
 							DisableEvent(kq, (*j)->socket_client, EVFILT_WRITE);
 							close((*j)->socket_client);
