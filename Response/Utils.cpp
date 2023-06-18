@@ -6,11 +6,19 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 18:12:02 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/17 21:00:37 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/17 23:28:08 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Response.hpp"
+
+std::string	get_next_option(std::string path)
+{
+	size_t last_slash_pos = path.rfind('/');
+	if (last_slash_pos < path.size())
+		return (path.substr(0, last_slash_pos));
+	return (path);
+}
 
 int check_path(std::string path)
 {

@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/07 13:00:51 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/17 18:18:22 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/17 23:27:47 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,14 +89,6 @@ Server_info	Response::get_server(request &req, Configuration conf)
 	if (server.port == -1)
 		return (*(conf.servers.begin()));
 	return (server);
-}
-
-std::string	get_next_option(std::string request_uri)
-{
-	size_t last_slash_pos = request_uri.rfind('/');
-	if (last_slash_pos < request_uri.size())
-		return (request_uri.substr(0, last_slash_pos));
-	return (request_uri);
 }
 
 Location	Response::get_location(request &req, Server_info server)

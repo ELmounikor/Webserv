@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 13:43:22 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/17 20:48:49 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/18 19:28:41 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	Get::implement_method(Response &res, request &req, Server_info server, Loca
 	if (check % 2 == 0)
 	{
 		if (req.path[req.path.size() - 1] != '/')
-			res.get_redirection_response(req, location, req.path + "/", 301);
+			res.get_redirection_response(req, req.path + "/", 301);
 		else if ((location.autoindex == 1 && check < 0) || (location.autoindex == 0 && location.indexes.size() == 0) )
 		{
 			res.status_code = 403;
@@ -42,7 +42,7 @@ void	Get::implement_method(Response &res, request &req, Server_info server, Loca
 						res.get_file_response(req, server, location, target + *i);
 					}
 					else if (current)
-						res.get_redirection_response(req, location, req.path + *i, 301);
+						res.get_redirection_response(req, req.path + *i, 301);
 					return ;
 				}
 				i++;

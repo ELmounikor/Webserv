@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 12:13:15 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/17 20:48:21 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/18 19:29:30 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,15 +54,15 @@ void	Response::response_fetch(request &req, Configuration conf)
 		else if (location.returns.size() > 0)
 		{
 			int redirect_code = (*location.returns.begin()).first;
-			std::string file = (*location.returns.begin()).second;
-			get_redirection_response(req, location, file, redirect_code);
+			std::string next_redirect = (*location.returns.begin()).second;
+			get_redirection_response(req, next_redirect, redirect_code);
 			return ;
 		}
 		else if (std::find(location.methods.begin(), location.methods.end(), req.method) == location.methods.end())
 			status_code = 405;
 	}
-	else if (req.method == "POST" && req.header.find("Transfer-Encoding") != req.header.end() && req.header.find("Content-Length") == req.header.end())
-		status_code = 411;
+	// else if (req.method == "POST" && req.header.find("Transfer-Encoding") != req.header.end() && req.header.find("Content-Length") == req.header.end())
+	// 	status_code = 411;
 	if (status_code != -1)
 		get_error_response(req, server);
 	else
@@ -104,8 +104,10 @@ void	Response::get_error_response(request &req, Server_info server)
 		std::ifstream error_page((*errp).second);
 		if (error_page.is_open())
 		{
-			std::getline(error_page, body, '\0');
-			response_content = get_status_line(req) + CRLF + body;
+			std::getline(error_page, body, '\0');		
+			if (body.size() > 0)
+				header["Content-Type"] = "text/html";
+			response_content = get_status_line(req) + body;
 			return ;
 		}
 		// else if (file && status_code != 403)
@@ -129,24 +131,20 @@ void	Response::get_error_response(request &req, Server_info server)
 			</div>\
 		</body>\
 	</html>";
-	response_content = get_status_line(req) + CRLF + body;
+	if (body.size() > 0)
+		header["Content-Type"] = "text/html";
+	response_content = get_status_line(req) + body;
 	is_finished = 1;
 }
 
-void	Response::get_redirection_response(request &req, Location location, std::string file, int redirect_code)
+void	Response::get_redirection_response(request &req, std::string next_location, int redirect_code)
 {
-	std::ifstream redirect_page(location.root + file);
-	if (location_name[location_name.size() - 1] != '/' && file[0] != '/')
-		file = "/" + file;
+	if (location_name[location_name.size() - 1] != '/' && next_location[0] != '/')
+		next_location = "/" + next_location;
 	status_code = redirect_code;
-	header["Location"] = location_name + file;
-	if (redirect_page.is_open())
-	{
-		std::getline(redirect_page, body, '\0');
-		response_content = get_status_line(req) + "\n" + CRLF + body;
-	}
-	else
-		response_content = get_status_line(req) + "\n" + CRLF + body;
+	header["Location"] = location_name + next_location;
+	response_content = get_status_line(req);
+	is_finished = 1;
 }
 
 void Response::get_auto_index_page_response(request &req, std::string dir_path)
@@ -169,7 +167,9 @@ void Response::get_auto_index_page_response(request &req, std::string dir_path)
 	}	
 	body = body + "</body></html>";
 	closedir(dir);
-	response_content = get_status_line(req) + CRLF + body;
+	if (body.size() > 0)
+		header["Content-Type"] = "text/html";
+	response_content = get_status_line(req) + body;
 	is_finished = 1;
 }
 
@@ -201,8 +201,10 @@ void Response::get_file_response(request &req, Server_info server, Location loca
 			}
 			i++;
 		}
+		// if (body.size() > 0)
+			// header["Content_Type"] = get_extention_type(extention);
 		std::getline(file, body, '\0');
-		response_content = get_status_line(req) + CRLF + body;
+		response_content = get_status_line(req) + body;
 		is_finished = 1;
 	}
 	else
