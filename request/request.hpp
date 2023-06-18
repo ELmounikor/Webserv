@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   request.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/21 18:20:01 by sennaama          #+#    #+#             */
-/*   Updated: 2023/06/08 16:16:16 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/18 17:05:39 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,20 @@ class request
         std::string     path;
 	    std::string     version;
         std::ofstream   body_file;
+        int             size;
+        int				contentLength;
         std::map<std::string, std::string> header;
+        int             flag;
         request();
-        void request_parse(std::string buf, int socket_client);
-        void print_request();
+		std::string	trim(std::string str);
+		std::string get_extension(std::string content_type);
+		void		request_parse(std::string buf, int socket_client);
+        void		header_parse(std::string buf);
+        void		print_request();
+        void		get_method(std::string assign);
+		void		post_method(std::string assign, int socket_client);
+		void		appendtofile(std::string str, std::string filename);
+		int			countcharacter(std::string str, char c);
         ~request();
 };
 #endif

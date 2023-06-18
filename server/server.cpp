@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:22:51 by sennaama          #+#    #+#             */
-/*   Updated: 2023/06/17 20:01:10 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/18 17:51:25 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ server::~server(){}
 void    server::addEvent(int kq, int fd, int fileter)
 {
 	struct kevent events[1];
-	EV_SET(&events[0], fd, fileter, EV_ADD | EV_CLEAR, 0, 0, NULL);
+	EV_SET(&events[0], fd, fileter, EV_ADD, 0, 0, NULL);
 	if (kevent(kq, events, 1, NULL, 0, NULL) < 0)
 	{
 		perror("addEvent");
@@ -142,38 +142,44 @@ void    server::multiplixing(const char *response)
 					}
 					Client *new_client = new Client(socket_client);
 					clients.push_back(new_client);
+					if (fcntl(socket_client, F_SETFL ,O_NONBLOCK) < 0)
+                        perror("FCNTL Error");
 					addEvent(kq, socket_client, EVFILT_READ);
 				}
 				else
 				{
 					for (std::vector<Client *>::iterator j = clients.begin(); j != clients.end();)
-					{
-						if (ft_exist(event, new_events, (*j)->socket_client) == 1)
-						{
-							char buf[6000];
-							size_t bytes_read = recv((*j)->socket_client, buf, sizeof(buf), 0);
-							if (bytes_read <= 0)
-							{
-								std::cout<<"client read error\n";
-								DeleteEvent(kq, (*j)->socket_client, EVFILT_READ);
-								close((*j)->socket_client);
-								delete *j;
-								clients.erase(j);
-							}
-							else
-							{
-								//std::cout<<"-"<<buf<<"-"<<std::endl;
-								(*j)->req.request_parse(buf, (*j)->socket_client);
-								//(*j)->req.print_request();
-								(*j)->res.response_fetch((*j)->req, conf);
-								addEvent(kq, (*j)->socket_client, EVFILT_WRITE);
-								DisableEvent(kq, (*j)->socket_client, EVFILT_READ);
-								++j;
-							}
-						}
-						else
-							++j;
-					}
+                    {
+                        if (ft_exist(event, new_events, (*j)->socket_client) == 1)
+                        {
+                            char buf[1024];
+                            size_t bytes_read = recv((*j)->socket_client, buf, 1024, 0);
+                            buf[bytes_read] = 0;
+                            std::string assign(buf, bytes_read);
+                            if (bytes_read < 0)
+                            {
+                                std::cout<<"client read error\n";
+                                DeleteEvent(kq, (*j)->socket_client, EVFILT_READ);
+                                close((*j)->socket_client);
+                                delete *j;
+                                clients.erase(j);
+                            }
+                            else
+                            {
+                                (*j)->req.request_parse(assign, (*j)->socket_client);
+                                //(*j)->req.print_request();
+                                if ((*j)->req.flag == -1)
+                                {
+                                    (*j)->res.response_fetch((*j)->req, conf);
+                                    addEvent(kq, (*j)->socket_client, EVFILT_WRITE);
+                                    DisableEvent(kq, (*j)->socket_client, EVFILT_READ);
+                                }
+                                ++j;
+                            }
+                        }
+                        else
+                            ++j;
+                    }
 				}
 			}
 			else if (event[i].filter == EVFILT_WRITE)
@@ -193,6 +199,12 @@ void    server::multiplixing(const char *response)
 							delete *j;
 							clients.erase(j);
 						}
+						// if (send((*j)->socket_client, response, strlen(response), 0) == -1)
+                        //     std::cout<<"client send error\n";
+                        // DisableEvent(kq, (*j)->socket_client, EVFILT_WRITE);
+                        // close((*j)->socket_client);
+                        // delete *j;
+                        // clients.erase(j);
 					}
 					else
 						++j;
