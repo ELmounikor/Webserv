@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 12:13:15 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/18 19:29:30 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/18 20:44:51 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void	Response::get_response(request &req, Server_info server, Location location)
 {
 	std::string	target;
 	
-	if (location_name[location_name.size() - 1] == '/')
+	if (location.root[location.root.size() - 1] == '/')
 		target = location.root + to_fetch;
 	else if (to_fetch != "")
 		target = location.root + "/" + to_fetch;
@@ -184,11 +184,11 @@ void Response::get_file_response(request &req, Server_info server, Location loca
 	}
 	if (file.is_open())
 	{
-		std::string extention = get_extention(path);
+		std::string extension = get_extension(path);
 		std::map<std::string, std::string>::iterator i = location.cgi.begin();
 		while (i != location.cgi.end())
 		{
-			if ((*i).first == extention)
+			if ((*i).first == extension)
 			{
 				if (access((*i).second.c_str(), X_OK))
 				{
@@ -201,8 +201,8 @@ void Response::get_file_response(request &req, Server_info server, Location loca
 			}
 			i++;
 		}
-		// if (body.size() > 0)
-			// header["Content_Type"] = get_extention_type(extention);
+		if (body.size() > 0)
+			header["Content_Type"] = get_extension_type(extension);
 		std::getline(file, body, '\0');
 		response_content = get_status_line(req) + body;
 		is_finished = 1;

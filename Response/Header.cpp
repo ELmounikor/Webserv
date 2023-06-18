@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Status.cpp                                         :+:      :+:    :+:   */
+/*   Header.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 22:14:54 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/18 19:26:13 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/18 20:34:43 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,15 @@
 std::string	Response::get_status_line(request &req)
 {
 	std::string	status_line = req.version + SP + std::to_string(status_code) + SP + get_status_message() + CRLF;
-	header["Date"] = get_date();
+	// header["Date"] = get_date();
 	if (body.size() > 0)
 		header["Content-Length"] = std::to_string(body.size());
-	std::map<std::string, std::string>::iterator i = header.begin();
-	while (i != header.end())
-	{
-		status_line = (*i).first + ": " + (*i).second + CRLF;
-		i++;
-	}
+	// std::map<std::string, std::string>::iterator i = header.begin();
+	// while (i != header.end())
+	// {
+	// 	status_line = (*i).first + ": " + (*i).second + CRLF;
+	// 	i++;
+	// }
 	return (status_line + "\n" + CRLF);
 }
 

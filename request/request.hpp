@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   request.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/21 18:20:01 by sennaama          #+#    #+#             */
-/*   Updated: 2023/06/18 17:05:39 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/06/18 20:59:43 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ class request
         std::map<std::string, std::string> header;
         int             flag;
         request();
-		std::string	trim(std::string str);
+		std::string	(std::string str);
 		std::string get_extension(std::string content_type);
 		void		request_parse(std::string buf, int socket_client);
         void		header_parse(std::string buf);

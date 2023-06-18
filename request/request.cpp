@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/21 20:11:15 by sennaama          #+#    #+#             */
-/*   Updated: 2023/06/18 17:49:52 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/06/18 19:41:38 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,85 +43,85 @@ int	request::countcharacter(std::string str, char c)
 }
 
 std::string	request::get_extension(std::string content_type) {
-	std::map<std::string, std::string> extention;
-    extention["audio/aac"] = ".aac";
-    extention["application/x-abiword"] = ".abw";
-    extention["application/x-freearc"] = ".arc";
-    extention["image/avif"] = ".avif";
-    extention["video/x-msvideo"] = ".avi";
-    extention["application/vnd.amazon.ebook"] = ".azw";
-    extention["application/octet-stream"] = ".bin";
-    extention["image/bmp"] = ".bmp";
-    extention["application/x-bzip"] = ".bz";
-    extention["application/x-bzip2"] = ".bz2";
-    extention["application/x-cdf"] = ".cda";
-    extention["application/x-csh"] = ".csh";
-    extention["text/css"] = ".css";
-    extention["text/csv"] = ".csv";
-    extention["application/msword"] = ".doc";
-    extention["application/vnd.openxmlformats-officedocument.wordprocessingml.document"] = ".docx";
-    extention["application/vnd.ms-fontobject"] = ".eot";
-    extention["application/epub+zip"] = ".epub";
-    extention["application/gzip"] = ".gz";
-    extention["image/gif"] = ".gif";
-    extention["text/html"] = ".html";
-    extention["image/vnd.microsoft.icon"] = ".ico";
-    extention["text/calendar"] = ".ics";
-    extention["application/java-archive"] = ".jar";
-    extention["image/jpeg"] = ".jpeg";
-    extention["text/javascript"] = ".js";
-    extention["application/json"] = ".json";
-    extention["application/ld+json"] = ".jsonld";
-    extention["audio/midi"] = ".mid";
-    extention["audio/x-midi"] = ".midi";
-    extention["text/javascript"] = ".mjs";
-    extention["audio/mpeg"] = ".mp3";
-    extention["video/mp4"] = ".mp4";
-    extention["video/mpeg"] = ".mpeg";
-    extention["application/vnd.apple.installer+xml"] = ".mpkg";
-    extention["application/vnd.oasis.opendocument.presentation"] = ".odp";
-    extention["application/vnd.oasis.opendocument.spreadsheet"] = ".ods";
-    extention["application/vnd.oasis.opendocument.text"] = ".odt";
-    extention["audio/ogg"] = ".oga";
-    extention["video/ogg"] = ".ogv";
-    extention["application/ogg"] = ".ogx";
-    extention["audio/opus"] = ".opus";
-    extention["font/otf"] = ".otf";
-    extention["image/png"] = ".png";
-    extention["application/pdf"] = ".pdf";
-    extention["application/x-httpd-php"] = ".php";
-    extention["application/vnd.ms-powerpoint"] = ".ppt";
-    extention["application/vnd.openxmlformats-officedocument.presentationml.presentation"] = ".pptx";
-    extention["application/vnd.rar"] = ".rar";
-    extention["application/rtf"] = ".rtf";
-    extention["application/x-sh"] = ".sh";
-    extention["image/svg+xml"] = ".svg";
-    extention["application/x-tar"] = ".tar";
-    extention["image/tiff"] = ".tiff";
-    extention["video/mp2t"] = ".ts";
-    extention["font/ttf"] = ".ttf";
-    extention["text/plain"] = ".txt";
-    extention["application/vnd.visio"] = ".vsd";
-    extention["audio/wav"] = ".wav";
-    extention["audio/webm"] = ".weba";
-    extention["video/webm"] = ".webm";
-    extention["image/webp"] = ".webp";
-    extention["font/woff"] = ".woff";
-    extention["font/woff2"] = ".woff2";
-    extention["application/xhtml+xml"] = ".xhtml";
-    extention["application/vnd.ms-excel"] = ".xls";
-    extention["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"] = ".xlsx";
-    extention["application/xml"] = ".xml";
-    extention["application/vnd.mozilla.xul+xml"] = ".xul";
-    extention["application/zip"] = ".zip";
-    extention["video/3gpp"] = ".3gp";
-    extention["video/3gpp2"] = ".3g2";
-    extention["application/x-7z-compressed"] = ".7z";
-    std::map<std::string, std::string>::iterator it = extention.find(content_type);
-    if (it != extention.end()) {
+	std::map<std::string, std::string> extension;
+    extension["audio/aac"] = ".aac";
+    extension["application/x-abiword"] = ".abw";
+    extension["application/x-freearc"] = ".arc";
+    extension["image/avif"] = ".avif";
+    extension["video/x-msvideo"] = ".avi";
+    extension["application/vnd.amazon.ebook"] = ".azw";
+    extension["application/octet-stream"] = ".bin";
+    extension["image/bmp"] = ".bmp";
+    extension["application/x-bzip"] = ".bz";
+    extension["application/x-bzip2"] = ".bz2";
+    extension["application/x-cdf"] = ".cda";
+    extension["application/x-csh"] = ".csh";
+    extension["text/css"] = ".css";
+    extension["text/csv"] = ".csv";
+    extension["application/msword"] = ".doc";
+    extension["application/vnd.openxmlformats-officedocument.wordprocessingml.document"] = ".docx";
+    extension["application/vnd.ms-fontobject"] = ".eot";
+    extension["application/epub+zip"] = ".epub";
+    extension["application/gzip"] = ".gz";
+    extension["image/gif"] = ".gif";
+    extension["text/html"] = ".html";
+    extension["image/vnd.microsoft.icon"] = ".ico";
+    extension["text/calendar"] = ".ics";
+    extension["application/java-archive"] = ".jar";
+    extension["image/jpeg"] = ".jpeg";
+    extension["text/javascript"] = ".js";
+    extension["application/json"] = ".json";
+    extension["application/ld+json"] = ".jsonld";
+    extension["audio/midi"] = ".mid";
+    extension["audio/x-midi"] = ".midi";
+    extension["text/javascript"] = ".mjs";
+    extension["audio/mpeg"] = ".mp3";
+    extension["video/mp4"] = ".mp4";
+    extension["video/mpeg"] = ".mpeg";
+    extension["application/vnd.apple.installer+xml"] = ".mpkg";
+    extension["application/vnd.oasis.opendocument.presentation"] = ".odp";
+    extension["application/vnd.oasis.opendocument.spreadsheet"] = ".ods";
+    extension["application/vnd.oasis.opendocument.text"] = ".odt";
+    extension["audio/ogg"] = ".oga";
+    extension["video/ogg"] = ".ogv";
+    extension["application/ogg"] = ".ogx";
+    extension["audio/opus"] = ".opus";
+    extension["font/otf"] = ".otf";
+    extension["image/png"] = ".png";
+    extension["application/pdf"] = ".pdf";
+    extension["application/x-httpd-php"] = ".php";
+    extension["application/vnd.ms-powerpoint"] = ".ppt";
+    extension["application/vnd.openxmlformats-officedocument.presentationml.presentation"] = ".pptx";
+    extension["application/vnd.rar"] = ".rar";
+    extension["application/rtf"] = ".rtf";
+    extension["application/x-sh"] = ".sh";
+    extension["image/svg+xml"] = ".svg";
+    extension["application/x-tar"] = ".tar";
+    extension["image/tiff"] = ".tiff";
+    extension["video/mp2t"] = ".ts";
+    extension["font/ttf"] = ".ttf";
+    extension["text/plain"] = ".txt";
+    extension["application/vnd.visio"] = ".vsd";
+    extension["audio/wav"] = ".wav";
+    extension["audio/webm"] = ".weba";
+    extension["video/webm"] = ".webm";
+    extension["image/webp"] = ".webp";
+    extension["font/woff"] = ".woff";
+    extension["font/woff2"] = ".woff2";
+    extension["application/xhtml+xml"] = ".xhtml";
+    extension["application/vnd.ms-excel"] = ".xls";
+    extension["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"] = ".xlsx";
+    extension["application/xml"] = ".xml";
+    extension["application/vnd.mozilla.xul+xml"] = ".xul";
+    extension["application/zip"] = ".zip";
+    extension["video/3gpp"] = ".3gp";
+    extension["video/3gpp2"] = ".3g2";
+    extension["application/x-7z-compressed"] = ".7z";
+    std::map<std::string, std::string>::iterator it = extension.find(content_type);
+    if (it != extension.end()) {
         return it->second;
     }
-    return extention["application/octet-stream"];
+    return extension["application/octet-stream"];
 }
 
 void    request::header_parse(std::string buf)

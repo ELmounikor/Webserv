@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 13:43:22 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/18 19:28:41 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/18 20:57:19 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,38 +23,31 @@ void	Get::implement_method(Response &res, request &req, Server_info server, Loca
 	{
 		if (req.path[req.path.size() - 1] != '/')
 			res.get_redirection_response(req, req.path + "/", 301);
-		else if ((location.autoindex == 1 && check < 0) || (location.autoindex == 0 && location.indexes.size() == 0) )
+		std::vector<std::string>::iterator i = location.indexes.begin();
+		while (i != location.indexes.end())
 		{
-			res.status_code = 403;
-			res.get_error_response(req, server);
-		}
-		else if (location.autoindex == 0)
-		{
-			std::vector<std::string>::iterator i = location.indexes.begin();
-			while (i != location.indexes.end())
+			int current = check_path(target + *i);
+			if (current)
 			{
-				int current = check_path(target + *i);
-				if (current)
+				if (current == 1)
 				{
-					if (current == 1)
-					{
-						res.status_code = 200;
-						res.get_file_response(req, server, location, target + *i);
-					}
-					else if (current)
-						res.get_redirection_response(req, req.path + *i, 301);
-					return ;
+					res.status_code = 200;
+					res.get_file_response(req, server, location, target + *i);
 				}
-				i++;
+				else if (current)
+					res.get_redirection_response(req, req.path + *i, 301);
+				return ;
 			}
-			res.status_code = 404;
-			res.get_error_response(req, server);
+			i++;
 		}
-		else
+		if (location.autoindex == 1 && check > 0)
 		{
 			res.status_code = 200;
 			res.get_auto_index_page_response(req, target);
+			return ;
 		}
+		res.status_code = 403;
+		res.get_error_response(req, server);
 	}
 	else
 	{
