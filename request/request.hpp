@@ -6,9 +6,10 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/21 18:20:01 by sennaama          #+#    #+#             */
-/*   Updated: 2023/06/18 20:59:43 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/18 21:11:16 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #ifndef REQUEST_HPP
 # define REQUEST_HPP
@@ -26,7 +27,7 @@ class request
         std::map<std::string, std::string> header;
         int             flag;
         request();
-		std::string	(std::string str);
+		std::string	trim(std::string str);
 		std::string get_extension(std::string content_type);
 		void		request_parse(std::string buf, int socket_client);
         void		header_parse(std::string buf);
