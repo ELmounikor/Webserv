@@ -3,13 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   request.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/21 18:20:01 by sennaama          #+#    #+#             */
-/*   Updated: 2023/06/18 21:11:16 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/20 18:53:04 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #ifndef REQUEST_HPP
 # define REQUEST_HPP
@@ -17,14 +16,16 @@
 class request
 {
     public:
-        int             status_code;
+        std::map<std::string, std::string> header;
+        std::string     data;
         std::string     method;
         std::string     path;
 	    std::string     version;
-        std::ofstream   body_file;
+        std::fstream   body_file;
+        std::string     name_file;
+        int             status_code;
         int             size;
-        int				contentLength;
-        std::map<std::string, std::string> header;
+        int             contentLength;
         int             flag;
         request();
 		std::string	trim(std::string str);
