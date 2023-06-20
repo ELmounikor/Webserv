@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 14:13:21 by mel-kora          #+#    #+#             */
 /*   Updated: 2023/06/20 22:36:51 by mel-kora         ###   ########.fr       */
@@ -41,18 +41,18 @@ void	ft_exit(std::string msg)
 
 int	main(int ac, char **av)
 {
-	try
-	{
+	//try
+	//{
 		// get_fake_res_from_fake_req(av);
 		// exit(0);
 		if (ac != 2)
 			ft_exit("Either too little or too much arguments 👽");
 		server s;
 		s.process(av[1]);
-	}
-	catch(const std::exception& e)
-	{
-		std::cerr << e.what() << std::endl;
-	}
+	//}
+	// catch(const std::exception& e)
+	// {
+	// 	std::cerr << e.what() << std::endl;
+	// }
 	return (0);
 }
