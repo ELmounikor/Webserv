@@ -34,4 +34,5 @@ class server
 		void    listener_port(int port);
 		void    multiplixing(const char *response);
 };
+
 #endif

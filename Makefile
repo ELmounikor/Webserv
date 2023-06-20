@@ -6,7 +6,7 @@
 #    By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/30 14:02:35 by mel-kora          #+#    #+#              #
-#    Updated: 2023/06/18 21:12:36 by mel-kora         ###   ########.fr        #
+#    Updated: 2023/06/20 22:06:08 by mel-kora         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,6 @@ SRCS		=	main.cpp\
 				server/server.cpp\
 				Client/Client.cpp\
 				request/request.cpp\
-				Response/cgi.cpp\
 				Response/Get.cpp\
 				Response/Post.cpp\
 				Response/Utils.cpp\
@@ -36,11 +35,12 @@ SRCS		=	main.cpp\
 				Parsing/server_params.cpp\
 				Parsing/server_checker.cpp\
 				Parsing/location_params.cpp\
+				Response/Send_nd_execute.cpp\
 				#more files
 OBJS		= 	${SRCS:.cpp=.o}
 CC			= 	@c++
 RM			= 	@rm -rf
-CPPFLAGS	= 	-Wall -Werror -Wextra -std=c++98
+CPPFLAGS	= 	-Wall -Werror -Wextra -std=c++98 -fsanitize=address -g
 
 .cpp.o : $(INCS)
 	@$(CC) $(CPPFLAGS) -c $< -o $@
@@ -68,4 +68,4 @@ fclean:		clean
 
 re:			fclean all
 
-.PHONY: all clean fclean re 
+.PHONY: all clean fclean re

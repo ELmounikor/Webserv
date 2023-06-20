@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 18:12:02 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/18 19:55:29 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/20 22:22:20 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,16 @@ int check_path(std::string path)
 	if (file.is_open())
 		return (1);
 	return (-1);
+}
+
+std::string get_file_size(std::string path)
+{
+	struct stat	buf;
+	if (stat(path.c_str(), &buf) != 0)
+		return (0);
+	if (S_ISDIR(buf.st_mode))
+		return (0);
+	return (std::to_string(buf.st_size));
 }
 
 std::string	get_extension(std::string file_name)

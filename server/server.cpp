@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:22:51 by sennaama          #+#    #+#             */
-/*   Updated: 2023/06/18 17:51:25 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/06/20 22:38:05 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,11 +188,7 @@ void    server::multiplixing(const char *response)
 				{
 					if (ft_exist(event, new_events, (*j)->socket_client) == 0)  
 					{
-						if (send((*j)->socket_client, (*j)->res.response_content.c_str(), 1024, 0) == -1)
-							std::cout<<"client send error\n";
-						else
-							(*j)->res.response_content = (*j)->res.response_content.substr(1024, (*j)->res.response_content.size());
-						if ((*j)->res.response_content.size() == 0 && (*j)->res.is_finished)
+						if (send_response(*j))
 						{
 							DisableEvent(kq, (*j)->socket_client, EVFILT_WRITE);
 							close((*j)->socket_client);

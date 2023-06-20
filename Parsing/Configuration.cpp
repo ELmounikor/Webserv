@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:16:16 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/18 20:10:46 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/20 17:16:30 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,11 +65,12 @@ Configuration::Configuration(std::string file_name)
 
 std::string	trim_spaces(std::string input)
 {
+	if (input.size() == 0)
+		return ("");
 	size_t i = 0, j = input.size() - 1;
-
 	while (i < input.size() && isspace(input[i]))
 		i++;
-	while (j >= 0 && isspace(input[j]))
+	while (j >= i && isspace(input[j]))
 		j--;
 	return (input.substr(i, j - i + 1));
 }

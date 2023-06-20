@@ -39,4 +39,7 @@ class Client
 		// int 	getSend();
 		// void	setSend(int send);	
 };
+
+int		    send_response(Client *cli);
+void	    execute_cgi(Client *cli);
 #endif
