@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mounikor <mounikor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 12:13:15 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/20 22:48:07 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/21 17:53:22 by mounikor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,27 +196,8 @@ void Response::get_file_response(Server_info server, Location location, std::str
 	}
 	if (file.is_open())
 	{
-		std::string extension = get_extension(path);
-		std::map<std::string, std::string>::iterator i = location.cgi.begin();
-		while (i != location.cgi.end())
-		{
-			if ((*i).first == extension)
-			{
-				if (access((*i).second.c_str(), X_OK))
-				{
-					status_code = 403;
-					get_error_response(server);
-				}
-				else
-				{
-					is_cgi = 1;
-					file_path = path;
-					exec_path = (*i).second;
-				}
-				return ;
-			}
-			i++;
-		}
+		if (has_cgi(path, location, server))
+			return ;
 		body_file.open(path);
 		headers["Content_Type"] = get_extension_type(extension);
 		headers["Content-Length"] = get_file_size(path);
@@ -227,4 +208,30 @@ void Response::get_file_response(Server_info server, Location location, std::str
 		status_code = 403;
 		get_error_response(server);
 	}
+}
+
+int Response::has_cgi(std::string path, Location location, Server server)
+{
+    std::string extension = get_extension(path);
+    std::map<std::string, std::string>::iterator i = location.cgi.begin();
+    while (i != location.cgi.end())
+    {
+        if ((*i).first == extension)
+        {
+            if (access((*i).second.c_str(), X_OK))
+            {
+                status_code = 403;
+                get_error_response(server);
+            }
+            else
+            {
+                is_cgi = 1;
+                file_path = path;
+                exec_path = (*i).second;
+            }
+            return (1);
+        }
+        i++;
+    }
+	return (0);
 }

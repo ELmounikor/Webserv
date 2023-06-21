@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Methods.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mounikor <mounikor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 18:04:19 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/20 22:32:31 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/21 18:14:55 by mounikor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,9 @@ class Delete: public Method
 {
 	public:
 		Delete(std::string target);
-		void implement_method (Response &res, request &req, Server_info server, Location location);
+		void delete_file(Response &res, std::string path);
+		int	 delete_folder(Response &res, std::string path);
+		int	 implement_method (Response &res, request &req, Server_info server, Location location);
 };
 
 int			check_path(std::string path);

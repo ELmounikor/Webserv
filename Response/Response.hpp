@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mounikor <mounikor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 12:12:52 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/20 22:39:42 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/21 17:46:40 by mounikor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ class	Response
 		std::fstream						body_file;
 		std::map<std::string, std::string>	headers;
 		Response();
+		int			has_cgi(std::string path, Location location, Server server);
 		void		reset_response(void);
 		void		get_host_nd_port(std::string value);
 		void		get_error_response(Server_info server);
