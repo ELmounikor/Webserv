@@ -6,7 +6,7 @@
 /*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/21 20:11:15 by sennaama          #+#    #+#             */
-/*   Updated: 2023/06/20 19:14:31 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/06/22 12:39:47 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -232,7 +232,7 @@ void	request::post_method(std::string assign, int socket_client)
    
     std::string file;
     
-	if (assign.empty() || header.find("Content-Type") == header.end() \
+	if (header.find("Content-Type") == header.end() \
 		|| (header.find("Content-Length") == header.end()\
 		&& header.find("Transfer-Encoding") == header.end()) || \
 		(header.find("Content-Length") != header.end()\
