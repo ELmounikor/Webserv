@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mounikor <mounikor@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 12:13:15 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/21 17:53:22 by mounikor         ###   ########.fr       */
+/*   Updated: 2023/06/22 18:36:29 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,7 +199,7 @@ void Response::get_file_response(Server_info server, Location location, std::str
 		if (has_cgi(path, location, server))
 			return ;
 		body_file.open(path);
-		headers["Content_Type"] = get_extension_type(extension);
+		headers["Content_Type"] = get_extension_type(get_extension(path));
 		headers["Content-Length"] = get_file_size(path);
 		// response_content = get_header(req) + body_file;
 	}
@@ -210,7 +210,7 @@ void Response::get_file_response(Server_info server, Location location, std::str
 	}
 }
 
-int Response::has_cgi(std::string path, Location location, Server server)
+int Response::has_cgi(std::string path, Location location, Server_info server)
 {
     std::string extension = get_extension(path);
     std::map<std::string, std::string>::iterator i = location.cgi.begin();

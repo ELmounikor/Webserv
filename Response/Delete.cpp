@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Delete.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mounikor <mounikor@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 13:44:14 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/21 18:23:29 by mounikor         ###   ########.fr       */
+/*   Updated: 2023/06/22 18:35:20 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	Delete::implement_method(Response &res, request &req, Server_info server, L
 	}
 	else if (!res.has_cgi(target, location, server))
 	{
-		delete_file(res);	
+		delete_file(res, target);	
 		if (res.status_code != -1)
 			res.get_error_response(server);
 	}
@@ -56,7 +56,7 @@ void	Delete::delete_file(Response &res, std::string path)
 {
 	if (res.status_code != -1)
 		return ;
-	if (std::remove(path))
+	if (std::remove(path.c_str()))
 	{
 		if (check_path(path) < 0)
 			res.status_code = 403;
@@ -69,7 +69,7 @@ void	Delete::delete_folder(Response &res, std::string path)
 {
 	if (res.status_code != -1)
 		return ;
-    DIR* dir = opendir(dir_path.c_str());
+    DIR* dir = opendir(path.c_str());
     struct dirent* element;
 	while ((element = readdir(dir)) != NULL)
 	{
@@ -80,7 +80,7 @@ void	Delete::delete_folder(Response &res, std::string path)
 			delete_folder(res, path + element->d_name);
 	}
 	closedir(dir);
-	if (std::remove(path))
+	if (std::remove(path.c_str()))
 	{
 		if (check_path(path) < 0)
 			res.status_code = 403;

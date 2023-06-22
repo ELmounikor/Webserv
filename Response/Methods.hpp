@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Methods.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mounikor <mounikor@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 18:04:19 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/21 18:25:50 by mounikor         ###   ########.fr       */
+/*   Updated: 2023/06/22 18:30:15 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ class	Configuration;
 class	Server_info;
 class	Location;
 class	Response;
+class	Client;
 class	request;
 class Method
 {

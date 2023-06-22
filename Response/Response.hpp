@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mounikor <mounikor@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 12:12:52 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/21 17:46:40 by mounikor         ###   ########.fr       */
+/*   Updated: 2023/06/22 18:30:33 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 # define	SP		" " 
 # include	"Methods.hpp"
 
-class	Client;
 class	Response
 {
 	public:
@@ -33,7 +32,7 @@ class	Response
 		std::fstream						body_file;
 		std::map<std::string, std::string>	headers;
 		Response();
-		int			has_cgi(std::string path, Location location, Server server);
+		int			has_cgi(std::string path, Location location, Server_info server);
 		void		reset_response(void);
 		void		get_host_nd_port(std::string value);
 		void		get_error_response(Server_info server);
