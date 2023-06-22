@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:22:51 by sennaama          #+#    #+#             */
-/*   Updated: 2023/06/20 22:38:05 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/22 22:26:28 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,8 +133,7 @@ void    server::multiplixing(const char *response)
 			{
 				if (std::find(listeners.begin(), listeners.end(), event_fd) != listeners.end())
 				{
-					std::cout<<"New connection coming in...\n";    
-
+					std::cout<<"New connection coming in...\n";
 					socket_client = accept(event_fd, (struct sockaddr *)&serv_addr, (socklen_t *)&client_len);
 					if (socket_client == -1)
 					{
@@ -152,7 +151,7 @@ void    server::multiplixing(const char *response)
                     {
                         if (ft_exist(event, new_events, (*j)->socket_client) == 1)
                         {
-                            char buf[1024];
+                            char buf[1025];
                             size_t bytes_read = recv((*j)->socket_client, buf, 1024, 0);
                             buf[bytes_read] = 0;
                             std::string assign(buf, bytes_read);
@@ -167,7 +166,6 @@ void    server::multiplixing(const char *response)
                             else
                             {
                                 (*j)->req.request_parse(assign, (*j)->socket_client);
-                                //(*j)->req.print_request();
                                 if ((*j)->req.flag == -1)
                                 {
                                     (*j)->res.response_fetch((*j)->req, conf);

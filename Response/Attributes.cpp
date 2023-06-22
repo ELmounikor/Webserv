@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/07 13:00:51 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/20 22:35:35 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/22 22:21:33 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ Location	Response::get_location(request &req, Server_info server)
 		location_name = (*location_i).first;
 		return ((*location_i).second);
 	}
-	if (request_uri[request_uri.size() - 1] == '/')
+	if (request_uri.size() > 0 && request_uri[request_uri.size() - 1] == '/')
 		request_uri = request_uri.substr(0, request_uri.size() - 1);
 	while (1)
 	{

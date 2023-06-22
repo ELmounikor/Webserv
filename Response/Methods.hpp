@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 18:04:19 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/22 18:30:15 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/22 19:28:15 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ class Method
 		int			check;
 		std::string	target;
 		Method(std::string target);
-		bool			target_not_good(Response &res, Server_info server);
+		int			target_not_good(Response &res, Server_info server);
 		virtual void	implement_method (Response &res, request &req, Server_info server, Location location) = 0;
 };
 

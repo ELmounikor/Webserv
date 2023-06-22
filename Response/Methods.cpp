@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Methods.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mounikor <mounikor@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 18:04:32 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/21 17:50:20 by mounikor         ###   ########.fr       */
+/*   Updated: 2023/06/22 19:28:26 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 Method::Method(std::string target): check(0), target(target)
 {}
 
-bool Method::target_not_good(Response &res, Server_info server)
+int	Method::target_not_good(Response &res, Server_info server)
 {
 	check = check_path(target);
 	if (!check)

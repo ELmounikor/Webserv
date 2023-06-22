@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 12:13:15 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/22 18:36:29 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/22 22:35:47 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,9 @@ void	Response::response_fetch(request &req, Configuration conf)
 		{
 			int redirect_code = (*location.returns.begin()).first;
 			std::string next_redirect = (*location.returns.begin()).second;
-			get_redirection_response(next_redirect, redirect_code);
+			// if (req.path.size() > 0 &&  req.path[req.path.size() - 1] != '/' && next_redirect[0] != '/')
+			// 	next_redirect = "/" + next_redirect;
+			get_redirection_response(req.path + next_redirect, redirect_code);
 			return ;
 		}
 		else if (std::find(location.methods.begin(), location.methods.end(), req.method) == location.methods.end())
@@ -88,7 +90,7 @@ void	Response::get_response(request &req, Server_info server, Location location)
 {
 	std::string	target;
 	
-	if (location.root[location.root.size() - 1] == '/')
+	if (location.root.size() > 0 && location.root[location.root.size() - 1] == '/')
 		target = location.root + to_fetch;
 	else if (to_fetch != "")
 		target = location.root + "/" + to_fetch;
@@ -153,7 +155,7 @@ void	Response::get_error_response(Server_info server)
 
 void	Response::get_redirection_response(std::string next_location, int redirect_code)
 {
-	if (location_name[location_name.size() - 1] != '/' && next_location[0] != '/')
+	if (location_name.size() > 0 && location_name[location_name.size() - 1] != '/' && next_location[0] != '/')
 		next_location = "/" + next_location;
 	status_code = redirect_code;
 	headers["Location"] = location_name + next_location;
@@ -189,11 +191,6 @@ void Response::get_file_response(Server_info server, Location location, std::str
 {
 	std::ifstream file(path);
 	
-	if (!check_path(path))
-	{
-		status_code = 404;
-		get_error_response(server);
-	}
 	if (file.is_open())
 	{
 		if (has_cgi(path, location, server))

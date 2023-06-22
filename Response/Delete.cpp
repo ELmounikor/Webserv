@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 13:44:14 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/22 18:35:20 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/22 22:24:02 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	Delete::implement_method(Response &res, request &req, Server_info server, L
 		return ;
 	if (check % 2 == 0)
 	{
-		if (req.path[req.path.size() - 1] != '/')
+		if (req.path.size() > 0 && req.path[req.path.size() - 1] != '/')
 		{
 			res.status_code = 409;
 			res.get_error_response(server);
@@ -39,6 +39,12 @@ void	Delete::implement_method(Response &res, request &req, Server_info server, L
 				res.get_error_response(server);
 				return ;
 			}
+			if (check < 0)
+			{
+				res.status_code = 403;
+				res.get_error_response(server);
+				return ;
+			}
 			delete_folder(res, target);
 			if (res.status_code != -1)
 				res.get_error_response(server);
@@ -46,6 +52,12 @@ void	Delete::implement_method(Response &res, request &req, Server_info server, L
 	}
 	else if (!res.has_cgi(target, location, server))
 	{
+		if (check < 0)
+		{
+			res.status_code = 403;
+			res.get_error_response(server);
+			return ;
+		}
 		delete_file(res, target);	
 		if (res.status_code != -1)
 			res.get_error_response(server);
@@ -57,12 +69,7 @@ void	Delete::delete_file(Response &res, std::string path)
 	if (res.status_code != -1)
 		return ;
 	if (std::remove(path.c_str()))
-	{
-		if (check_path(path) < 0)
-			res.status_code = 403;
-		else
-			res.status_code = 500;
-	}
+		res.status_code = 500;
 }
 
 void	Delete::delete_folder(Response &res, std::string path)
@@ -81,10 +88,5 @@ void	Delete::delete_folder(Response &res, std::string path)
 	}
 	closedir(dir);
 	if (std::remove(path.c_str()))
-	{
-		if (check_path(path) < 0)
-			res.status_code = 403;
-		else
-			res.status_code = 500;
-	}
+		res.status_code = 500;
 }

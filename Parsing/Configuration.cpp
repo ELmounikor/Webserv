@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:16:16 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/20 17:16:30 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/22 22:21:17 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,7 +158,7 @@ std::string	Configuration::parse_server_line(Server_info &serv, std::string line
 	while (end < line.size() && !isspace(line[end]))
 		end++;
 	parameter = line.substr(start, end - start);
-	if (line[line.size() - 1] == ';')
+	if (line.size() > 0 && line[line.size() - 1] == ';')
 		line = line.substr(0, line.size() - 1);
 	argument = trim_spaces(line.substr(end, line.size()));
 	int i = 0;
@@ -229,7 +229,7 @@ void	Configuration::parse_location_line(Location &location, std::string line)
 	while (end < line.size() && !isspace(line[end]))
 		end++;
 	parameter = line.substr(start, end - start);
-	if (line[line.size() - 1] == ';')
+	if (line.size() > 0 && line[line.size() - 1] == ';')
 		line = line.substr(0, line.size() - 1);
 	argument = trim_spaces(line.substr(end, line.size() - end));
 	if (argument == "")
