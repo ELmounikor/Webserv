@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 12:12:52 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/23 16:19:22 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/23 19:31:09 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ class	Response
 		std::string							file_path;
 		std::string							exec_path;
 		std::string							location_name;
-		std::fstream						body_file;
+		std::ifstream						body_file;
 		std::map<std::string, std::string>	headers;
 		Response();
 		int			has_cgi(std::string path, Location location, Server_info server);

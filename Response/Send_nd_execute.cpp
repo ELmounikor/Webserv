@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 17:33:41 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/23 17:35:33 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/23 19:31:57 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,18 @@ int	send_response(Client *cli)
 			perror("client send error");
 		cli->res.is_finished = 1;
 	}
-	if (cli->res.status_code % 100 == 3 || cli->res.status_code == 204 || cli->res.status_code == 201)
-		cli->res.is_finished++;
-	else if (cli->res.is_cgi)
+	if (cli->res.body_file.is_open())
 	{
-		execute_cgi(cli);
-		cli->res.is_finished++;
+		if (!cli->res.body_file.eof())
+		{
+			char buf[1000];
+			memset(buf, 0, 1000);
+			cli->res.body_file.read(buf, 1000);
+			if (send(cli->socket_client, buf, 1000, 0) < 0)
+				perror("client send error");
+		}
+		else
+			cli->res.is_finished++;		
 	}
 	else if (cli->res.body != "")
 	{
@@ -35,18 +41,13 @@ int	send_response(Client *cli)
 			perror("client send error");
 		cli->res.is_finished++;
 	}
-	else if (cli->res.body_file.is_open())
+	else if (cli->res.is_cgi)
 	{
-		char buf[2048];
-		memset(buf, 0, 2048);
-		if (cli->res.body_file.read(buf, 2048))
-		{
-			if (send(cli->socket_client, buf, 2048, 0) < 0)
-				perror("client send error");
-		}
-		else
-			cli->res.is_finished++;		
+		execute_cgi(cli);
+		cli->res.is_finished++;
 	}
+	else if (cli->res.status_code % 100 == 3 || cli->res.status_code == 204 || cli->res.status_code == 201)
+		cli->res.is_finished++;
 	if (cli->res.is_finished == 2)
 	{
 		cli->res.reset_response();
