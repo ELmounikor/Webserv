@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 12:12:52 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/22 18:30:33 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/23 16:19:22 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,9 @@ class	Response
 		int			has_cgi(std::string path, Location location, Server_info server);
 		void		reset_response(void);
 		void		get_host_nd_port(std::string value);
-		void		get_error_response(Server_info server);
 		void		response_fetch(request &req, Configuration conf);
 		void		get_auto_index_page_response(std::string dir_path);
+		void		get_error_response(Server_info server, Location location);
 		void		print_response_attr(Server_info server, Location location);
 		void		get_response(request &req, Server_info server, Location location);
 		void		get_redirection_response(std::string next_location, int redirect_code);

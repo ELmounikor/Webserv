@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 17:33:41 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/22 22:31:27 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/23 17:35:33 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	send_response(Client *cli)
 			perror("client send error");
 		cli->res.is_finished = 1;
 	}
-	if (cli->res.status_code % 100 == 3 || cli->res.status_code == 204)
+	if (cli->res.status_code % 100 == 3 || cli->res.status_code == 204 || cli->res.status_code == 201)
 		cli->res.is_finished++;
 	else if (cli->res.is_cgi)
 	{
@@ -37,11 +37,11 @@ int	send_response(Client *cli)
 	}
 	else if (cli->res.body_file.is_open())
 	{
-		char buf[1024];
-		memset(buf, 0, 1024);
-		if (cli->res.body_file.read(buf, 1024))
+		char buf[2048];
+		memset(buf, 0, 2048);
+		if (cli->res.body_file.read(buf, 2048))
 		{
-			if (send(cli->socket_client, buf, 1024, 0) < 0)
+			if (send(cli->socket_client, buf, 2048, 0) < 0)
 				perror("client send error");
 		}
 		else

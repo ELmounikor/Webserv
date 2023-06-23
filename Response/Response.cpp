@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 12:13:15 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/22 22:35:47 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/23 17:13:05 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	Response::reset_response()
 
 int	check_request_uri(std::string request_uri)
 {
-	std::string	allowed_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ._~:/?#[]@!$&'()*+,;=%";
+	std::string	allowed_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~:/?#[]@!$&'()*+,;=%";
 	size_t i = 0, j;
 	
 	while (i < request_uri.size())
@@ -49,8 +49,6 @@ int	check_request_uri(std::string request_uri)
 
 void	Response::response_fetch(request &req, Configuration conf)
 {
-	if (req.status_code == -1 && req.method == "" && req.path == "" && req.version == "" && req.header.size() == 0)
-		return ;
 	is_finished = 0;
 	is_cgi = 0;
 	status_code = req.status_code;
@@ -69,33 +67,22 @@ void	Response::response_fetch(request &req, Configuration conf)
 		else if (location.autoindex == -1)
 			status_code = 404;
 		else if (location.returns.size() > 0)
-		{
-			int redirect_code = (*location.returns.begin()).first;
-			std::string next_redirect = (*location.returns.begin()).second;
-			// if (req.path.size() > 0 &&  req.path[req.path.size() - 1] != '/' && next_redirect[0] != '/')
-			// 	next_redirect = "/" + next_redirect;
-			get_redirection_response(req.path + next_redirect, redirect_code);
-			return ;
-		}
+			get_redirection_response(join_paths(location_name, (*location.returns.begin()).second), (*location.returns.begin()).first);
 		else if (std::find(location.methods.begin(), location.methods.end(), req.method) == location.methods.end())
 			status_code = 405;
 	}
 	if (status_code != -1)
-		get_error_response(server);
+		get_error_response(server, location);
 	else
 		get_response(req, server, location);
+	// print_response_attr(server, location);
 }
 
 void	Response::get_response(request &req, Server_info server, Location location)
 {
 	std::string	target;
 	
-	if (location.root.size() > 0 && location.root[location.root.size() - 1] == '/')
-		target = location.root + to_fetch;
-	else if (to_fetch != "")
-		target = location.root + "/" + to_fetch;
-	else
-		target = location.root;
+	target = join_paths(location.root, to_fetch);
 	if (req.method == "GET")
 	{
 		Get res(target);
@@ -113,7 +100,7 @@ void	Response::get_response(request &req, Server_info server, Location location)
 	}
 }
 
-void	Response::get_error_response(Server_info server)
+void	Response::get_error_response(Server_info server, Location location)
 {
 	std::map<int, std::string>::iterator errp = server.error_pages.find(status_code);
 	if (server.port != -1 && errp != server.error_pages.end())
@@ -121,16 +108,13 @@ void	Response::get_error_response(Server_info server)
 		std::ifstream error_page((*errp).second);
 		if (error_page.is_open())
 		{
-			headers["Content-Type"] = "text/html";
-			headers["Content-Length"] = get_file_size((*errp).second);
-			body_file.open((*errp).second);
-			// response_content = get_header(req) + body_file;
+			get_file_response(server, location, (*errp).second);
 			return ;
 		}
 		// else if (file && status_code != 403)
 		// {
 		// 	status_code = 403;
-		// 	get_error_response(server);
+		// 	get_error_response(server, location);
 		// 	return ;
 		// }
 	}
@@ -150,16 +134,12 @@ void	Response::get_error_response(Server_info server)
 	</html>";
 	headers["Content-Type"] = "text/html";
 	headers["Content-Length"] = std::to_string(body.size());
-	// response_content = get_header(req) + body;
 }
 
 void	Response::get_redirection_response(std::string next_location, int redirect_code)
 {
-	if (location_name.size() > 0 && location_name[location_name.size() - 1] != '/' && next_location[0] != '/')
-		next_location = "/" + next_location;
 	status_code = redirect_code;
-	headers["Location"] = location_name + next_location;
-	// response_content = get_header(req);
+	headers["Location"] = next_location;
 }
 
 void Response::get_auto_index_page_response(std::string dir_path)
@@ -184,26 +164,22 @@ void Response::get_auto_index_page_response(std::string dir_path)
 	closedir(dir);
 	headers["Content-Type"] = "text/html";
 	headers["Content-Length"] = std::to_string(body.size());
-	// response_content = get_header(req) + body;
 }
 
 void Response::get_file_response(Server_info server, Location location, std::string path)
 {
-	std::ifstream file(path);
-	
-	if (file.is_open())
+	body_file.open(path);
+	if (body_file.is_open())
 	{
-		if (has_cgi(path, location, server))
+		if (location.autoindex != -1 && has_cgi(path, location, server))
 			return ;
-		body_file.open(path);
 		headers["Content_Type"] = get_extension_type(get_extension(path));
 		headers["Content-Length"] = get_file_size(path);
-		// response_content = get_header(req) + body_file;
 	}
 	else
 	{
 		status_code = 403;
-		get_error_response(server);
+		get_error_response(server, location);
 	}
 }
 
@@ -218,7 +194,7 @@ int Response::has_cgi(std::string path, Location location, Server_info server)
             if (access((*i).second.c_str(), X_OK))
             {
                 status_code = 403;
-                get_error_response(server);
+                get_error_response(server, location);
             }
             else
             {

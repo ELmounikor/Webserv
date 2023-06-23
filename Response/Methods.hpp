@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 18:04:19 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/22 19:28:15 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/23 16:23:16 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ class Method
 		int			check;
 		std::string	target;
 		Method(std::string target);
-		int			target_not_good(Response &res, Server_info server);
+		int				target_not_good(Response &res, Server_info server, Location location);
 		virtual void	implement_method (Response &res, request &req, Server_info server, Location location) = 0;
 };
 
@@ -59,5 +59,6 @@ std::string	get_date(void);
 std::string	get_next_option(std::string path);
 std::string	get_extension(std::string file_name);
 std::string	get_extension_type(std::string extension);
+std::string join_paths(std::string path1, std::string path2);
 
 #endif

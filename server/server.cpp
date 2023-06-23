@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:22:51 by sennaama          #+#    #+#             */
-/*   Updated: 2023/06/22 22:26:28 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/23 16:37:10 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ void    server::addEvent(int kq, int fd, int fileter)
 	if (kevent(kq, events, 1, NULL, 0, NULL) < 0)
 	{
 		perror("addEvent");
-		exit(1);
 	}
 }
 
@@ -35,7 +34,6 @@ void    server::DisableEvent(int kq, int fd, int fileter)
 	if (kevent(kq, events, 1, NULL, 0, NULL) < 0)
 	{
 		perror("DisableEvent");
-		exit(1);
 	}
 }
 
@@ -46,7 +44,6 @@ void    server::DeleteEvent(int kq, int fd, int fileter)
 	if (kevent(kq, events, 1, NULL, 0, NULL) < 0)
 	{
 		perror("DeleteEvent");
-		exit(1);
 	}
 }
 
@@ -57,7 +54,6 @@ void    server::EnableEvent(int kq, int fd, int fileter)
 	if (kevent(kq, events, 1, NULL, 0, NULL) < 0)
 	{
 		perror("EnableEvent");
-		exit(1);
 	}
 }
 
@@ -73,6 +69,11 @@ void    server::listener_port(int port)
 	if (setsockopt(socket_server, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)
 	{
 		perror("setsockopt");
+		exit(1);
+	}
+	if (setsockopt(socket_server, SOL_SOCKET, SO_NOSIGPIPE, &opt, sizeof(opt)) < 0)
+	{
+		perror("setsockopt2");
 		exit(1);
 	}
 	serv_addr.sin_family = AF_INET;
@@ -127,7 +128,6 @@ void    server::multiplixing(const char *response)
 		}
 		for (int i = 0; i < new_events; i++)
 		{
-			std::cout<<"new event: "<<new_events<<std::endl;
 			int event_fd = event[i].ident;
 			if (event[i].filter == EVFILT_READ)
 			{
@@ -151,13 +151,11 @@ void    server::multiplixing(const char *response)
                     {
                         if (ft_exist(event, new_events, (*j)->socket_client) == 1)
                         {
-                            char buf[1025];
-                            size_t bytes_read = recv((*j)->socket_client, buf, 1024, 0);
-                            buf[bytes_read] = 0;
-                            std::string assign(buf, bytes_read);
-                            if (bytes_read < 0)
+                            char buf[6000 + 1];
+                            int bytes_read = recv((*j)->socket_client, buf, 6000, 0);
+                            if (bytes_read <= 0)
                             {
-                                std::cout<<"client read error\n";
+                                perror("client read error");
                                 DeleteEvent(kq, (*j)->socket_client, EVFILT_READ);
                                 close((*j)->socket_client);
                                 delete *j;
@@ -165,7 +163,10 @@ void    server::multiplixing(const char *response)
                             }
                             else
                             {
+								buf[bytes_read] = 0;
+								std::string assign(buf, bytes_read);
                                 (*j)->req.request_parse(assign, (*j)->socket_client);
+								// (*j)->req.print_request();
                                 if ((*j)->req.flag == -1)
                                 {
                                     (*j)->res.response_fetch((*j)->req, conf);
@@ -182,6 +183,7 @@ void    server::multiplixing(const char *response)
 			}
 			else if (event[i].filter == EVFILT_WRITE)
 			{
+				//std::cout<<"--->write"<<std::endl;
 				for (std::vector<Client *>::iterator j = clients.begin(); j != clients.end();)
 				{
 					if (ft_exist(event, new_events, (*j)->socket_client) == 0)  

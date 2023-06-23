@@ -6,7 +6,7 @@
 /*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/21 20:11:15 by sennaama          #+#    #+#             */
-/*   Updated: 2023/06/22 12:39:47 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/06/23 13:33:22 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,7 @@ std::string	request::get_extension(std::string content_type) {
     extention["application/zip"] = ".zip";
     extention["video/3gpp"] = ".3gp";
     extention["video/3gpp2"] = ".3g2";
+    extention["text/x-c"] = ".c";
     extention["application/x-7z-compressed"] = ".7z";
     std::map<std::string, std::string>::iterator it = extention.find(content_type);
     if (it != extention.end()) {
@@ -231,7 +232,6 @@ void	request::post_method(std::string assign, int socket_client)
     std::string client;
    
     std::string file;
-    
 	if (header.find("Content-Type") == header.end() \
 		|| (header.find("Content-Length") == header.end()\
 		&& header.find("Transfer-Encoding") == header.end()) || \
@@ -265,6 +265,7 @@ void	request::post_method(std::string assign, int socket_client)
     {
 
         data += assign;
+         
         unsigned long i;
         if (size == 0)
         {
@@ -304,8 +305,11 @@ void	request::post_method(std::string assign, int socket_client)
                 data.clear();
             if (data == "0\r\n\r\n")
                 flag = -1;
-            appendtofile(assign, file); 
+            
         }
+        if (assign == "0\r\n\r\n")
+            assign.clear();
+        appendtofile(assign, file);
     }
     else
     {
@@ -360,7 +364,7 @@ void request::print_request()
         std::cout<<"\nBAD REQUEST\n"<<std::endl;
         return;
     }
-    std::cout << "Method: " << method << std::endl;
+    std::cout << "\nMethod: " << method << std::endl;
     std::cout << "Path: " << path << std::endl;
     std::cout << "Version: " << version << std::endl;
     std::map<std::string, std::string>::iterator iter;
