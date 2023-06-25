@@ -6,7 +6,7 @@
 /*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 14:13:32 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/18 17:12:19 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/06/25 13:03:01 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 # include   <sys/event.h>
 # include   <sys/socket.h>
 # include   <netinet/in.h>
+# include <netdb.h>
 # include   "request/request.hpp"
 # include   "Parsing/Configuration.hpp"
 # include   "Response/Response.hpp"

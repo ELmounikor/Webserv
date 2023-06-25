@@ -3,55 +3,56 @@
 /*                                                        :::      ::::::::   */
 /*   server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:22:51 by sennaama          #+#    #+#             */
-/*   Updated: 2023/06/23 16:37:10 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/25 17:30:45 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.hpp"
 #include <arpa/inet.h>
+#include <cerrno>
 
-server::server():clients(){}
+server::server():clients(){
+	kq = kqueue();
+	events = (struct kevent *)malloc(sizeof(struct kevent));
+}
 
 server::~server(){}
 
-void    server::addEvent(int kq, int fd, int fileter)
+void    server::addEvent(int kq, int& fd, int fileter)
 {
-	struct kevent events[1];
 	EV_SET(&events[0], fd, fileter, EV_ADD, 0, 0, NULL);
-	if (kevent(kq, events, 1, NULL, 0, NULL) < 0)
+	
+	if (kevent(kq, &events[0], 1, NULL, 0, NULL) < 0)
 	{
 		perror("addEvent");
 	}
 }
 
-void    server::DisableEvent(int kq, int fd, int fileter)
+void    server::DisableEvent(int kq, int& fd, int fileter)
 {
-	struct kevent events[1];
-	EV_SET(events, fd, fileter, EV_DISABLE, 0, 0, NULL);
+	EV_SET(&events[0], fd, fileter, EV_DISABLE, 0, 0, NULL);
 	if (kevent(kq, events, 1, NULL, 0, NULL) < 0)
 	{
 		perror("DisableEvent");
 	}
 }
 
-void    server::DeleteEvent(int kq, int fd, int fileter)
+void    server::DeleteEvent(int kq, int& fd, int fileter)
 {
-	struct kevent events[1];
-	EV_SET(events, fd, fileter, EV_DELETE, 0, 0, NULL);
-	if (kevent(kq, events, 1, NULL, 0, NULL) < 0)
+	EV_SET(&events[0], fd, fileter, EV_DELETE, 0, 0, NULL);
+	if (kevent(kq, &events[0], 1, NULL, 0, NULL) < 0)
 	{
 		perror("DeleteEvent");
 	}
 }
 
-void    server::EnableEvent(int kq, int fd, int fileter)
+void    server::EnableEvent(int kq, int& fd, int fileter)
 {
-	struct kevent events[1];
-	EV_SET(events, fd, fileter, EV_ENABLE, 0, 0, NULL);
-	if (kevent(kq, events, 1, NULL, 0, NULL) < 0)
+	EV_SET(&events[0], fd, fileter, EV_ENABLE, 0, 0, NULL);
+	if (kevent(kq, &events[0], 1, NULL, 0, NULL) < 0)
 	{
 		perror("EnableEvent");
 	}
@@ -59,13 +60,31 @@ void    server::EnableEvent(int kq, int fd, int fileter)
 
 void    server::listener_port(int port)
 {
-	int opt = true;
 
-	if (((socket_server = socket(AF_INET, SOCK_STREAM, 0)) < 0))
-	{
-		perror("ERROR opening socket");
-		exit(1);
-	}
+	memset(&hints, 0, sizeof(hints));
+    
+    hints.ai_family = AF_INET;
+    hints.ai_socktype = SOCK_STREAM;
+    hints.ai_flags = AI_PASSIVE;
+	
+	int opt = true;
+	int get_add_errno = 0;
+
+	std::stringstream sd;
+	sd << port;
+
+	std::string s;
+	sd >> s;
+	
+	
+	if ((get_add_errno = getaddrinfo(NULL, s.c_str(), &hints, &servinfo)) != 0){
+        std::cerr << (get_add_errno) << std::endl;
+    }
+
+	if ((socket_server = socket(servinfo->ai_family,servinfo->ai_socktype,servinfo->ai_protocol)) < 0){
+        perror("Server_Socket");
+        exit(EXIT_FAILURE);
+    }
 	if (setsockopt(socket_server, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)
 	{
 		perror("setsockopt");
@@ -76,11 +95,9 @@ void    server::listener_port(int port)
 		perror("setsockopt2");
 		exit(1);
 	}
-	serv_addr.sin_family = AF_INET;
-	serv_addr.sin_addr.s_addr = INADDR_ANY;
-	serv_addr.sin_port = htons(port);
-	memset(serv_addr.sin_zero, 0, sizeof (serv_addr.sin_zero));
-	if (bind(socket_server, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0)
+	if (fcntl(socket_server, F_SETFL ,O_NONBLOCK) < 0)
+        perror("FCNTL Error");
+	if (bind(socket_server, (struct sockaddr*)servinfo->ai_addr,servinfo->ai_addrlen) < 0)
 	{
 		perror("bind");
 		exit(1);
@@ -90,37 +107,35 @@ void    server::listener_port(int port)
 		perror("listen");
 		exit(1);
 	}
+	addEvent(kq, socket_server, EVFILT_READ);
 	listeners.push_back(socket_server);
 }
 
-int     ft_exist(struct kevent *event,int new_events, int client)
+int     server::ft_exist(int new_events, int client)
 {
 	for (int e = 0; e < new_events; e++)
 	{
-		int event_ident = event[e].ident;
+		int event_ident = r_events[e].ident;
 		if (client == event_ident)
 		{
-			if (event[e].filter ==  EVFILT_READ)
+			if (r_events[e].filter ==  EVFILT_READ)
 				return (1);
-			else if (event[e].filter ==  EVFILT_WRITE)
+			else if (r_events[e].filter ==  EVFILT_WRITE)
 				return (0);
 		}
 	}
 	return (-1);
 }
 
-void    server::multiplixing(const char *response)
+void    server::multiplixing()
 {
-	(void) response;
-	int client_len, socket_client, kq, new_events;
-	struct kevent event[MAX_EVENTS];
-	client_len = sizeof(serv_addr);
-	kq = kqueue();
-	for (size_t j = 0; j < listeners.size(); j++)
-		addEvent(kq, listeners[j], EVFILT_READ);
+	int socket_client, new_events;
+	struct timespec timeout;
+    timeout.tv_sec = 1;
+    timeout.tv_nsec = 0;
 	while(true)
 	{
-		new_events = kevent(kq, NULL, 0, event, MAX_EVENTS, NULL);
+		new_events = kevent(kq, NULL, 0, r_events, MAX_EVENTS, &timeout);
 		if (new_events == -1)
 		{
 			perror("kevent");
@@ -128,82 +143,95 @@ void    server::multiplixing(const char *response)
 		}
 		for (int i = 0; i < new_events; i++)
 		{
-			int event_fd = event[i].ident;
-			if (event[i].filter == EVFILT_READ)
+			int event_fd = r_events[i].ident;
+			if (r_events[i].filter == EVFILT_READ)
 			{
 				if (std::find(listeners.begin(), listeners.end(), event_fd) != listeners.end())
 				{
 					std::cout<<"New connection coming in...\n";
-					socket_client = accept(event_fd, (struct sockaddr *)&serv_addr, (socklen_t *)&client_len);
+					socket_client = accept(*(std::find(listeners.begin(), listeners.end(), event_fd)), NULL , NULL);
 					if (socket_client == -1)
 					{
 						perror("Accept socket error");
 					}
 					Client *new_client = new Client(socket_client);
-					clients.push_back(new_client);
-					if (fcntl(socket_client, F_SETFL ,O_NONBLOCK) < 0)
+					if (fcntl(new_client->socket_client, F_SETFL ,O_NONBLOCK) < 0)
                         perror("FCNTL Error");
-					addEvent(kq, socket_client, EVFILT_READ);
+					addEvent(kq, new_client->socket_client, EVFILT_READ);
+					new_client->state =0;
+					clients.push_back(new_client);
 				}
 				else
 				{
 					for (std::vector<Client *>::iterator j = clients.begin(); j != clients.end();)
                     {
-                        if (ft_exist(event, new_events, (*j)->socket_client) == 1)
+                        if (ft_exist(new_events, (*j)->socket_client) == 1 && ((*j)->state == 0))
                         {
                             char buf[6000 + 1];
                             int bytes_read = recv((*j)->socket_client, buf, 6000, 0);
                             if (bytes_read <= 0)
-                            {
-                                perror("client read error");
-                                DeleteEvent(kq, (*j)->socket_client, EVFILT_READ);
+							{
+								perror("Client recv error");
+								DeleteEvent(kq, (*j)->socket_client, EVFILT_READ);
                                 close((*j)->socket_client);
                                 delete *j;
                                 clients.erase(j);
-                            }
+							}
                             else
                             {
 								buf[bytes_read] = 0;
-								std::string assign(buf, bytes_read);
+								std::string assign(buf, buf + bytes_read);
                                 (*j)->req.request_parse(assign, (*j)->socket_client);
-								// (*j)->req.print_request();
+								//(*j)->req.print_request();
+								
                                 if ((*j)->req.flag == -1)
                                 {
+									//std::cout << "client request complete " << (*j)->socket_client << std::endl;
+									(*j)->req.print_request();
                                     (*j)->res.response_fetch((*j)->req, conf);
+									
+			                        DisableEvent(kq, (*j)->socket_client, EVFILT_READ);
                                     addEvent(kq, (*j)->socket_client, EVFILT_WRITE);
-                                    DisableEvent(kq, (*j)->socket_client, EVFILT_READ);
+									(*j)->state = 1;
+									//	r_events[i].filter = EVFILT_WRITE;
+									// exit(0);
                                 }
-                                ++j;
+                                j++;
                             }
                         }
                         else
-                            ++j;
+                            j++;
                     }
 				}
 			}
-			else if (event[i].filter == EVFILT_WRITE)
+			else if (r_events[i].filter == EVFILT_WRITE)
 			{
-				//std::cout<<"--->write"<<std::endl;
+				
 				for (std::vector<Client *>::iterator j = clients.begin(); j != clients.end();)
 				{
-					if (ft_exist(event, new_events, (*j)->socket_client) == 0)  
+					if (ft_exist( new_events, (*j)->socket_client) == 0 && ((*j)->state == 1)) 
 					{
 						if (send_response(*j))
 						{
-							DisableEvent(kq, (*j)->socket_client, EVFILT_WRITE);
+							DeleteEvent(kq, (*j)->socket_client, EVFILT_WRITE);
+							DeleteEvent(kq, (*j)->socket_client, EVFILT_READ);
 							close((*j)->socket_client);
 							delete *j;
 							clients.erase(j);
 						}
+						// const char *response ("HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: \
+						// 12\n\nHello world!");
 						// if (send((*j)->socket_client, response, strlen(response), 0) == -1)
-                        //     std::cout<<"client send error\n";
-                        // DisableEvent(kq, (*j)->socket_client, EVFILT_WRITE);
+                        //     std::cout<<"client send errorfff\n";
+						
+                        // DeleteEvent(kq, (*j)->socket_client, EVFILT_WRITE);
+						// DeleteEvent(kq, (*j)->socket_client, EVFILT_READ);
                         // close((*j)->socket_client);
                         // delete *j;
                         // clients.erase(j);
 					}
 					else
-						++j;
+						j++;
 				}
 			}
 		}
@@ -212,8 +240,7 @@ void    server::multiplixing(const char *response)
 
 void    server::process(char *file)
 {
-	const char *response ("HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: \
-		12\n\nHello world!");
+	
 	this->conf = Configuration(file);
 	std::vector<Server_info>::iterator i = conf.servers.begin();
 	while (i != conf.servers.end())
@@ -221,5 +248,5 @@ void    server::process(char *file)
 		listener_port((i)->port);
 		i++;
 	}
-	multiplixing(response);
+	multiplixing();
 }

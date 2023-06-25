@@ -6,7 +6,7 @@
 /*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:59:12 by sennaama          #+#    #+#             */
-/*   Updated: 2023/05/26 18:15:07 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/06/25 14:43:22 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ class Client
 		int			socket_client;
 		int 		recv;
 		int			send;
+		int			state;
 	
 		//Client();
 		Client(int client_socket);
