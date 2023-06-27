@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mounikor <mounikor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 18:12:02 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/23 16:03:08 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/27 23:15:14 by mounikor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,31 @@ std::string	get_extension(std::string file_name)
 	return (file_name);
 }
 
+std::string	get_file_name(std::string file_path)
+{
+	static long	i = 0;
+	std::string	file_name = 'file_000' + std::to_string(i);
+	std::ofstream file(join_paths(file_path, file_name));
+	while (!file.is_open())
+	{
+		i++;
+		file_name = 'file_000' + std::to_string(i);
+		file(join_paths(file_path, file_name));
+	}
+	return (join_paths(file_path, file_name));
+}
+
+std::string	get_date(void)
+{
+	time_t		ct = time(NULL);
+	tm * 		curr_time;
+	char		date[29];
+	
+	curr_time = localtime(&ct);
+	strftime(date, 29, "%a, %d %b %G %R:%S GMT", curr_time);
+	return (date);
+}
+
 std::string	get_extension_type(std::string extension) {
 	std::map<std::string, std::string> extension_list;
 	extension_list[".aac"] = "audio/aac";
@@ -78,7 +103,10 @@ std::string	get_extension_type(std::string extension) {
 	extension_list[".bmp"] = "image/bmp";
 	extension_list[".bz"] = "application/x-bzip";
 	extension_list[".bz2"] = "application/x-bzip2";
+	extension_list[".c"] = "text/x-c";
+	extension_list[".cat"] = "application/vnd.ms-pki.seccat";
 	extension_list[".cda"] = "application/x-cdf";
+	extension_list[".cpp"] = "text/x-c";
 	extension_list[".csh"] = "application/x-csh";
 	extension_list[".css"] = "text/css";
 	extension_list[".csv"] = "text/csv";
@@ -147,15 +175,4 @@ std::string	get_extension_type(std::string extension) {
 		return it->second;
 	}
 	return ("application/octet-stream");
-}
-
-std::string	get_date(void)
-{
-	time_t		ct = time(NULL);
-	tm * 		curr_time;
-	char		date[29];
-	
-	curr_time = localtime(&ct);
-	strftime(date, 29, "%a, %d %b %G %R:%S GMT", curr_time);
-	return (date);
 }

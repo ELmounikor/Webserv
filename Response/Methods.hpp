@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Methods.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mounikor <mounikor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 18:04:19 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/23 16:23:16 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/27 23:01:54 by mounikor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,10 @@ class Delete: public Method
 };
 
 int			check_path(std::string path);
-std::string	get_file_size(std::string path);
 std::string	get_date(void);
+std::string	get_file_size(std::string path);
 std::string	get_next_option(std::string path);
+std::string	get_file_name(std::string file_path);
 std::string	get_extension(std::string file_name);
 std::string	get_extension_type(std::string extension);
 std::string join_paths(std::string path1, std::string path2);
