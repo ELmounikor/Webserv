@@ -6,7 +6,7 @@
 /*   By: mounikor <mounikor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 13:44:03 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/27 23:03:04 by mounikor         ###   ########.fr       */
+/*   Updated: 2023/06/27 23:22:01 by mounikor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ void	Post::implement_method(Response &res, request &req, Server_info server, Loc
 		}
 		res.status_code = 201;
 	}
-	(void) res;
-	(void) req;
-	(void) server;
+	if (target_not_good(res, server, location))
+		return ;
 }
