@@ -6,7 +6,7 @@
 /*   By: mounikor <mounikor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 13:44:03 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/27 23:22:01 by mounikor         ###   ########.fr       */
+/*   Updated: 2023/06/28 11:29:40 by mounikor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,11 @@ void	Post::implement_method(Response &res, request &req, Server_info server, Loc
 			return ;
 		}
 		std::ofstream	out_file(get_file_name(file_location));
+		if (in_file.eof())
+		{
+			res.status_code = 204;
+			return ;
+		}
 		while (!in_file.eof())
 		{
 			char buf[1024];
@@ -39,4 +44,25 @@ void	Post::implement_method(Response &res, request &req, Server_info server, Loc
 	}
 	if (target_not_good(res, server, location))
 		return ;
+	if (check % 2 == 0)
+	{
+		std::vector<std::string>::iterator i = location.indexes.begin();
+		while (i != location.indexes.end())
+		{
+			std::string new_target = join_paths(target, *i);
+			int current = check_path(new_target);
+			if (current == 1 && res.has_cgi(new_target, location, server))
+				return ;
+			i++;
+		}
+		res.status_code = 403;
+		res.get_error_response(server, location);
+	}
+	else
+	{
+		if (check == 1 && res.has_cgi(target, location, server))
+			return ;
+		res.status_code = 403;
+		res.get_error_response(server, location);
+	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mounikor <mounikor@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 12:13:15 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/23 19:33:02 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/06/28 11:33:26 by mounikor         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,12 +111,6 @@ void	Response::get_error_response(Server_info server, Location location)
 			get_file_response(server, location, (*errp).second);
 			return ;
 		}
-		// else if (file && status_code != 403)
-		// {
-		// 	status_code = 403;
-		// 	get_error_response(server, location);
-		// 	return ;
-		// }
 	}
 	body = "<!DOCTYPE html>\
 	<style>@import url('https://fonts.googleapis.com/css?family=Press Start 2P');	html, body {	width: 100%;	height: 100%;	margin: 0;	} 	* {	font-family: 'Press Start 2P', cursive;	box-sizing: border-box;	}	#app {	padding: 1rem;	background: black;	display: flex;	height: 100%;	justify-content: center;	align-items: center;	color: #5bd6ff;	text-shadow: 0px 0px 10px;	font-size: 6rem;	flex-direction: column;	}	#app .txt {	font-size: 1.8rem;	}	@keyframes blink {	0% {opacity: 0;}	49% {opacity: 0;}	50% {opacity: 1;}	100% {opacity: 1;}	}	.blink {	animation-name: blink;	animation-duration: 1s;	animation-iteration-count: infinite;	}</style>\
@@ -144,8 +138,8 @@ void	Response::get_redirection_response(std::string next_location, int redirect_
 
 void Response::get_auto_index_page_response(std::string dir_path)
 {
-    DIR* dir = opendir(dir_path.c_str());
-    struct dirent* element;
+	DIR* dir = opendir(dir_path.c_str());
+	struct dirent* element;
 	status_code = 200;
 	body = "<!DOCTYPE html>\
 	<style>@import url('https://fonts.googleapis.com/css?family=Press Start 2P');	html, body {	width: 100%;	height: 100%;	margin: 0;	} 	* {	font-family: 'Press Start 2P', cursive;	box-sizing: border-box;	}	#app {	padding: 1rem;	background: black;	display: flex;	height: 100%;	justify-content: center;	align-items: center;	color: #5bd6ff;	text-shadow: 0px 0px 10px;	font-size: 6rem;	flex-direction: column;	}	#app .txt {	font-size: 1.8rem;	}	@keyframes blink {	0% {opacity: 0;}	49% {opacity: 0;}	50% {opacity: 1;}	100% {opacity: 1;}	}	.blink {	animation-name: blink;	animation-duration: 1s;	animation-iteration-count: infinite;	}</style>\
@@ -185,26 +179,31 @@ void Response::get_file_response(Server_info server, Location location, std::str
 
 int Response::has_cgi(std::string path, Location location, Server_info server)
 {
-    std::string extension = get_extension(path);
-    std::map<std::string, std::string>::iterator i = location.cgi.begin();
-    while (i != location.cgi.end())
-    {
-        if ((*i).first == extension)
-        {
-            if (access((*i).second.c_str(), X_OK))
-            {
-                status_code = 403;
-                get_error_response(server, location);
-            }
-            else
-            {
-                is_cgi = 1;
-                file_path = path;
-                exec_path = (*i).second;
-            }
-            return (1);
-        }
-        i++;
-    }
+	std::string extension = get_extension(path);
+	std::map<std::string, std::string>::iterator i = location.cgi.begin();
+	while (i != location.cgi.end())
+	{
+		if ((*i).first == extension)
+		{
+			if (access((*i).second.c_str(), F_OK))
+			{
+				status_code = 404;
+				get_error_response(server, location);
+			}
+			else if (access((*i).second.c_str(), X_OK))
+			{
+				status_code = 403;
+				get_error_response(server, location);
+			}
+			else
+			{
+				is_cgi = 1;
+				file_path = path;
+				exec_path = (*i).second;
+			}
+			return (1);
+		}
+		i++;
+	}
 	return (0);
 }
