@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mounikor <mounikor@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mac <mac@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 18:12:02 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/27 23:15:14 by mounikor         ###   ########.fr       */
+/*   Updated: 2023/06/29 08:57:04 by mac              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,13 +69,13 @@ std::string	get_extension(std::string file_name)
 std::string	get_file_name(std::string file_path)
 {
 	static long	i = 0;
-	std::string	file_name = 'file_000' + std::to_string(i);
+	std::string	file_name = "file_000" + std::to_string(i);
 	std::ofstream file(join_paths(file_path, file_name));
 	while (!file.is_open())
 	{
 		i++;
-		file_name = 'file_000' + std::to_string(i);
-		file(join_paths(file_path, file_name));
+		file_name = "file_000" + std::to_string(i);
+		file.open(join_paths(file_path, file_name));
 	}
 	return (join_paths(file_path, file_name));
 }

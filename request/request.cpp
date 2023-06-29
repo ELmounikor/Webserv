@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: mac <mac@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/21 20:11:15 by sennaama          #+#    #+#             */
-/*   Updated: 2023/06/25 13:15:41 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/06/29 17:32:47 by mac              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -353,7 +353,7 @@ void    request::request_parse(std::string assign, int socket_client)
     {
         flag = 1;
         get_method(assign);
-        std::cout<<"client req:  "<<socket_client<<std::endl;
+        // std::cout<<"client req:  "<<socket_client<<std::endl;
         flag = -1;
     }
 	else if (method == "POST")

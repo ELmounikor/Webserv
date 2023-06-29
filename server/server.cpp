@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: mac <mac@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:22:51 by sennaama          #+#    #+#             */
-/*   Updated: 2023/06/25 17:30:45 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/06/29 17:34:01 by mac              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,7 +187,7 @@ void    server::multiplixing()
                                 if ((*j)->req.flag == -1)
                                 {
 									//std::cout << "client request complete " << (*j)->socket_client << std::endl;
-									(*j)->req.print_request();
+									// (*j)->req.print_request();
                                     (*j)->res.response_fetch((*j)->req, conf);
 									
 			                        DisableEvent(kq, (*j)->socket_client, EVFILT_READ);

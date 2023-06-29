@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Send_nd_execute.cpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: mac <mac@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 17:33:41 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/24 18:33:35 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/06/29 17:31:38 by mac              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,14 @@ int	send_response(Client *cli)
 	{
 		if (!cli->res.body_file.eof())
 		{
-			char buf[1000];
-			memset(buf, 0, 1000);
-			cli->res.body_file.read(buf, 1000);
-			if (send(cli->socket_client, buf, 1000, 0) < 0)
-				perror("client send error");
+			char buf[1024];
+			memset(buf, 0, 1024);
+			if (cli->res.body_file.read(buf, 1024))
+			{
+				size_t	byte_read = cli->res.body_file.gcount();
+				if (send(cli->socket_client, buf, byte_read, 0) < 0)
+					perror("client send error");
+			}
 		}
 		else
 			cli->res.is_finished++;		
