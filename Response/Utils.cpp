@@ -6,7 +6,7 @@
 /*   By: mac <mac@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 18:12:02 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/29 08:57:04 by mac              ###   ########.fr       */
+/*   Updated: 2023/06/29 22:40:20 by mac              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,10 +84,11 @@ std::string	get_date(void)
 {
 	time_t		ct = time(NULL);
 	tm * 		curr_time;
-	char		date[29];
+	char		date[30];
 	
 	curr_time = localtime(&ct);
-	strftime(date, 29, "%a, %d %b %G %R:%S GMT", curr_time);
+	memset(date, 0, 30);
+	strftime(date, 30, "%a, %d %b %G %R:%S GMT", curr_time);
 	return (date);
 }
 

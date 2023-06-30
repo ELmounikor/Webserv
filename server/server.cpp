@@ -6,7 +6,7 @@
 /*   By: mac <mac@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:22:51 by sennaama          #+#    #+#             */
-/*   Updated: 2023/06/29 17:34:01 by mac              ###   ########.fr       */
+/*   Updated: 2023/06/30 12:36:31 by mac              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,6 +213,7 @@ void    server::multiplixing()
 					{
 						if (send_response(*j))
 						{
+							DisableEvent(kq, (*j)->socket_client, EVFILT_WRITE);
 							DeleteEvent(kq, (*j)->socket_client, EVFILT_WRITE);
 							DeleteEvent(kq, (*j)->socket_client, EVFILT_READ);
 							close((*j)->socket_client);

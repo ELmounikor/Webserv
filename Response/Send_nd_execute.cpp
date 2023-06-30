@@ -6,7 +6,7 @@
 /*   By: mac <mac@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 17:33:41 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/29 17:31:38 by mac              ###   ########.fr       */
+/*   Updated: 2023/06/30 12:51:51 by mac              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,15 @@ int	send_response(Client *cli)
 			perror("client send error");
 		cli->res.is_finished = 1;
 	}
-	if (cli->res.body_file.is_open())
+	if (cli->res.status_code / 100 == 3 || cli->res.status_code == 204 || cli->res.status_code == 201)
+		cli->res.is_finished++;
+	else if (cli->res.body != "")
+	{
+		if (send(cli->socket_client, cli->res.body.c_str(), cli->res.body.size(), 0) < 0)
+			perror("client send error");
+		cli->res.is_finished++;
+	}
+	else if (cli->res.body_file.is_open())
 	{
 		if (!cli->res.body_file.eof())
 		{
@@ -33,24 +41,16 @@ int	send_response(Client *cli)
 				size_t	byte_read = cli->res.body_file.gcount();
 				if (send(cli->socket_client, buf, byte_read, 0) < 0)
 					perror("client send error");
-			}
+			}	
 		}
 		else
 			cli->res.is_finished++;		
-	}
-	else if (cli->res.body != "")
-	{
-		if (send(cli->socket_client, cli->res.body.c_str(), cli->res.body.size(), 0) < 0)
-			perror("client send error");
-		cli->res.is_finished++;
 	}
 	else if (cli->res.is_cgi)
 	{
 		execute_cgi(cli);
 		cli->res.is_finished++;
 	}
-	else if (cli->res.status_code % 100 == 3 || cli->res.status_code == 204 || cli->res.status_code == 201)
-		cli->res.is_finished++;
 	if (cli->res.is_finished == 2)
 	{
 		cli->res.reset_response();

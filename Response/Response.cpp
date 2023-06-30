@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mounikor <mounikor@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mac <mac@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 12:13:15 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/28 11:33:26 by mounikor         ###   ########.fr       */
+/*   Updated: 2023/06/30 12:49:25 by mac              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,6 +169,8 @@ void Response::get_file_response(Server_info server, Location location, std::str
 			return ;
 		headers["Content_Type"] = get_extension_type(get_extension(path));
 		headers["Content-Length"] = get_file_size(path);
+		// headers["Expires"] = "1d";
+		// headers["Cache-Control"] = "max-age=1000000, public";
 	}
 	else
 	{
