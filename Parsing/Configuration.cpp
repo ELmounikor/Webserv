@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Configuration.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mac <mac@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:16:16 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/22 22:21:17 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/01 14:40:03 by mac              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,8 @@ Configuration::Configuration(std::string file_name)
 	if (!conf_file.is_open())
 		ft_exit("Cannot open configuration file 👽");
 	std::getline(conf_file, content, '\0');
+	if (content == "")
+		ft_exit("Empty configuration file 👽");
 	parse_content(content);
     conf_file.close();
 }

@@ -6,7 +6,7 @@
 /*   By: mac <mac@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 12:13:15 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/30 12:49:25 by mac              ###   ########.fr       */
+/*   Updated: 2023/07/01 15:26:33 by mac              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,22 +80,20 @@ void	Response::response_fetch(request &req, Configuration conf)
 
 void	Response::get_response(request &req, Server_info server, Location location)
 {
-	std::string	target;
-	
-	target = join_paths(location.root, to_fetch);
+	file_path = join_paths(location.root, to_fetch);
 	if (req.method == "GET")
 	{
-		Get res(target);
+		Get res(file_path);
 		res.implement_method(*this, req, server, location);
 	}
 	else if (req.method == "DELETE")
 	{
-		Delete res(target);
+		Delete res(file_path);
 		res.implement_method(*this, req, server, location);
 	}
 	else if (req.method == "POST")
 	{
-		Post res(target);
+		Post res(file_path);
 		res.implement_method(*this, req, server, location);
 	}
 }
@@ -108,6 +106,7 @@ void	Response::get_error_response(Server_info server, Location location)
 		std::ifstream error_page((*errp).second);
 		if (error_page.is_open())
 		{
+			file_path = (*errp).second;
 			get_file_response(server, location, (*errp).second);
 			return ;
 		}
@@ -128,12 +127,14 @@ void	Response::get_error_response(Server_info server, Location location)
 	</html>";
 	headers["Content-Type"] = "text/html";
 	headers["Content-Length"] = std::to_string(body.size());
+	file_path = "Default";
 }
 
 void	Response::get_redirection_response(std::string next_location, int redirect_code)
 {
 	status_code = redirect_code;
 	headers["Location"] = next_location;
+	file_path = "redirect to " + next_location;
 }
 
 void Response::get_auto_index_page_response(std::string dir_path)
@@ -148,16 +149,18 @@ void Response::get_auto_index_page_response(std::string dir_path)
 			<meta http-equiv=content-type content=text/html; charset=UTF-8>\
 			<title>" + location_name + to_fetch + "'s autoindex page" + "</title>\
 		</head>\
-		<body>";
+		<body>\
+		<h1>Index of "+ dir_path + "</h1><hr><div>";
 	while ((element = readdir(dir)) != NULL)
 	{
 		body = body + "<a href=" + element->d_name + ((check_path(dir_path + element->d_name) % 2) ? "" : "/") +">" + \
 		element->d_name + ((check_path(dir_path + element->d_name) % 2) ? "" : "/")  + "</a><br>";
 	}	
-	body = body + "</body></html>";
+	body = body + "</div><hr></body></html>";
 	closedir(dir);
 	headers["Content-Type"] = "text/html";
 	headers["Content-Length"] = std::to_string(body.size());
+	file_path = "Default";
 }
 
 void Response::get_file_response(Server_info server, Location location, std::string path)
@@ -165,12 +168,11 @@ void Response::get_file_response(Server_info server, Location location, std::str
 	body_file.open(path);
 	if (body_file.is_open())
 	{
+		file_path = path;
 		if (location.autoindex != -1 && has_cgi(path, location, server))
 			return ;
 		headers["Content_Type"] = get_extension_type(get_extension(path));
 		headers["Content-Length"] = get_file_size(path);
-		// headers["Expires"] = "1d";
-		// headers["Cache-Control"] = "max-age=1000000, public";
 	}
 	else
 	{
@@ -187,21 +189,22 @@ int Response::has_cgi(std::string path, Location location, Server_info server)
 	{
 		if ((*i).first == extension)
 		{
-			if (access((*i).second.c_str(), F_OK))
+			file_path = path;
+			exec_path = (*i).second;
+			if (access(exec_path.c_str(), F_OK))
 			{
 				status_code = 404;
 				get_error_response(server, location);
 			}
-			else if (access((*i).second.c_str(), X_OK))
+			else if (access(exec_path.c_str(), X_OK))
 			{
 				status_code = 403;
 				get_error_response(server, location);
 			}
 			else
 			{
+				status_code = 200;
 				is_cgi = 1;
-				file_path = path;
-				exec_path = (*i).second;
 			}
 			return (1);
 		}
