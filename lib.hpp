@@ -3,19 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   lib.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: mac <mac@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 14:13:32 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/25 13:03:01 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/07/02 12:09:16 by mac              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef     LIB_WERBSERV_HPP
 # define    LIB_WERBSERV_HPP
 # include   <map>
-# include   <vector>
 # include   <ctime>
+# include   <vector>
 # include   <cstdio>
+# include   <netdb.h>
 # include   <cstring>
 # include   <cstdlib>
 # include   <fstream>
@@ -30,7 +31,6 @@
 # include   <sys/event.h>
 # include   <sys/socket.h>
 # include   <netinet/in.h>
-# include <netdb.h>
 # include   "request/request.hpp"
 # include   "Parsing/Configuration.hpp"
 # include   "Response/Response.hpp"

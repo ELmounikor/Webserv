@@ -6,7 +6,7 @@
 /*   By: mac <mac@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 12:13:15 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/01 15:26:33 by mac              ###   ########.fr       */
+/*   Updated: 2023/07/02 13:11:15 by mac              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,6 @@ void	Response::get_error_response(Server_info server, Location location)
 		std::ifstream error_page((*errp).second);
 		if (error_page.is_open())
 		{
-			file_path = (*errp).second;
 			get_file_response(server, location, (*errp).second);
 			return ;
 		}
@@ -127,14 +126,14 @@ void	Response::get_error_response(Server_info server, Location location)
 	</html>";
 	headers["Content-Type"] = "text/html";
 	headers["Content-Length"] = std::to_string(body.size());
-	file_path = "Default";
+	file_path = "Default error page";
 }
 
 void	Response::get_redirection_response(std::string next_location, int redirect_code)
 {
 	status_code = redirect_code;
 	headers["Location"] = next_location;
-	file_path = "redirect to " + next_location;
+	file_path = "Redirection to " + next_location;
 }
 
 void Response::get_auto_index_page_response(std::string dir_path)
@@ -143,24 +142,24 @@ void Response::get_auto_index_page_response(std::string dir_path)
 	struct dirent* element;
 	status_code = 200;
 	body = "<!DOCTYPE html>\
-	<style>@import url('https://fonts.googleapis.com/css?family=Press Start 2P');	html, body {	width: 100%;	height: 100%;	margin: 0;	} 	* {	font-family: 'Press Start 2P', cursive;	box-sizing: border-box;	}	#app {	padding: 1rem;	background: black;	display: flex;	height: 100%;	justify-content: center;	align-items: center;	color: #5bd6ff;	text-shadow: 0px 0px 10px;	font-size: 6rem;	flex-direction: column;	}	#app .txt {	font-size: 1.8rem;	}	@keyframes blink {	0% {opacity: 0;}	49% {opacity: 0;}	50% {opacity: 1;}	100% {opacity: 1;}	}	.blink {	animation-name: blink;	animation-duration: 1s;	animation-iteration-count: infinite;	}</style>\
+	<style>@import url('https://fonts.googleapis.com/css?family=Press Start 2P');	html, body {	width: 100%;	height: 100%;	margin: 0; } 	* {	font-family: 'Press Start 2P', cursive;	box-sizing: border-box;	}	#app {	padding: 0.5rem;	background: black;	display: flex;	height: 100%;	justify-content: center;	align-items: center;	text-shadow: 0px 0px 2px;	font-size: 0.3rem;	flex-direction: column;	}	#app .txt { margin:auto; padding:10px;	font-size:0.5rem;	}	@keyframes blink {	0% {opacity: 0;}	49% {opacity: 0;}	50% {opacity: 1;}	100% {opacity: 1;}	}	.blink {	animation-name: blink;	animation-duration: 1s;	animation-iteration-count: infinite;	}</style>\
 	<html>\
 		<head>\
 			<meta http-equiv=content-type content=text/html; charset=UTF-8>\
 			<title>" + location_name + to_fetch + "'s autoindex page" + "</title>\
 		</head>\
 		<body>\
-		<h1>Index of "+ dir_path + "</h1><hr><div>";
+		<h1 class=app style='padding:1em;'>Index of "+ dir_path + "</h1><hr><br><div class=app>";
 	while ((element = readdir(dir)) != NULL)
 	{
-		body = body + "<a href=" + element->d_name + ((check_path(dir_path + element->d_name) % 2) ? "" : "/") +">" + \
+		body = body + "<a class=txt style='padding:1em;' href=" + element->d_name + ((check_path(dir_path + element->d_name) % 2) ? "" : "/") +">" + \
 		element->d_name + ((check_path(dir_path + element->d_name) % 2) ? "" : "/")  + "</a><br>";
 	}	
-	body = body + "</div><hr></body></html>";
+	body = body + "<br></div><hr></body></html>";
 	closedir(dir);
 	headers["Content-Type"] = "text/html";
 	headers["Content-Length"] = std::to_string(body.size());
-	file_path = "Default";
+	file_path = "Autoindex page of " + dir_path;
 }
 
 void Response::get_file_response(Server_info server, Location location, std::string path)
