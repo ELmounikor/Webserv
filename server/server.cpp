@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:22:51 by sennaama          #+#    #+#             */
-/*   Updated: 2023/07/04 11:59:00 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/07/04 20:16:08 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,11 +131,11 @@ void    server::multiplixing()
 {
 	int socket_client, new_events;
 	struct timespec timeout;
-    timeout.tv_sec = 1;
+    timeout.tv_sec = 0;
     timeout.tv_nsec = 0;
 	while(true)
 	{
-		new_events = kevent(kq, NULL, 0, r_events, MAX_EVENTS, &timeout);
+		new_events = kevent(kq, NULL, 0, r_events, MAX_EVENTS, NULL);
 		if (new_events == -1)
 		{
 			perror("kevent");
@@ -143,7 +143,9 @@ void    server::multiplixing()
 		}
 		for (int i = 0; i < new_events; i++)
 		{
+
 			int event_fd = r_events[i].ident;
+			std::cout<<"new event: "<< event_fd<< "\n";
 			if (r_events[i].filter == EVFILT_READ)
 			{
 				if (std::find(listeners.begin(), listeners.end(), event_fd) != listeners.end())
@@ -187,7 +189,7 @@ void    server::multiplixing()
                                 if ((*j)->req.flag == -1)
                                 {
 									//std::cout << "client request complete " << (*j)->socket_client << std::endl;
-									//(*j)->req.print_request();
+									// (*j)->req.print_request();
                                     (*j)->res.response_fetch((*j)->req, conf);
 									
 			                        DisableEvent(kq, (*j)->socket_client, EVFILT_READ);
@@ -207,19 +209,24 @@ void    server::multiplixing()
 			else if (r_events[i].filter == EVFILT_WRITE)
 			{
 				
-				for (std::vector<Client *>::iterator j = clients.begin(); j != clients.end();)
+				for (std::vector<Client *>::iterator j = clients.begin(); j < clients.end();)
 				{
 					if (ft_exist( new_events, (*j)->socket_client) == 0 && ((*j)->state == 1)) 
-					{
-						if (send_response(*j))
+					{	
+						int i  = send_response(*j);
+						if (i)
 						{
-							DisableEvent(kq, (*j)->socket_client, EVFILT_WRITE);
-							DeleteEvent(kq, (*j)->socket_client, EVFILT_WRITE);
-							DeleteEvent(kq, (*j)->socket_client, EVFILT_READ);
-							close((*j)->socket_client);
-							delete *j;
-							clients.erase(j);
+						std::cout << i;
+							std::vector<Client *>::iterator tmp = j++;
+							DeleteEvent(kq, (*tmp)->socket_client, EVFILT_WRITE);
+							DeleteEvent(kq, (*tmp)->socket_client, EVFILT_READ);
+							close((*tmp)->socket_client);
+							delete *tmp;
+							clients.erase(tmp);
+	std::cout << "connection dropped " << clients.size() << std::endl;
 						}
+						else
+							j++;
 						// const char *response ("HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: \
 						// 12\n\nHello world!");
 						// if (send((*j)->socket_client, response, strlen(response), 0) == -1)

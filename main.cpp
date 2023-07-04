@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 14:13:21 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/22 20:20:53 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/04 19:22:15 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ void	ft_exit(std::string msg)
 
 int	main(int ac, char **av)
 {
+	std::signal(SIGPIPE, SIG_IGN);
 	if (ac != 2)
 		ft_exit("Either too little or too much arguments 👽");
 	server s;
