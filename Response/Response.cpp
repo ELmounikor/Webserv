@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mac <mac@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 12:13:15 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/02 13:11:15 by mac              ###   ########.fr       */
+/*   Updated: 2023/07/04 13:49:14 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Response.hpp"
 
-Response::Response(): is_finished(-1), status_code(-1), is_cgi(-1), port(-1), host(""), body(""), to_fetch(""), file_path(""), exec_path(""), location_name("")
+Response::Response(): is_finished(-1), status_code(-1), is_cgi(-1), port(-1), byte_read(0), host(""), body(""), to_fetch(""), file_path(""), exec_path(""), location_name("")
 {}
 
 void	Response::reset_response()
@@ -30,6 +30,7 @@ void	Response::reset_response()
 	body_file.close();
 	body_file.clear();
 	headers.clear();
+	byte_read = 0;
 }
 
 int	check_request_uri(std::string request_uri)

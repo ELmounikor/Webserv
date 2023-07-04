@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Send_nd_execute.cpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mac <mac@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 17:33:41 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/02 13:23:28 by mac              ###   ########.fr       */
+/*   Updated: 2023/07/04 14:00:59 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,10 @@
 
 void	print_interaction(Client *cli)
 {
-	printf("\033[0;93m[ Request From Socket %d]  Host=<%s>  Method=<%s>  URI=<%s>\033[0m\n", \
-	cli->socket_client, cli->req.header["Host"].c_str(), cli->req.method.c_str(), cli->req.path.c_str());
-	printf("\033[0;96m[ Response To Socket %d]   Status=<%d>  Path=<%s>\033[0m\n", \
-	cli->socket_client, cli->res.status_code, cli->res.file_path.c_str());
+	std::cout << "\033[0;93m[ Request From Socket <<"<<cli->socket_client<<"]  Host=<"<<cli->req.header["Host"].c_str()<<\
+	">  Method=<"<<cli->req.method.c_str()<<">  URI=<"<<cli->req.path.c_str()<<">\033[0m\n";
+	std::cout << "\033[0;96m[ Response To Socket "<<cli->socket_client<<"]   Status=<"<<cli->res.status_code<<\
+	">  Path=<"<<cli->res.file_path.c_str()<<">\033[0m\n";
 }
 
 int	send_response(Client *cli)
@@ -44,23 +44,47 @@ int	send_response(Client *cli)
 		execute_cgi(cli);
 		cli->res.is_finished++;
 	}
-	else if (cli->res.body_file.is_open())
+	else
 	{
-		if (!cli->res.body_file.eof())
+		if ((size_t) strtol(cli->res.headers["Content-Length"].c_str(), NULL, 10) != cli->res.byte_read)
 		{
-			char buf[65536];
-			memset(buf, 0, 65536);
+			char buf[65536] = {};
+			// cli->res.body_file.close();
+			// cli->res.body_file.open(cli->res.file_path);
+			// cli->res.body_file.seekg(cli->res.byte_read);
 			cli->res.body_file.read(buf, 65536);
-			size_t	byte_read = cli->res.body_file.gcount();
-			if (send(cli->socket_client, buf, byte_read, 0) < 0)
+			size_t read = cli->res.body_file.gcount();
+			cli->res.byte_read += read;
+			if (read > 0)
 			{
-				cli->res.is_finished = 2;
-				perror("client send error");
+				std::string data(buf, read);
+				if (send(cli->socket_client, data.c_str(), data.size(), 0) < 0)
+				{
+					perror("client send error");
+					std::cout << "We read " << cli->res.byte_read << " bytes out of " + cli->res.headers["Content-Length"] + "\n";
+				}
 			}
 		}
 		else
-			cli->res.is_finished++;		
+			cli->res.is_finished++;
 	}
+	// else if (cli->res.body_file.is_open())
+	// {
+	// 	if (!cli->res.body_file.eof())
+	// 	{
+	// 		char buf[65536];
+	// 		memset(buf, 0, 65536);
+	// 		cli->res.body_file.read(buf, 65536);
+	// 		size_t	byte_read = cli->res.body_file.gcount();
+	// 		if (send(cli->socket_client, buf, byte_read, 0) < 0)
+	// 		{
+	// 			cli->res.is_finished = 2;
+	// 			perror("client send error");
+	// 		}
+	// 	}
+	// 	else
+	// 		cli->res.is_finished++;		
+	// }
 	if (cli->res.is_finished == 2)
 	{
 		cli->res.reset_response();

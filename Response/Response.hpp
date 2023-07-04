@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 12:12:52 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/23 19:31:09 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/04 13:48:55 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ class	Response
 		int									status_code;
 		int									is_cgi;
 		int									port;
+		size_t								byte_read;
 		std::string							host;
 		std::string							body;
 		std::string							to_fetch;
