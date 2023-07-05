@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 17:33:41 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/05 12:59:20 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/05 13:08:05 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	send_response(Client *cli)
 	{
 		print_interaction(cli);
 		if (send(cli->socket_client, res_header.c_str(), res_header.size(), 0) < 0)
-			perror("client send error");
+			perror("client send header error");
 		cli->res.is_finished = 1;
 		if (cli->res.status_code / 100 == 3 || cli->res.status_code == 204 || cli->res.status_code == 201)
 		cli->res.is_finished = 2;
@@ -36,7 +36,7 @@ int	send_response(Client *cli)
 	else if (cli->res.body != "")
 	{
 		if (send(cli->socket_client, cli->res.body.c_str(), cli->res.body.size(), 0) < 0)
-			perror("client send error");
+			perror("client send body error");
 		cli->res.is_finished = 2;
 	}
 	else if (cli->res.is_cgi)
@@ -66,7 +66,10 @@ int	send_response(Client *cli)
 					cli->res.byte_sent += sent;
 			}
 			else
+			{
+				perror("client read file error");
 				cli->res.is_finished = 2;
+			}
 		}
 		else
 			cli->res.is_finished = 2;
