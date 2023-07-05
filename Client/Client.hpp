@@ -6,7 +6,7 @@
 /*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:59:12 by sennaama          #+#    #+#             */
-/*   Updated: 2023/06/25 14:43:22 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/07/05 18:09:39 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,25 +20,10 @@ class Client
 		request		req;
 		Response	res;
 		int			socket_client;
-		int 		recv;
-		int			send;
 		int			state;
-	
-		//Client();
+
 		Client(int client_socket);
-		//Client(const Client& obj);
-		//Client& operator=(const Client& obj);
 		~Client();
-		// std::string	getResponse();
-		// void	setPesponse(std::string response);
-		// std::string	getRequest();
-		// void	setRequest(std::string request);
-		// int		getClientSocket();
-		// void	setCLientSocket(int client_socket);	
-		// int 	getRecv();
-		// void	setRecv(int recv);	
-		// int 	getSend();
-		// void	setSend(int send);	
 };
 
 int		    send_response(Client *cli);

@@ -5,13 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-<<<<<<< HEAD
 /*   Created: 2023/07/05 11:40:01 by sennaama          #+#    #+#             */
-/*   Updated: 2023/07/05 17:57:39 by sennaama         ###   ########.fr       */
-=======
-/*   Created: 2023/04/09 17:22:51 by sennaama          #+#    #+#             */
-/*   Updated: 2023/07/05 13:00:41 by mel-kora         ###   ########.fr       */
->>>>>>> f1fb5d7690f4d9e4935f1a54f729d292eae5d15e
+/*   Updated: 2023/07/05 18:04:06 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,39 +155,9 @@ void	server::multiplixing()
                 int res = send_response(clients[i]);
 				if (res)
 				{
-<<<<<<< HEAD
 					//std::cout << "client dropped " << clients[i]->socket_client << std::endl;
 					FD_CLR(clients[i]->socket_client, &writeSet);
 					DeleteClient(i);
-=======
-					if (ft_exist( new_events, (*j)->socket_client) == 0 && ((*j)->state == 1)) 
-					{
-						if (send_response(*j))
-						{
-							std::vector<Client *>::iterator tmp = j++;
-							DeleteEvent(kq, (*tmp)->socket_client, EVFILT_WRITE);
-							DeleteEvent(kq, (*tmp)->socket_client, EVFILT_READ);
-							close((*tmp)->socket_client);
-							delete *tmp;
-							clients.erase(tmp);
-	std::cout << "connection dropped " << clients.size() << std::endl;
-						}
-						else
-							j++;
-						// const char *response ("HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: \
-						// 12\n\nHello world!");
-						// if (send((*j)->socket_client, response, strlen(response), 0) == -1)
-                        //     std::cout<<"client send errorfff\n";
-						
-                        // DeleteEvent(kq, (*j)->socket_client, EVFILT_WRITE);
-						// DeleteEvent(kq, (*j)->socket_client, EVFILT_READ);
-                        // close((*j)->socket_client);
-                        // delete *j;
-                        // clients.erase(j);
-					}
-					else
-						j++;
->>>>>>> f1fb5d7690f4d9e4935f1a54f729d292eae5d15e
 				}
             }
         }

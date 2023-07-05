@@ -6,11 +6,7 @@
 /*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 17:33:41 by mel-kora          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2023/07/05 08:27:30 by sennaama         ###   ########.fr       */
-=======
-/*   Updated: 2023/07/05 13:08:05 by mel-kora         ###   ########.fr       */
->>>>>>> f1fb5d7690f4d9e4935f1a54f729d292eae5d15e
+/*   Updated: 2023/07/05 18:06:44 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,33 +56,6 @@ int	send_response(Client *cli)
 			if (read > 0)
 			{
 				std::string data(buf, read);
-<<<<<<< HEAD
-				// std::cout << "****************\n";
-				// std::cout << "sok:" << cli->socket_client << "\n";
-				// std::cout << "state:" << cli->state << "\n";
-				// std::cout << "****************\n";
-				long sent = send(cli->socket_client, data.c_str(), data.size(), 0);
-				//std::cout <<data.size() << "->" << sent << "\n";
-				
-				if (sent < 0)
-				{
-					cli->res.is_finished = 2;
-					perror("send:");
-				}
-				else
-				{
-						cli->res.byte_sent += sent;
-				}
-				// while (sent < 0)
-				// {
-				// 	usleep(10);
-				// 	sent = send(cli->socket_client, data.c_str(), data.size(), 0);
-				// }
-				// if (sent > 0)
-					//std::cout << "YOU SENT " << cli->res.byte_sent << " bytes out of " << strtol(cli->res.headers["Content-Length"].c_str(), NULL, 10) << "\n";
-				// {
-				// }
-=======
 				long sent = send(cli->socket_client, data.c_str(), data.size(), 0);
 				if (sent < 0)
 				{
@@ -95,7 +64,6 @@ int	send_response(Client *cli)
 				}
 				else
 					cli->res.byte_sent += sent;
->>>>>>> f1fb5d7690f4d9e4935f1a54f729d292eae5d15e
 			}
 			else
 			{
