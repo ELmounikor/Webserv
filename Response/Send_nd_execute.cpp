@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Send_nd_execute.cpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 17:33:41 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/04 20:28:47 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/05 08:27:30 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,16 +60,18 @@ int	send_response(Client *cli)
 			if (read > 0)
 			{
 				std::string data(buf, read);
-				std::cout << "****************\n";
-				std::cout << "sok:" << cli->socket_client << "\n";
-				std::cout << "state:" << cli->state << "\n";
-				std::cout << "****************\n";
+				// std::cout << "****************\n";
+				// std::cout << "sok:" << cli->socket_client << "\n";
+				// std::cout << "state:" << cli->state << "\n";
+				// std::cout << "****************\n";
 				long sent = send(cli->socket_client, data.c_str(), data.size(), 0);
-				std::cout <<data.size() << "->" << sent << "\n";
+				//std::cout <<data.size() << "->" << sent << "\n";
 				
 				if (sent < 0)
 				{
-					cli->res.is_finished = 2;}
+					cli->res.is_finished = 2;
+					perror("send:");
+				}
 				else
 				{
 						cli->res.byte_sent += sent;
@@ -80,7 +82,7 @@ int	send_response(Client *cli)
 				// 	sent = send(cli->socket_client, data.c_str(), data.size(), 0);
 				// }
 				// if (sent > 0)
-					std::cout << "YOU SENT " << cli->res.byte_sent << " bytes out of " << strtol(cli->res.headers["Content-Length"].c_str(), NULL, 10) << "\n";
+					//std::cout << "YOU SENT " << cli->res.byte_sent << " bytes out of " << strtol(cli->res.headers["Content-Length"].c_str(), NULL, 10) << "\n";
 				// {
 				// }
 			}

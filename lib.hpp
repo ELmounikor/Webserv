@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lib.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 14:13:32 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/04 19:22:25 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/05 10:51:02 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,6 @@
 # include   "request/request.hpp"
 # include   "Parsing/Configuration.hpp"
 # include   "Response/Response.hpp"
-# define    MAX_EVENTS 20000
+# define    MAX_EVENTS 60000
 void        ft_exit(std::string msg);
 #endif

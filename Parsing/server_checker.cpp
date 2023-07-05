@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server_checker.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 14:27:50 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/13 15:58:56 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/05 15:19:31 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 Server_info	server_checker(Server_info &server)
 {
 	if (server.host == "")
-		server.host = "0.0.0.0";
+		server.host = "127.0.0.1";
 	if (server.port == -1)
 		server.port = 80;
 	if (server.body_size == -1)

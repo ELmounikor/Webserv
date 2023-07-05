@@ -3,60 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/09 17:22:51 by sennaama          #+#    #+#             */
-/*   Updated: 2023/07/04 20:16:08 by mel-kora         ###   ########.fr       */
+/*   Created: 2023/07/05 11:40:01 by sennaama          #+#    #+#             */
+/*   Updated: 2023/07/05 17:57:39 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.hpp"
-#include <arpa/inet.h>
-#include <cerrno>
-
-server::server():clients(){
-	kq = kqueue();
-	events = (struct kevent *)malloc(sizeof(struct kevent));
+server::server():clients(),maxFd(0)
+{
+    FD_ZERO(&readSet);
+    FD_ZERO(&writeSet);
 }
-
 server::~server(){}
-
-void    server::addEvent(int kq, int& fd, int fileter)
-{
-	EV_SET(&events[0], fd, fileter, EV_ADD, 0, 0, NULL);
-	
-	if (kevent(kq, &events[0], 1, NULL, 0, NULL) < 0)
-	{
-		perror("addEvent");
-	}
-}
-
-void    server::DisableEvent(int kq, int& fd, int fileter)
-{
-	EV_SET(&events[0], fd, fileter, EV_DISABLE, 0, 0, NULL);
-	if (kevent(kq, events, 1, NULL, 0, NULL) < 0)
-	{
-		perror("DisableEvent");
-	}
-}
-
-void    server::DeleteEvent(int kq, int& fd, int fileter)
-{
-	EV_SET(&events[0], fd, fileter, EV_DELETE, 0, 0, NULL);
-	if (kevent(kq, &events[0], 1, NULL, 0, NULL) < 0)
-	{
-		perror("DeleteEvent");
-	}
-}
-
-void    server::EnableEvent(int kq, int& fd, int fileter)
-{
-	EV_SET(&events[0], fd, fileter, EV_ENABLE, 0, 0, NULL);
-	if (kevent(kq, &events[0], 1, NULL, 0, NULL) < 0)
-	{
-		perror("EnableEvent");
-	}
-}
 
 void    server::listener_port(int port)
 {
@@ -107,144 +67,103 @@ void    server::listener_port(int port)
 		perror("listen");
 		exit(1);
 	}
-	addEvent(kq, socket_server, EVFILT_READ);
+    FD_SET(socket_server, &readSet);
 	listeners.push_back(socket_server);
+	if (socket_server > maxFd)
+    	maxFd = socket_server;
 }
 
-int     server::ft_exist(int new_events, int client)
+void	server::AddClient(int socket)
 {
-	for (int e = 0; e < new_events; e++)
-	{
-		int event_ident = r_events[e].ident;
-		if (client == event_ident)
-		{
-			if (r_events[e].filter ==  EVFILT_READ)
-				return (1);
-			else if (r_events[e].filter ==  EVFILT_WRITE)
-				return (0);
-		}
-	}
-	return (-1);
+	Client *new_client = new Client(socket);
+	if (fcntl(new_client->socket_client, F_SETFL ,O_NONBLOCK) < 0)
+        perror("FCNTL Error");
+	FD_SET(socket, &readSet);
+	clients.push_back(new_client);
+    if (socket > maxFd)
+    {
+        maxFd = socket;
+    }
 }
 
-void    server::multiplixing()
-{
-	int socket_client, new_events;
-	struct timespec timeout;
-    timeout.tv_sec = 0;
-    timeout.tv_nsec = 0;
-	while(true)
-	{
-		new_events = kevent(kq, NULL, 0, r_events, MAX_EVENTS, NULL);
-		if (new_events == -1)
-		{
-			perror("kevent");
-			exit(1);
-		}
-		for (int i = 0; i < new_events; i++)
-		{
+void	server::DeleteClient(int i)
+{	
+	close(clients[i]->socket_client);
+	delete clients[i];
+	clients.erase(clients.begin() + i);
+}
 
-			int event_fd = r_events[i].ident;
-			std::cout<<"new event: "<< event_fd<< "\n";
-			if (r_events[i].filter == EVFILT_READ)
-			{
-				if (std::find(listeners.begin(), listeners.end(), event_fd) != listeners.end())
-				{
-					std::cout<<"New connection coming in...\n";
-					socket_client = accept(*(std::find(listeners.begin(), listeners.end(), event_fd)), NULL , NULL);
-					if (socket_client == -1)
-					{
-						perror("Accept socket error");
-					}
-					Client *new_client = new Client(socket_client);
-					if (fcntl(new_client->socket_client, F_SETFL ,O_NONBLOCK) < 0)
-                        perror("FCNTL Error");
-					addEvent(kq, new_client->socket_client, EVFILT_READ);
-					new_client->state =0;
-					clients.push_back(new_client);
-				}
-				else
-				{
-					for (std::vector<Client *>::iterator j = clients.begin(); j != clients.end();)
-                    {
-                        if (ft_exist(new_events, (*j)->socket_client) == 1 && ((*j)->state == 0))
-                        {
-                            char buf[6000 + 1];
-                            int bytes_read = recv((*j)->socket_client, buf, 6000, 0);
-                            if (bytes_read <= 0)
-							{
-								perror("Client recv error");
-								DeleteEvent(kq, (*j)->socket_client, EVFILT_READ);
-                                close((*j)->socket_client);
-                                delete *j;
-                                clients.erase(j);
-							}
-                            else
-                            {
-								buf[bytes_read] = 0;
-								std::string assign(buf, buf + bytes_read);
-                                (*j)->req.request_parse(assign, (*j)->socket_client);
-								//(*j)->req.print_request();
-								
-                                if ((*j)->req.flag == -1)
-                                {
-									//std::cout << "client request complete " << (*j)->socket_client << std::endl;
-									// (*j)->req.print_request();
-                                    (*j)->res.response_fetch((*j)->req, conf);
-									
-			                        DisableEvent(kq, (*j)->socket_client, EVFILT_READ);
-                                    addEvent(kq, (*j)->socket_client, EVFILT_WRITE);
-									(*j)->state = 1;
-									//	r_events[i].filter = EVFILT_WRITE;
-									// exit(0);
-                                }
-                                j++;
-                            }
-                        }
-                        else
-                            j++;
-                    }
-				}
-			}
-			else if (r_events[i].filter == EVFILT_WRITE)
-			{
-				
-				for (std::vector<Client *>::iterator j = clients.begin(); j < clients.end();)
-				{
-					if (ft_exist( new_events, (*j)->socket_client) == 0 && ((*j)->state == 1)) 
-					{	
-						int i  = send_response(*j);
-						if (i)
-						{
-						std::cout << i;
-							std::vector<Client *>::iterator tmp = j++;
-							DeleteEvent(kq, (*tmp)->socket_client, EVFILT_WRITE);
-							DeleteEvent(kq, (*tmp)->socket_client, EVFILT_READ);
-							close((*tmp)->socket_client);
-							delete *tmp;
-							clients.erase(tmp);
-	std::cout << "connection dropped " << clients.size() << std::endl;
-						}
-						else
-							j++;
-						// const char *response ("HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: \
-						// 12\n\nHello world!");
-						// if (send((*j)->socket_client, response, strlen(response), 0) == -1)
-                        //     std::cout<<"client send errorfff\n";
-						
-                        // DeleteEvent(kq, (*j)->socket_client, EVFILT_WRITE);
-						// DeleteEvent(kq, (*j)->socket_client, EVFILT_READ);
-                        // close((*j)->socket_client);
-                        // delete *j;
-                        // clients.erase(j);
-					}
-					else
-						j++;
-				}
-			}
-		}
+void	server::request_part(Client* cli, std::string assign)
+{
+	cli->req.request_parse(assign, cli->socket_client);
+	if (cli->req.flag == -1)
+	{
+		cli->res.response_fetch(cli->req, conf);
+		FD_CLR(cli->socket_client, &readSet);
+		FD_SET(cli->socket_client, &writeSet);
 	}
 }
+
+void	server::multiplixing()
+{
+    fd_set readSet_copy;
+    fd_set writeSet_copy;
+    int socket_client;
+    while(true)
+    {
+		readSet_copy =  readSet;
+        writeSet_copy = writeSet;
+        activity = select(maxFd + 1, &readSet_copy, &writeSet_copy, NULL, NULL);
+        if (activity < 0) {
+            perror("Select error");
+        }
+		for (std::vector<int>::iterator it = listeners.begin(); it != listeners.end(); it++)
+		{
+			socket_server =  *it;
+			if (FD_ISSET(socket_server, &readSet_copy)) 
+			{
+				//std::cout<<"New connection coming in... "<< socket_server << std::endl;
+				socket_client = accept(socket_server, NULL, NULL);
+				if (socket_client == -1)
+				{
+					perror("Accept socket error");
+				}
+				else 
+					AddClient(socket_client);
+			}
+	   }
+        for (size_t i = 0; i < clients.size(); i++) 
+		{
+            if (FD_ISSET(clients[i]->socket_client, &readSet_copy)) {
+                char buf[6000 + 1];
+				int bytes_read = recv(clients[i]->socket_client, buf, 6000, 0);
+                if (bytes_read <= 0)
+				{
+					FD_CLR(clients[i]->socket_client, &readSet);
+					DeleteClient(i);
+                    perror("recv : ");
+				}
+                else
+                {
+                    buf[bytes_read] = 0;
+					std::string assign(buf, buf + bytes_read);
+					request_part(clients[i], assign);
+                }
+            }
+            else if (FD_ISSET(clients[i]->socket_client, &writeSet_copy))
+			{
+                int res = send_response(clients[i]);
+				if (res)
+				{
+					//std::cout << "client dropped " << clients[i]->socket_client << std::endl;
+					FD_CLR(clients[i]->socket_client, &writeSet);
+					DeleteClient(i);
+				}
+            }
+        }
+    }
+}
+
 
 void    server::process(char *file)
 {
