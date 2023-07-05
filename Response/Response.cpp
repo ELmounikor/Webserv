@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 12:13:15 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/04 19:09:00 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/05 13:09:38 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,8 @@ void	Response::response_fetch(request &req, Configuration conf)
 		get_error_response(server, location);
 	else
 		get_response(req, server, location);
+	if (body_file.is_open())
+		body_file.close();
 	// print_response_attr(server, location);
 }
 
@@ -153,7 +155,7 @@ void Response::get_auto_index_page_response(std::string dir_path)
 		<h1 class=app style='padding:1em;'>Index of "+ dir_path + "</h1><hr><br><div class=app>";
 	while ((element = readdir(dir)) != NULL)
 	{
-		body = body + "<a class=txt style='padding:1em;' href=" + element->d_name + ((check_path(dir_path + element->d_name) % 2) ? "" : "/") +">" + \
+		body = body + "<br><a class=txt style='padding:1em;' href=" + element->d_name + ((check_path(dir_path + element->d_name) % 2) ? "" : "/") +">" + \
 		element->d_name + ((check_path(dir_path + element->d_name) % 2) ? "" : "/")  + "</a><br>";
 	}	
 	body = body + "<br></div><hr></body></html>";
@@ -171,7 +173,7 @@ void Response::get_file_response(Server_info server, Location location, std::str
 		file_path = path;
 		if (location.autoindex != -1 && has_cgi(path, location, server))
 			return ;
-		headers["Content_Type"] = get_extension_type(get_extension(path));
+		headers["Content-Type"] = get_extension_type(get_extension(path));
 		headers["Content-Length"] = get_file_size(path);
 	}
 	else
