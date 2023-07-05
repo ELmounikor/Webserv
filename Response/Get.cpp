@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 13:43:22 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/23 17:25:39 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/05 22:58:11 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ Get::Get(std::string target): Method(target)
 
 void	Get::implement_method(Response &res, request &req, Server_info server, Location location)
 {
-	// std::cout << "TARGET = '" + target + "'\n";
 	if (target_not_good(res, server, location))
 		return ;
 	if (check % 2 == 0)
@@ -31,7 +30,6 @@ void	Get::implement_method(Response &res, request &req, Server_info server, Loca
 			int current = check_path(new_target);
 			if (current)
 			{
-				// std::cout << "new_target = '" + new_target + "'\n";
 				if (current == 1)
 				{
 					res.status_code = 200;

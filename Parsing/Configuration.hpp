@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:16:09 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/08 10:59:23 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/05 21:53:26 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ class Location
 		Location();
 		Location &operator=(const Location& rhs);
 };
- 
+
 class Server_info
 {
 	public:
@@ -42,6 +42,7 @@ class Server_info
 		std::map<std::string, Location>	locations;
 		Server_info();
 		Server_info &operator=(const Server_info& rhs);
+		void		server_checker();
 };
 
 class Configuration
@@ -50,6 +51,7 @@ class Configuration
 		std::vector<Server_info>	servers;
 		Configuration();
 		Configuration(std::string conf_file_name);
+		void		print_config();
 		void		parse_content(std::string content);
 		void		parse_server_block(std::string block);
 		void		parse_location_block(Server_info &serv, std::string location_match, std::string block);
@@ -59,10 +61,8 @@ class Configuration
 
 std::ostream	&operator<<( std::ostream &output, const Location &location);
 std::string		get_valid_path(std::string path);
-Server_info		server_checker(Server_info &server);
-void			print_config(Configuration config);
-int				is_number(std::string input);
 int				is_ip_address(std::string host);
+int				is_number(std::string input);
 
 template <class T> void print_vector(T container)
 {

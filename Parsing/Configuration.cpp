@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Configuration.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mac <mac@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:16:16 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/01 14:40:03 by mac              ###   ########.fr       */
+/*   Updated: 2023/07/05 21:57:39 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,8 @@ void	Configuration::parse_server_block(std::string block)
 		}
 		block = block.substr(++end, block.size());
 	}
-	this->servers.push_back(server_checker(server));
+	server.server_checker();
+	this->servers.push_back(server);
 }
 
 std::string	Configuration::parse_server_line(Server_info &serv, std::string line)
