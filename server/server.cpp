@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 17:22:51 by sennaama          #+#    #+#             */
-/*   Updated: 2023/07/04 20:16:08 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/05 13:00:41 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,11 +212,9 @@ void    server::multiplixing()
 				for (std::vector<Client *>::iterator j = clients.begin(); j < clients.end();)
 				{
 					if (ft_exist( new_events, (*j)->socket_client) == 0 && ((*j)->state == 1)) 
-					{	
-						int i  = send_response(*j);
-						if (i)
+					{
+						if (send_response(*j))
 						{
-						std::cout << i;
 							std::vector<Client *>::iterator tmp = j++;
 							DeleteEvent(kq, (*tmp)->socket_client, EVFILT_WRITE);
 							DeleteEvent(kq, (*tmp)->socket_client, EVFILT_READ);
