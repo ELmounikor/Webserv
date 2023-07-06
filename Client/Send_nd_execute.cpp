@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 17:33:41 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/06 17:25:58 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/06 20:43:46 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,6 @@ void	Client::post_file_chunk(Configuration conf)
 	std::fstream	out_file(res.file_path, std::fstream::out | std::fstream::app);
 	std::ifstream	in_file(res.exec_path);
 	
-	std::cout << "post_file_chunk\n";
 	if (!out_file.is_open() || !in_file.is_open())
 	{
 		if (in_file.is_open())	in_file.close();
@@ -129,7 +128,6 @@ void	Client::post_file_chunk(Configuration conf)
 			std::string data(buf, read);
 			out_file << data;
 			res.byte_sent += read;
-			std::cout << "you written " << read  << " -> total=" << res.byte_sent << "bytes\n";
 		}
 		else
 		{
@@ -145,13 +143,10 @@ void	Client::post_file_chunk(Configuration conf)
 	{
 		if (res.byte_sent != (ssize_t)strtol((get_file_size(res.exec_path)).c_str(), NULL, 10))
 		{
-			
 			fail_in_execution(conf);
 			return ;
 		}
 		send_response_header();
 		res.is_finished = 2;
 	}
-	else
-		res.is_finished = 0;
 }
