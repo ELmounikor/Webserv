@@ -6,7 +6,7 @@
 /*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 11:40:01 by sennaama          #+#    #+#             */
-/*   Updated: 2023/07/05 18:04:06 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/07/06 06:56:59 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,7 @@ void	server::request_part(Client* cli, std::string assign)
 	cli->req.request_parse(assign, cli->socket_client);
 	if (cli->req.flag == -1)
 	{
+		//cli->req.print_request();
 		cli->res.response_fetch(cli->req, conf);
 		FD_CLR(cli->socket_client, &readSet);
 		FD_SET(cli->socket_client, &writeSet);

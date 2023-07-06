@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mac <mac@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/21 20:11:15 by sennaama          #+#    #+#             */
-/*   Updated: 2023/06/29 17:32:47 by mac              ###   ########.fr       */
+/*   Updated: 2023/07/06 06:56:03 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -226,24 +226,8 @@ bool isValidContentLength(std::string contentLength) {
     return length >= minContentLength && length <= maxContentLength;
 }
 
-void	request::post_method(std::string assign, int socket_client)
+void	request::post_method(std::string assign)
 {
-	std::stringstream st;
-    std::string client;
-   
-    std::string file;
-	if (header.find("Content-Type") == header.end() \
-		|| (header.find("Content-Length") == header.end()\
-		&& header.find("Transfer-Encoding") == header.end()) || \
-		(header.find("Content-Length") != header.end()\
-		&& header.find("Transfer-Encoding") != header.end()))
-	{
-		status_code = 400;
-		return ;
-	}
-	st << socket_client;
-    st >> client;
-    file = name_file + client + get_extension(header["Content-Type"]);
     if (header.find("Content-Length") != header.end())
 	{
         if (!isValidContentLength(header["Content-Length"]))
@@ -258,7 +242,7 @@ void	request::post_method(std::string assign, int socket_client)
 		{
             flag = -1;
         }
-        appendtofile(assign, file); 
+        appendtofile(assign, name_file); 
       
     }
     else if (header["Transfer-Encoding"] == "chunked")
@@ -309,7 +293,7 @@ void	request::post_method(std::string assign, int socket_client)
         }
         if (assign == "0\r\n\r\n")
             assign.clear();
-        appendtofile(assign, file);
+        appendtofile(assign, name_file);
     }
     else
     {
@@ -320,22 +304,6 @@ void	request::post_method(std::string assign, int socket_client)
 
 void    request::request_parse(std::string assign, int socket_client)
 {
-	// stdj::cout<<"---------------"<<std::endl;
-    //std::cout<<buf<<"\n\n";
-    // buf = "GET / HTTP/1.1\n"
-    //     "Host: localhost:8080\r\n"
-    //     "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:109.0) Gecko/20100101 Firefox/113.0\r\n"
-    //     "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8\r\n"
-    //     "Accept-Language: en-US,en;q=0.5\r\n"
-    //     "Accept-Encoding: gzip, deflate, br\r\n"
-    //     "Connection: keep-alive\r\n"
-    //     "Upgrade-Insecure-Requests: 1\r\n"
-    //     "Sec-Fetch-Dest: document\r\n"
-    //     "Sec-Fetch-Mode: navigate\r\n"
-    //     "Sec-Fetch-Site: none\r\n"
-    //     "Sec-Fetch-User: ?1\r\n"
-    //     "\r\n";
-	
     size_t pos_header_end = assign.find("\r\n\r\n");
     if (pos_header_end != std::string::npos && flag == -1)
     {
@@ -343,6 +311,25 @@ void    request::request_parse(std::string assign, int socket_client)
 		if (status_code == 400)
 			return ;
 		assign.erase(0, pos_header_end + strlen("\r\n\r\n"));
+        
+        if (method == "POST")
+        {
+            if (header.find("Content-Type") == header.end() \
+            || (header.find("Content-Length") == header.end()\
+            && header.find("Transfer-Encoding") == header.end()) || \
+            (header.find("Content-Length") != header.end()\
+            && header.find("Transfer-Encoding") != header.end()))
+            {
+                status_code = 400;
+                return ;
+            }
+            std::string file;
+            std::stringstream st;
+            std::string client;
+            st << socket_client;
+            st >> client;
+            name_file = name_file + client + get_extension(header["Content-Type"]);
+        }   
     }
     else if (pos_header_end == std::string::npos && flag == -1)
     {
@@ -353,11 +340,10 @@ void    request::request_parse(std::string assign, int socket_client)
     {
         flag = 1;
         get_method(assign);
-        // std::cout<<"client req:  "<<socket_client<<std::endl;
         flag = -1;
     }
 	else if (method == "POST")
-        post_method(assign, socket_client);
+        post_method(assign);
 }
 
 request::~request(){}  
@@ -376,4 +362,6 @@ void request::print_request()
     for (iter = header.begin(); iter != header.end(); ++iter) {
        std::cout << iter->first <<" : " << iter->second << std::endl;
     }
+    if (method == "POST")
+        std::cout<<"name file: "<<name_file <<std::endl;
 }                                                                                                 

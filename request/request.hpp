@@ -6,7 +6,7 @@
 /*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/21 18:20:01 by sennaama          #+#    #+#             */
-/*   Updated: 2023/06/20 18:53:04 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/07/06 06:42:22 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ class request
         void		header_parse(std::string buf);
         void		print_request();
         void		get_method(std::string assign);
-		void		post_method(std::string assign, int socket_client);
+		void		post_method(std::string assign);
 		void		appendtofile(std::string str, std::string filename);
 		int			countcharacter(std::string str, char c);
         ~request();
