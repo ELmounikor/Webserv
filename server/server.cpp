@@ -6,7 +6,7 @@
 /*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 11:40:01 by sennaama          #+#    #+#             */
-/*   Updated: 2023/07/06 10:38:57 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/07/06 17:33:25 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,7 +153,7 @@ void	server::multiplixing()
             }
             else if (FD_ISSET(clients[i]->socket_client, &writeSet_copy))
 			{
-                int res = clients[i]->send_response();
+                int res = clients[i]->send_response(conf);
 				if (res)
 				{
 					//std::cout << "client dropped " << clients[i]->socket_client << std::endl;
