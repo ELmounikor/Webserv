@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mac <mac@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 18:12:02 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/29 22:40:20 by mac              ###   ########.fr       */
+/*   Updated: 2023/07/06 15:02:55 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,10 +84,9 @@ std::string	get_date(void)
 {
 	time_t		ct = time(NULL);
 	tm * 		curr_time;
-	char		date[30];
+	char		date[30] = {0};
 	
 	curr_time = localtime(&ct);
-	memset(date, 0, 30);
 	strftime(date, 30, "%a, %d %b %G %R:%S GMT", curr_time);
 	return (date);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 11:40:01 by sennaama          #+#    #+#             */
-/*   Updated: 2023/07/06 07:02:57 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/07/06 16:01:29 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,7 +153,7 @@ void	server::multiplixing()
             }
             else if (FD_ISSET(clients[i]->socket_client, &writeSet_copy))
 			{
-                int res = clients[i]->send_response();
+                int res = clients[i]->send_response(conf);
 				if (res)
 				{
 					//std::cout << "client dropped " << clients[i]->socket_client << std::endl;

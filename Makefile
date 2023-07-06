@@ -6,7 +6,7 @@
 #    By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/30 14:02:35 by mel-kora          #+#    #+#              #
-#    Updated: 2023/07/05 22:26:45 by mel-kora         ###   ########.fr        #
+#    Updated: 2023/07/06 16:18:56 by mel-kora         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,6 +36,7 @@ SRCS		=	main.cpp\
 				Parsing/server_checker.cpp\
 				Parsing/location_params.cpp\
 				Client/Send_nd_execute.cpp\
+				Client/cgi.cpp\
 				#more files
 OBJS		= 	${SRCS:.cpp=.o}
 CC			= 	@c++

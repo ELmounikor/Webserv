@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 13:44:03 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/06 00:04:32 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/06 16:55:38 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,42 +21,36 @@ void	Post::implement_method(Response &res, request &req, Server_info server, Loc
 	{
 		std::string		file_location = join_paths(location.root, *(location.uploads.begin()));
 		std::string		out_file_path = join_paths(file_location, res.to_fetch + req.get_extension(req.header["Content-Type"]));
-		// int	i = chmod(req.name_file.c_str(), S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
-		// std::cout  << req.name_file << "\n"; 
-		// if (i < 0)
-		// 	perror("read request body file error");
 		std::ifstream	in_file(req.name_file);
-		if (in_file.eof())
-		{
-			res.status_code = 204;
-			return ;
-		}
 		if (check_path(out_file_path) || res.to_fetch == "")
 		{
 			res.status_code = 409;
 			res.get_error_response(server, location);
 			return ;
 		}
-		std::ofstream	out_file(out_file_path);
+		std::fstream	out_file(out_file_path, std::fstream::out | std::fstream::app);
 		if (!out_file.is_open() || !in_file.is_open())
 		{
+			if (in_file.is_open())	in_file.close();
+			if (out_file.is_open())	out_file.close();
 			res.status_code = 500;
 			res.get_error_response(server, location);
 			return ;
 		}
-		while (!in_file.eof())
+		if (in_file.eof())
 		{
-			char buf[65536] = {0};
-			in_file.read(buf, 65536);
-			std::string data(buf, in_file.gcount());
-			out_file << data;
+			res.status_code = 204;
+			return ;
 		}
+		in_file.close();
+		out_file.close();
+		res.file_path = out_file_path;
+		res.exec_path = req.name_file;
 		res.status_code = 201;
 		return ;
 	}
-	if (target_not_good(res, server, location))
-		return ;
-	if (check % 2 == 0)
+	target_not_good(res, server, location);
+	if (check % 2 == 2)
 	{
 		std::vector<std::string>::iterator i = location.indexes.begin();
 		while (i != location.indexes.end())

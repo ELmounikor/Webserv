@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:59:12 by sennaama          #+#    #+#             */
-/*   Updated: 2023/07/05 21:33:17 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/06 16:28:26 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,13 @@ class Client
 
 		Client(int client_socket);
 		~Client();
-		int		send_response();
-		void	execute_cgi();
-		void	send_file_chunk();
-		void	print_interaction();
+		int		send_response(Configuration conf);
+		void	fail_in_execution(Configuration conf);
+		void	post_file_chunk(Configuration conf);
+		void	execute_cgi(Configuration conf);
+		void	send_response_header(void);
+		void	print_interaction(void);
+		void	send_file_chunk(void);
 };
 
 #endif
