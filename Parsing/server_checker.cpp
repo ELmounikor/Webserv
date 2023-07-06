@@ -3,53 +3,52 @@
 /*                                                        :::      ::::::::   */
 /*   server_checker.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 14:27:50 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/05 15:19:31 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/07/05 21:50:57 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Configuration.hpp"
 
-Server_info	server_checker(Server_info &server)
+void	Server_info::server_checker()
 {
-	if (server.host == "")
-		server.host = "127.0.0.1";
-	if (server.port == -1)
-		server.port = 80;
-	if (server.body_size == -1)
-		server.body_size = 1000000;
-	if (server.locations.size() > 0)
+	if (host == "")
+		host = "0.0.0.0";
+	if (port == -1)
+		port = 80;
+	if (body_size == -1)
+		body_size = 1000000;
+	if (locations.size() > 0)
 	{
-		std::map<std::string, Location>::iterator j = server.locations.begin();
+		std::map<std::string, Location>::iterator j = locations.begin();
 		
-		while (j != server.locations.end())
+		while (j != locations.end())
 		{
 			if ((*j).second.autoindex == -1)
 				(*j).second.autoindex = 0;
 			if ((*j).second.root == "")
 			{
-				if (server.root == "")
+				if (root == "")
 					ft_exit("Missing root detected 🤖");
-				(*j).second.root = server.root;
+				(*j).second.root = root;
 			}
 			if ((*j).second.methods.size() == 0)
-				(*j).second.methods = server.methods;
+				(*j).second.methods = methods;
 			j++;
 		}
 	}
 	else
 		ft_exit("Missing location block detected 🤖");
-	return (server);
 }
 
-void	print_config(Configuration config)
+void	Configuration::print_config()
 {
-	std::vector<Server_info>::iterator i = config.servers.begin();
+	std::vector<Server_info>::iterator i = servers.begin();
 	int	server_id = 1;
 
-	while (i != config.servers.end())
+	while (i != servers.end())
 	{
 		std::cout << "***************** Server " << server_id << " info: *****************\n";
 		std::cout << "* listening on " << (*i).host << ':' << (*i).port << "\n";

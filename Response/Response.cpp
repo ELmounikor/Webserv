@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 12:13:15 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/05 13:09:38 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/05 22:54:38 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,11 @@ void	Response::response_fetch(request &req, Configuration conf)
 	{
 		if (req.header.find("Host") == req.header.end() || !check_request_uri(req.path))
 			status_code = 400;
-		else if (req.header.find("Transfer-Encoding") != req.header.end() && req.header["Transfer-Encoding"] != "chunked")
+		else if (req.header.find("Transfer-Encoding") != req.header.end() && \
+		req.header["Transfer-Encoding"] != "chunked")
 			status_code = 501;
-		else if (req.header.find("Content-Length") != req.header.end() && strtol(req.header["Content-Length"].c_str(), NULL, 10) > server.body_size)
+		else if (req.header.find("Content-Length") != req.header.end() && \
+		strtol(req.header["Content-Length"].c_str(), NULL, 10) > server.body_size)
 			status_code = 413;
 		else if (req.path.size() > 2048)
 			status_code = 414;
@@ -76,8 +78,6 @@ void	Response::response_fetch(request &req, Configuration conf)
 		get_error_response(server, location);
 	else
 		get_response(req, server, location);
-	if (body_file.is_open())
-		body_file.close();
 	// print_response_attr(server, location);
 }
 
@@ -99,6 +99,8 @@ void	Response::get_response(request &req, Server_info server, Location location)
 		Post res(file_path);
 		res.implement_method(*this, req, server, location);
 	}
+	if (body_file.is_open())
+		body_file.close();
 }
 
 void	Response::get_error_response(Server_info server, Location location)
@@ -204,10 +206,7 @@ int Response::has_cgi(std::string path, Location location, Server_info server)
 				get_error_response(server, location);
 			}
 			else
-			{
-				status_code = 200;
 				is_cgi = 1;
-			}
 			return (1);
 		}
 		i++;

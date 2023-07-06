@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server_params.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 10:26:41 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/05 15:19:31 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/07/05 21:46:09 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	get_port(Server_info &serv, std::string argument)
 	if (!is_number(argument) || port > 65535)
 		ft_exit("Invalid port detected 🤖");
 	if (serv.host == "")
-		serv.host = "127.0.0.1";
+		serv.host = "0.0.0.0";
 	serv.port = port;
 }
 

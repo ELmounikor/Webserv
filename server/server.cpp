@@ -6,11 +6,12 @@
 /*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 11:40:01 by sennaama          #+#    #+#             */
-/*   Updated: 2023/07/06 06:56:59 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/07/06 07:02:57 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.hpp"
+
 server::server():clients(),maxFd(0)
 {
     FD_ZERO(&readSet);
@@ -35,7 +36,6 @@ void    server::listener_port(int port)
 
 	std::string s;
 	sd >> s;
-	
 	
 	if ((get_add_errno = getaddrinfo(NULL, s.c_str(), &hints, &servinfo)) != 0){
         std::cerr << (get_add_errno) << std::endl;
@@ -132,7 +132,7 @@ void	server::multiplixing()
 				else 
 					AddClient(socket_client);
 			}
-	   }
+	    }
         for (size_t i = 0; i < clients.size(); i++) 
 		{
             if (FD_ISSET(clients[i]->socket_client, &readSet_copy)) {
@@ -153,7 +153,7 @@ void	server::multiplixing()
             }
             else if (FD_ISSET(clients[i]->socket_client, &writeSet_copy))
 			{
-                int res = send_response(clients[i]);
+                int res = clients[i]->send_response();
 				if (res)
 				{
 					//std::cout << "client dropped " << clients[i]->socket_client << std::endl;
@@ -168,7 +168,6 @@ void	server::multiplixing()
 
 void    server::process(char *file)
 {
-	
 	this->conf = Configuration(file);
 	std::vector<Server_info>::iterator i = conf.servers.begin();
 	while (i != conf.servers.end())

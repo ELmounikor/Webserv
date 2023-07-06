@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Attributes.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/07 13:00:51 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/05 15:19:31 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/07/05 21:42:41 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ Server_info	Response::get_server(request &req, Configuration conf)
 			serv_i = conf.servers.begin();
 			while (serv_i != conf.servers.end())
 			{
-				if ((*serv_i).host == "127.0.0.1" && (*serv_i).port == port)
+				if ((*serv_i).host == "0.0.0.0" && (*serv_i).port == port)
 					return (*serv_i);
 				serv_i++;
 			}

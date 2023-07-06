@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+         #
+#    By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/30 14:02:35 by mel-kora          #+#    #+#              #
-#    Updated: 2023/07/05 17:58:17 by sennaama         ###   ########.fr        #
+#    Updated: 2023/07/05 22:26:45 by mel-kora         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,7 +35,7 @@ SRCS		=	main.cpp\
 				Parsing/server_params.cpp\
 				Parsing/server_checker.cpp\
 				Parsing/location_params.cpp\
-				Response/Send_nd_execute.cpp\
+				Client/Send_nd_execute.cpp\
 				#more files
 OBJS		= 	${SRCS:.cpp=.o}
 CC			= 	@c++
