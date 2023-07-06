@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 13:44:14 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/23 17:40:44 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/06 18:20:55 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	Delete::implement_method(Response &res, request &req, Server_info server, L
 		if (check < 0)
 			res.status_code = 403;
 		else if (res.status_code == -1)
-			delete_file(res, target);
+			delete_folder(res, target);
 	}
 	else
 	{
@@ -66,16 +66,21 @@ void	Delete::delete_folder(Response &res, std::string path)
 	if (res.status_code != -1)
 		return ;
     DIR* dir = opendir(path.c_str());
-    struct dirent* element;
-	while ((element = readdir(dir)) != NULL)
+	if (dir)
 	{
-		int current = check_path(path + element->d_name);
-		if (current % 2)
-			delete_file(res, path + element->d_name);
-		else
-			delete_folder(res, path + element->d_name);
+		struct dirent* element;
+		while ((element = readdir(dir)) != NULL)
+		{
+			int current = check_path(path + element->d_name);
+			if (current % 2)
+				delete_file(res, path + element->d_name);
+			else
+				delete_folder(res, path + element->d_name);
+		}
+		closedir(dir);
 	}
-	closedir(dir);
 	if (std::remove(path.c_str()))
 		res.status_code = 500;
+	else
+		res.status_code = -1;
 }
