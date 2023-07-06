@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 17:33:41 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/06 17:06:53 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/06 17:25:58 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ void	Client::send_file_chunk(void)
 			res.body_file.seekg(res.byte_sent);
 			res.body_file.read(buf, sizeof(buf));
 			ssize_t read = res.body_file.gcount();
-			if (read > 0)
+			if (read >= 0)
 			{
 				std::string data(buf, read);
 				ssize_t sent = send(socket_client, data.c_str(), data.size(), 0);
@@ -124,7 +124,7 @@ void	Client::post_file_chunk(Configuration conf)
 		char buf[65536] = {0};
 		in_file.read(buf, 65536);
 		ssize_t read = in_file.gcount();
-		if (read > 0)
+		if (read >= 0)
 		{
 			std::string data(buf, read);
 			out_file << data;
@@ -145,6 +145,7 @@ void	Client::post_file_chunk(Configuration conf)
 	{
 		if (res.byte_sent != (ssize_t)strtol((get_file_size(res.exec_path)).c_str(), NULL, 10))
 		{
+			
 			fail_in_execution(conf);
 			return ;
 		}
