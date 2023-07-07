@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 12:13:15 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/07 15:50:01 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/07 17:50:50 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ void	Response::get_error_response(Server_info server, Location location)
 		}
 	}
 	body = "<!DOCTYPE html>\
-	<style>@import url('https://fonts.googleapis.com/css?family=Press Start 2P');	html, body {	width: 100%;	height: 100%;	margin: 0;	} 	* {	font-family: 'Press Start 2P', cursive;	box-sizing: border-box;	}	#app {	padding: 1rem;	background: black;	display: flex;	height: 100%;	justify-content: center;	align-items: center;	color: #5bd6ff;	text-shadow: 0px 0px 10px;	font-size: 6rem;	flex-direction: column;	}	#app .txt {	font-size: 1.8rem;	}	@keyframes blink {	0% {opacity: 0;}	49% {opacity: 0;}	50% {opacity: 1;}	100% {opacity: 1;}	}	.blink {	animation-name: blink;	animation-duration: 1s;	animation-iteration-count: infinite;	}</style>\
+	<style>@import url('https://fonts.googleapis.com/css?family=Press Start 2P');	html, body {	width: 100%;	height: 100%;	margin: 0;	} 	* {	font-family: 'Press Start 2P', cursive;	box-sizing: border-box;	}	#app {	padding: 1rem;	background: black;	display: flex;	height: 100%;	text-align: center;	align-items: center;	color: #5bd6ff;	text-shadow: 0px 0px 10px;	font-size: 6rem;	flex-direction: column;	}	#app .txt {	font-size: 1.8rem;	}	@keyframes blink {	0% {opacity: 0;}	49% {opacity: 0;}	50% {opacity: 1;}	100% {opacity: 1;}	}	.blink {	animation-name: blink;	animation-duration: 1s;	animation-iteration-count: infinite;	}</style>\
 	<html>\
 		<head>\
 			<meta http-equiv=content-type content=text/html; charset=UTF-8>\
@@ -154,13 +154,14 @@ void Response::get_auto_index_page_response(std::string dir_path)
 			<title>Index of "+ join_paths(location_name, to_fetch) + "</title>\
 		</head>\
 		<body>\
-		<h1 class=app style='padding:1em;'>Index of "+ join_paths(location_name, to_fetch) + "</h1><hr><br><div class=app>";
+		<h1 class=app style='padding:1em;'>Index of "+ join_paths(location_name, to_fetch) + "</h1><hr><table class='app text' style='width: 100%;	height: 100%'><tr><th style='padding: 1em 3em 1em 1em; text-align: left;'>Name</th><th style='padding: 1em 3em 1em 1em'>Last modification date</th><th style='padding: 1em 3em 1em 1em'>Size</th></tr>";
 	while ((element = readdir(dir)) != NULL)
 	{
-		body = body + "<br><a class=txt style='padding:1em;' href=" + element->d_name + ((check_path(dir_path + element->d_name) % 2) ? "" : "/") +">" + \
-		element->d_name + ((check_path(dir_path + element->d_name) % 2) ? "" : "/")  + "</a><br>";
+		body = body + "<tr><th style='padding: 1em 3em 1em 1em; text-align: left;'><a href=" + element->d_name + ((check_path(dir_path + element->d_name) % 2) ? "" : "/") +">" + \
+		element->d_name + ((check_path(dir_path + element->d_name) % 2) ? "" : "/") + "</a></th><th style='padding: 1em 3em 1em 1em'>" + \
+		get_modification_date(dir_path + element->d_name) + "</th><th style='padding: 1em 3em 1em 1em'>"+ get_file_size(dir_path + element->d_name) + "</th></tr>";
 	}	
-	body = body + "<br></div><hr></body></html>";
+	body = body + "<br></table><hr></body></html>";
 	closedir(dir);
 	headers["Content-Type"] = "text/html";
 	headers["Content-Length"] = std::to_string(body.size());

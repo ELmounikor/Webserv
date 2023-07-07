@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 18:12:02 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/07 15:39:46 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/07 17:06:35 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,10 +52,23 @@ std::string get_file_size(std::string path)
 {
 	struct stat	buf;
 	if (stat(path.c_str(), &buf) != 0)
-		return (0);
+		return ("");
 	if (S_ISDIR(buf.st_mode))
-		return (0);
+		return ("-");
 	return (std::to_string(buf.st_size));
+}
+
+std::string get_modification_date(std::string path)
+{
+	struct stat	buf;
+	if (stat(path.c_str(), &buf) != 0)
+		return ("");
+	tm * 		last_modification_time;
+	char		date[30] = {0};
+	
+	last_modification_time = localtime(&(buf.st_mtime));
+	strftime(date, 30, "%d %b %G %R", last_modification_time);
+	return (date);
 }
 
 std::string	get_extension(std::string file_name)

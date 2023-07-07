@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 17:33:41 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/06 20:43:46 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/07 16:18:57 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,11 @@ int	Client::send_response(Configuration conf)
 	else
 		send_file_chunk();
 	if (res.is_finished == 2)
+	{
+		if (check_path(req.name_file))
+			std::remove(req.name_file.c_str());
 		return (1);
+	}
 	return (0);
 }
 
