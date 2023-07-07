@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 10:25:59 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/18 19:41:38 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/07 15:40:13 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,8 @@ void	get_location_cgi(Location &location, std::string argument)
 	while (end < argument.size() && !isspace(argument[end]))
 		end++;
 	extension = argument.substr(0, end);
+	if (extension.size() == 0 || extension[0] != '.')
+		ft_exit ("Invalid extention detected 🤖");
 	while (end < argument.size() && isspace(argument[end]))
 		end++;
 	location.cgi[extension] = get_valid_path(argument.substr(end, argument.size()));

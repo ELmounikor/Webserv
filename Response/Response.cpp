@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 12:13:15 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/06 17:05:42 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/07 15:50:01 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,10 +151,10 @@ void Response::get_auto_index_page_response(std::string dir_path)
 	<html>\
 		<head>\
 			<meta http-equiv=content-type content=text/html; charset=UTF-8>\
-			<title>" + join_paths(location_name, to_fetch) + "'s autoindex page" + "</title>\
+			<title>Index of "+ join_paths(location_name, to_fetch) + "</title>\
 		</head>\
 		<body>\
-		<h1 class=app style='padding:1em;'>Index of "+ dir_path + "</h1><hr><br><div class=app>";
+		<h1 class=app style='padding:1em;'>Index of "+ join_paths(location_name, to_fetch) + "</h1><hr><br><div class=app>";
 	while ((element = readdir(dir)) != NULL)
 	{
 		body = body + "<br><a class=txt style='padding:1em;' href=" + element->d_name + ((check_path(dir_path + element->d_name) % 2) ? "" : "/") +">" + \
