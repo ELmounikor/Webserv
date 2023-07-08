@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 16:18:19 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/08 22:29:51 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/08 22:39:56 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,14 +72,24 @@ void	Client::get_cgi_env(std::vector<std::string> &env_var, char **cgi_env)
 void	execute(int out, char **args, char **cgi_env)
 {
 	int err = dup(2);
-	dup2(out, 1);
-	dup2(out, 2);
+	if (dup2(out, 1) < 0)
+	{
+		perror("Client CGI dup1 fail");
+		close(out);
+		exit(1);
+	}
+	if (dup2(out, 2) < 0)
+	{
+		perror("Client CGI dup2 fail");
+		close(out);
+		exit(2);
+	}
 	close(out);
 	if (execve(args[0], args, cgi_env) == -1)
 	{
 		dup2(err, 2);
 		perror("Client CGI execution fail");
-		exit(1);
+		exit(3);
 	}
 	exit (0);
 }
