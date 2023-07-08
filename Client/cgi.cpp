@@ -6,63 +6,118 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 16:18:19 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/07 19:09:09 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/08 18:19:51 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../lib.hpp"
 #include "../Client/Client.hpp"
 
-std::string	Client::get_QueryString()
+void	Client::fail_in_execution(Configuration conf)
 {
-	ssize_t		interogation_pos = req.path.find('?');
-	if (interogation_pos + 1 >= (ssize_t)req.path.size())
-		return ("");
-	std::string	QueryString = req.path.substr(interogation_pos + 1, req.path.size());
-	//may need decoding but let see that later
-	return (QueryString);
+	Server_info		server = res.get_server(req, conf);
+	Location		location = res.get_location(req, server);
+	res.status_code = 500;
+	res.get_error_response(server, location);
 }
 
-void	Client::get_cgi_env(std::vector<std::string> cgi_env_var, char *cgi_env[14])
+std::string	Client::get_QueryString()
 {
-	std::string QueryString = get_QueryString();
-	cgi_env_var.push_back("SCRIPT_FILENAME=" + res.exec_path);
-	cgi_env_var.push_back("PATH_INFO=" + res.file_path);
-	cgi_env_var.push_back("SERVER_PROTOCOL=" + req.version);
-	cgi_env_var.push_back("SERVER_PORT=" + std::to_string(res.port));
-	cgi_env_var.push_back("REQUEST_METHOD=" + req.method);
-	cgi_env_var.push_back("CONTENT_TYPE=" + req.header["Content-Type"]);
-	cgi_env_var.push_back("CONTENT_LENGTH=" + req.header["Content-Length"]);
-	cgi_env_var.push_back("HTTP_COOKIE=" + req.header["Cookie"]);
-	cgi_env_var.push_back("QUERY_STRING=" + QueryString);
-	cgi_env_var.push_back("GATEWAY_INTERFACE=CGI/1.1");
-	cgi_env_var.push_back("REDIRECT_STATUS=200");
+	ssize_t		interogation_pos = req.path.find("?");
+	if (interogation_pos + 1 < (ssize_t)req.path.size())
+	{
+		std::string	QueryString = req.path.substr(interogation_pos + 1, req.path.size());
+		//may need decoding but let see that later
+		return (QueryString);
+	}
+	return ("");
+}
+
+void	Client::get_cgi_env(std::vector<std::string> &env_var, char **cgi_env)
+{
+	std::string server_sofware =  strtok((char *)req.header["User-Agent"].c_str(), " ");
+	env_var.push_back("SCRIPT_NAME=" + res.exec_path);
+	env_var.push_back("PATH_INFO=" + res.file_path);
+	env_var.push_back("SERVER_SOFTWARE=" + server_sofware);
+	env_var.push_back("SERVER_PROTOCOL=" + req.version);
+	env_var.push_back("SERVER_PORT=" + std::to_string(res.port));
+	env_var.push_back("REQUEST_METHOD=" + req.method);
+	env_var.push_back("CONTENT_TYPE=" + req.header["Content-Type"]);
+	env_var.push_back("CONTENT_LENGTH=" + req.header["Content-Length"]);
+	env_var.push_back("QUERY_STRING=" + get_QueryString());
+	env_var.push_back("HTTP_ACCEPT=" + req.header["Accept"]);
+	env_var.push_back("HTTP_USER_AGENT=" + req.header["User-Agent"]);
+	env_var.push_back("HTTP_COOKIE=" + req.header["Cookie"]);
+	env_var.push_back("GATEWAY_INTERFACE=CGI/1.1");
+	env_var.push_back("REDIRECT_STATUS=200");
 	if (is_ip_address(res.host))
-		cgi_env_var.push_back("REMOTE_ADDR=" + res.host);
+		env_var.push_back("REMOTE_ADDR=" + res.host);
 	else
 	{
-		cgi_env_var.push_back("REMOTE_HOST=" + res.host);
-		cgi_env_var.push_back("SERVER_NAME=" + res.host);
+		env_var.push_back("REMOTE_HOST=" + res.host);
+		env_var.push_back("SERVER_NAME=" + res.host);
 	}
-	std::vector<std::string>::iterator i = cgi_env_var.begin();
+	
+	std::vector<std::string>::iterator i = env_var.begin();
 	int j = 0;
-	while (i != cgi_env_var.end())
+	while (i != env_var.end())
 		cgi_env[j++] = (char *)(*(i++)).c_str();
 	cgi_env[j] = NULL;
+}
+
+void	execute(int out, char **args, char **cgi_env)
+{
+	int err = dup(2);
+	dup2(out, 1);
+	dup2(out, 2);
+	close(out);
+	if (execve(args[0], args, cgi_env) == -1)
+	{
+		dup2(err, 2);
+		perror("Client CGI execution fail");
+		exit(errno);
+	}
+	exit (0);
 }
 
 void	Client::execute_cgi(Configuration conf)
 {
 	char						*args[3] = {(char*)res.exec_path.c_str(), (char*)res.file_path.c_str(), NULL};
-	char 						*cgi_env[14];
-	std::vector<std::string>	cgi_env_var;
-	
-	get_cgi_env(cgi_env_var, cgi_env);
-	(void) args;
-	(void) cgi_env;
-	// to_be_continued
-    if (res.is_finished == 1)
-		fail_in_execution(conf);
-    else
-	    res.is_finished = 2;
+	char 						*cgi_env[30];
+	std::vector<std::string>	env_var;
+	if (pid == -1)
+	{
+		get_cgi_env(env_var, cgi_env);
+		// std::cout << "CGI En vironment Variables\n";
+		// int j = 0;
+		// while (cgi_env[j])
+		// 	std::cout << cgi_env[j++] << "\n";
+		pid = fork();
+		if (pid < 0)
+		{
+			perror("Client CGI fork error");
+			res.is_finished = 2;
+			return ;
+		}
+		out_file = get_file_name("");
+		int out = open(out_file.c_str(), O_RDWR, 0777);
+		if (pid == 0)
+			execute(out, args, cgi_env);
+		close(out);
+	}
+	int result = waitpid(pid, 0, WNOHANG);
+	if (result != 0)
+	{
+		if (result == -1)
+			fail_in_execution(conf);
+		else
+		{
+			res.status_code = 200;
+			res.file_path = out_file;
+			//mazal khas out file ytparsa
+			res.headers["Content-Type"] = get_extension_type(get_extension(res.file_path));
+			res.headers["Content-Length"] = get_file_size(res.file_path);
+			res.is_cgi = 0;
+		}
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 12:13:15 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/07 19:18:07 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/08 18:21:24 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,12 +154,12 @@ void Response::get_auto_index_page_response(std::string dir_path)
 			<title>Index of "+ join_paths(location_name, to_fetch) + "</title>\
 		</head>\
 		<body>\
-		<h1 class=app style='padding:1em;'>Index of "+ join_paths(location_name, to_fetch) + "</h1><hr><table class='app text' style='width: 100%;	height: auto'><tr><th style='padding: 1em 3em 0em 2em; text-align: left;'>Name</th><th style='padding: 1em 3em 0em 2em'>Last modification date</th><th style='padding: 1em 3em 0em 2em'>Size</th></tr>";
+		<h1 class=app style='padding:1em;'>Index of "+ join_paths(location_name, to_fetch) + "</h1><hr><table class='app text' style='width: 100%;	height: auto'><tr><th style='padding: 1em 3em 0em 2em; text-align: left;'>Name</th><th style='padding: 1em 3em 0em 2em;'>Last modification date</th><th style='padding: 1em 3em 0em 2em; text-align: right;'>Size in bytes</th></tr>";
 	while ((element = readdir(dir)) != NULL)
 	{
 		body = body + "<tr><th style='padding: 1em 3em 0em 2em; text-align: left;'><a href=" + element->d_name + ((check_path(dir_path + element->d_name) % 2) ? "" : "/") +">" + \
-		element->d_name + ((check_path(dir_path + element->d_name) % 2) ? "" : "/") + "</a></th><th style='padding: 1em 3em 0em 2em'>" + \
-		get_modification_date(dir_path + element->d_name) + "</th><th style='padding: 1em 3em 0em 2em'>"+ get_file_size(dir_path + element->d_name) + "</th></tr>";
+		element->d_name + ((check_path(dir_path + element->d_name) % 2) ? "" : "/") + "</a></th><th style='padding: 1em 3em 0em 2em;'>" + \
+		get_modification_date(dir_path + element->d_name) + "</th><th style='padding: 1em 3em 0em 2em; text-align: right;'>"+ get_file_size(dir_path + element->d_name) + "</th></tr>";
 	}	
 	body = body + "<br></table><hr></body></html>";
 	closedir(dir);
@@ -196,12 +196,13 @@ int Response::has_cgi(std::string path, Location location, Server_info server)
 		{
 			file_path = path;
 			exec_path = (*i).second;
-			if (access(exec_path.c_str(), F_OK))
-			{
-				status_code = 404;
-				get_error_response(server, location);
-			}
-			else if (access(exec_path.c_str(), X_OK))
+			// if (access(exec_path.c_str(), F_OK))
+			// {
+			// 	status_code = 404;
+			// 	get_error_response(server, location);
+			// }
+			// else 
+			if (access(exec_path.c_str(), X_OK))
 			{
 				status_code = 403;
 				get_error_response(server, location);

@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:59:12 by sennaama          #+#    #+#             */
-/*   Updated: 2023/07/07 19:08:08 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/08 18:18:26 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ class Client
 		Response	res;
 		int			socket_client;
 		int			state;
+		int			pid;
+		std::string	out_file;
 
 		Client(int client_socket);
 		~Client();
@@ -31,7 +33,7 @@ class Client
 		void		send_response_header(void);
 		void		print_interaction(void);
 		void		send_file_chunk(void);
-		void		get_cgi_env(std::vector<std::string> cgi_env_var, char *cgi_env[14]);
+		void		get_cgi_env(std::vector<std::string> &cgi_env_var, char **cgi_env);
 		std::string	get_QueryString(void);
 };
 
