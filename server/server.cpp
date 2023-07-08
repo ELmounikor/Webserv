@@ -6,7 +6,7 @@
 /*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 11:40:01 by sennaama          #+#    #+#             */
-/*   Updated: 2023/07/06 17:33:25 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/07/08 15:08:10 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ void    server::listener_port(int port)
 	listeners.push_back(socket_server);
 	if (socket_server > maxFd)
     	maxFd = socket_server;
+	freeaddrinfo(servinfo);
 }
 
 void	server::AddClient(int socket)
