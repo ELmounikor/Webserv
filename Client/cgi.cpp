@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 16:18:19 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/08 22:39:56 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/09 15:50:17 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,30 +37,30 @@ std::string	Client::get_QueryString()
 void	Client::get_cgi_env(std::vector<std::string> &env_var, char **cgi_env)
 {
 	std::string server_sofware =  strtok((char *)req.header["User-Agent"].c_str(), " ");
-	env_var.push_back("SCRIPT_NAME=" + res.exec_path);
+	env_var.push_back("SCRIPT_FILENAME=" + res.file_path);
 	env_var.push_back("PATH_INFO=" + res.file_path);
-	env_var.push_back("SERVER_SOFTWARE=" + server_sofware);
-	env_var.push_back("SERVER_PROTOCOL=" + req.version);
-	env_var.push_back("SERVER_PORT=" + std::to_string(res.port));
-	env_var.push_back("REQUEST_URI=" + req.path);
+	// env_var.push_back("SERVER_SOFTWARE=" + server_sofware);
+	// env_var.push_back("SERVER_PROTOCOL=" + req.version);
+	// env_var.push_back("SERVER_PORT=" + std::to_string(res.port));
+	// env_var.push_back("REQUEST_URI=" + req.path);
 	env_var.push_back("REQUEST_METHOD=" + req.method);
 	env_var.push_back("QUERY_STRING=" + get_QueryString());
 	env_var.push_back("CONTENT_TYPE=" + req.header["Content-Type"]);
 	env_var.push_back("CONTENT_LENGTH=" + req.header["Content-Length"]);
-	env_var.push_back("HTTP_ACCEPT=" + req.header["Accept"]);
-	env_var.push_back("HTTP_ACCEPT_ENCODING=" + req.header["Accept-Encoding"]);
-	env_var.push_back("HTTP_ACCEPT_LANGUAGE=" + req.header["Accept-Language"]);
-	env_var.push_back("HTTP_ACCEPT_CHARSET=" + req.header["Accept-Charset"]);
-	env_var.push_back("HTTP_CONNECTION=" + req.header["Connection"]);
+	// env_var.push_back("HTTP_ACCEPT=" + req.header["Accept"]);
+	// env_var.push_back("HTTP_ACCEPT_ENCODING=" + req.header["Accept-Encoding"]);
+	// env_var.push_back("HTTP_ACCEPT_LANGUAGE=" + req.header["Accept-Language"]);
+	// env_var.push_back("HTTP_ACCEPT_CHARSET=" + req.header["Accept-Charset"]);
+	// env_var.push_back("HTTP_CONNECTION=" + req.header["Connection"]);
 	env_var.push_back("HTTP_COOKIE=" + req.header["Cookie"]);
-	env_var.push_back("HTTP_USER_AGENT=" + req.header["User-Agent"]);
-	env_var.push_back("GATEWAY_INTERFACE=CGI/1.1");
+	// env_var.push_back("HTTP_USER_AGENT=" + req.header["User-Agent"]);
+	// env_var.push_back("GATEWAY_INTERFACE=CGI/1.1");
 	env_var.push_back("REDIRECT_STATUS=200");
-	env_var.push_back("SERVER_NAME=" + res.host);
-	if (is_ip_address(res.host))
-		env_var.push_back("REMOTE_ADDR=" + res.host);
-	else
-		env_var.push_back("REMOTE_HOST=" + res.host);
+	// env_var.push_back("SERVER_NAME=" + res.host);
+	// if (is_ip_address(res.host))
+	// 	env_var.push_back("REMOTE_ADDR=" + res.host);
+	// else
+	// 	env_var.push_back("REMOTE_HOST=" + res.host);
 	
 	std::vector<std::string>::iterator i = env_var.begin();
 	int j = 0;

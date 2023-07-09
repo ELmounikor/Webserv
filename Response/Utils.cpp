@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 18:12:02 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/08 22:29:40 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/09 15:53:43 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,12 +82,12 @@ std::string	get_extension(std::string file_name)
 std::string	get_file_name(std::string file_path)
 {
 	static long	i = 0;
-	std::string	file_name = "tmpfile_000" + std::to_string(i);
+	std::string	file_name = "cgi_out_file_000" + std::to_string(i);
 	std::ofstream file(join_paths(file_path, file_name));
 	while (!file.is_open())
 	{
 		i++;
-		file_name = "tmpfile_000" + std::to_string(i);
+		file_name = "cgi_out_file_000" + std::to_string(i);
 		file.open(join_paths(file_path, file_name));
 	}
 	file.close();
