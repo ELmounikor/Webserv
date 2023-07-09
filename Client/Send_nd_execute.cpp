@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 17:33:41 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/08 22:14:03 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/09 21:56:09 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,4 +147,13 @@ void	Client::post_file_chunk(Configuration conf)
 		send_response_header();
 		res.is_finished = 2;
 	}
+}
+
+void	Client::fail_in_execution(Configuration conf)
+{
+	Server_info		server = res.get_server(req, conf);
+	Location		location = res.get_location(req, server);
+	res.status_code = 500;
+	res.is_cgi = 0;
+	res.get_error_response(server, location);
 }

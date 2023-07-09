@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:59:12 by sennaama          #+#    #+#             */
-/*   Updated: 2023/07/08 18:18:26 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/09 21:58:01 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ class Client
 		void		send_response_header(void);
 		void		print_interaction(void);
 		void		send_file_chunk(void);
+		void		parse_cgi_outfile(void);
+		void		execute(char **args, char **cgi_env);
 		void		get_cgi_env(std::vector<std::string> &cgi_env_var, char **cgi_env);
 		std::string	get_QueryString(void);
 };

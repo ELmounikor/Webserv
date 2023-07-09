@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:16:16 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/05 21:57:39 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/09 21:32:32 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,7 +196,7 @@ std::string	Configuration::parse_server_line(Server_info &serv, std::string line
 		case 8:
 			break;
 		default:
-			ft_exit("Bad server parameter detected 🤖");
+			ft_exit("Bad server parameter " + parameter + " detected 🤖");
 	}
 	return (parameter);
 }
@@ -218,7 +218,7 @@ void	Configuration::parse_location_block(Server_info	&serv, std::string location
 
 void	Configuration::parse_location_line(Location &location, std::string line)
 {
-	std::string	location_parameters[] = {"autoindex", "root", "methods", "index", "upload", "return", "cgi"};
+	std::string	location_parameters[] = {"autoindex", "root", "methods", "index", "upload_pass", "return", "cgi_pass"};
 	std::string	parameter, argument;
 	size_t		start = 0, end = 0;
 
@@ -264,7 +264,7 @@ void	Configuration::parse_location_line(Location &location, std::string line)
 			get_location_cgi(location, argument);
 			break;
 		default:
-			ft_exit("Bad location parameter detected 🤖");
+			ft_exit("Bad location parameter " + parameter + " detected 🤖");
 	}
 }
 

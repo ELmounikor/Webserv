@@ -6,29 +6,19 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 16:18:19 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/09 15:50:17 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/09 22:44:30 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../lib.hpp"
 #include "../Client/Client.hpp"
 
-void	Client::fail_in_execution(Configuration conf)
-{
-	Server_info		server = res.get_server(req, conf);
-	Location		location = res.get_location(req, server);
-	res.status_code = 500;
-	res.get_error_response(server, location);
-	res.is_cgi = 0;
-}
-
 std::string	Client::get_QueryString()
 {
-	ssize_t		interogation_pos = req.path.find("?");
-	if (interogation_pos + 1 < (ssize_t)req.path.size())
+	size_t	interogation_pos = req.path.find("?");
+	if (interogation_pos + 1 < req.path.size())
 	{
 		std::string	QueryString = req.path.substr(interogation_pos + 1, req.path.size());
-		//may need decoding but let see that later
 		return (QueryString);
 	}
 	return ("");
@@ -39,28 +29,27 @@ void	Client::get_cgi_env(std::vector<std::string> &env_var, char **cgi_env)
 	std::string server_sofware =  strtok((char *)req.header["User-Agent"].c_str(), " ");
 	env_var.push_back("SCRIPT_FILENAME=" + res.file_path);
 	env_var.push_back("PATH_INFO=" + res.file_path);
-	// env_var.push_back("SERVER_SOFTWARE=" + server_sofware);
-	// env_var.push_back("SERVER_PROTOCOL=" + req.version);
-	// env_var.push_back("SERVER_PORT=" + std::to_string(res.port));
-	// env_var.push_back("REQUEST_URI=" + req.path);
+	env_var.push_back("SERVER_SOFTWARE=" + server_sofware);
+	env_var.push_back("SERVER_PROTOCOL=" + req.version);
+	env_var.push_back("SERVER_PORT=" + std::to_string(res.port));
+	env_var.push_back("REQUEST_URI=" + req.path);
 	env_var.push_back("REQUEST_METHOD=" + req.method);
 	env_var.push_back("QUERY_STRING=" + get_QueryString());
 	env_var.push_back("CONTENT_TYPE=" + req.header["Content-Type"]);
 	env_var.push_back("CONTENT_LENGTH=" + req.header["Content-Length"]);
-	// env_var.push_back("HTTP_ACCEPT=" + req.header["Accept"]);
-	// env_var.push_back("HTTP_ACCEPT_ENCODING=" + req.header["Accept-Encoding"]);
-	// env_var.push_back("HTTP_ACCEPT_LANGUAGE=" + req.header["Accept-Language"]);
-	// env_var.push_back("HTTP_ACCEPT_CHARSET=" + req.header["Accept-Charset"]);
-	// env_var.push_back("HTTP_CONNECTION=" + req.header["Connection"]);
+	env_var.push_back("HTTP_ACCEPT=" + req.header["Accept"]);
+	env_var.push_back("HTTP_ACCEPT_ENCODING=" + req.header["Accept-Encoding"]);
+	env_var.push_back("HTTP_ACCEPT_LANGUAGE=" + req.header["Accept-Language"]);
+	env_var.push_back("HTTP_CONNECTION=" + req.header["Connection"]);
 	env_var.push_back("HTTP_COOKIE=" + req.header["Cookie"]);
-	// env_var.push_back("HTTP_USER_AGENT=" + req.header["User-Agent"]);
-	// env_var.push_back("GATEWAY_INTERFACE=CGI/1.1");
+	env_var.push_back("HTTP_USER_AGENT=" + req.header["User-Agent"]);
+	env_var.push_back("GATEWAY_INTERFACE=CGI/1.1");
 	env_var.push_back("REDIRECT_STATUS=200");
-	// env_var.push_back("SERVER_NAME=" + res.host);
-	// if (is_ip_address(res.host))
-	// 	env_var.push_back("REMOTE_ADDR=" + res.host);
-	// else
-	// 	env_var.push_back("REMOTE_HOST=" + res.host);
+	env_var.push_back("SERVER_NAME=" + res.host);
+	if (is_ip_address(res.host))
+		env_var.push_back("REMOTE_ADDR=" + res.host);
+	else
+		env_var.push_back("REMOTE_HOST=" + res.host);
 	
 	std::vector<std::string>::iterator i = env_var.begin();
 	int j = 0;
@@ -69,29 +58,91 @@ void	Client::get_cgi_env(std::vector<std::string> &env_var, char **cgi_env)
 	cgi_env[j] = NULL;
 }
 
-void	execute(int out, char **args, char **cgi_env)
+void	cgi_dup(int in, int out)
 {
-	int err = dup(2);
+	if (in < 0)
+	{
+		perror("Client CGI infile open error");
+		exit(1);
+	}
+	if (in && dup2(in, 0) < 0)
+	{
+		perror("Client CGI dup0 fail");
+		close(out);
+		if(in)
+			close(in);
+		exit(1);
+	}
 	if (dup2(out, 1) < 0)
 	{
 		perror("Client CGI dup1 fail");
 		close(out);
+		if(in)
+			close(in);
 		exit(1);
 	}
 	if (dup2(out, 2) < 0)
 	{
 		perror("Client CGI dup2 fail");
 		close(out);
-		exit(2);
+		if(in)
+			close(in);
+		exit(1);
 	}
 	close(out);
+	if(in)
+		close(in);
+}
+
+void	Client::execute(char **args, char **cgi_env)
+{
+	int in = 0;
+	int out = open(out_file.c_str(), O_RDWR, 0666);
+	int err = dup(2);
+	if (out < 0)
+	{
+		perror("Client CGI outfile open error");
+		exit(1);
+	}
+	if (check_path(req.name_file))
+		in = open(req.name_file.c_str(), O_RDONLY);
+	cgi_dup(in, out);
 	if (execve(args[0], args, cgi_env) == -1)
 	{
 		dup2(err, 2);
 		perror("Client CGI execution fail");
-		exit(3);
+		exit(1);
 	}
-	exit (0);
+}
+
+void	Client::parse_cgi_outfile(void)
+{
+	std::ifstream	cgi_outfile(out_file);
+	std::string		header_content;
+
+	// std::getline(cgi_outfile, header_content, '\0');
+	// size_t empty_line_pos  = header_content.find("\n\n");
+	// if (empty_line_pos < header_content.size())
+	// {
+	// 	header_content = header_content.substr(0, empty_line_pos);
+	// 	while (header_content.size())
+	// 	{
+	// 		size_t	nl_pos = header_content.find("\n");
+	// 		if (nl_pos >= empty_line_pos)
+	// 			break ;
+	// 		std::string line = header_content.substr(0, nl_pos);
+	// 		size_t sep_pos = line.find(":");
+	// 		if (sep_pos < line.size())
+	// 			res.headers[line.substr(0, sep_pos)] = line.substr(sep_pos + 1, line.size());
+	// 		else
+	// 		{
+	// 			res.headers.clear();
+	// 			return ;
+	// 		}
+	// 		header_content = header_content.substr(++nl_pos, header_content.size());
+	// 	}
+	// 	res.byte_sent = empty_line_pos;
+	// }
 }
 
 void	Client::execute_cgi(Configuration conf)
@@ -102,22 +153,20 @@ void	Client::execute_cgi(Configuration conf)
 	if (pid == -1)
 	{
 		get_cgi_env(env_var, cgi_env);
-		// std::cout << "CGI En vironment Variables\n";
+		// std::cout << "CGI Environment Variables\n";
 		// int j = 0;
 		// while (cgi_env[j])
-		// 	std::cout << cgi_env[j++] << "\n";
+		// 	std::cout << "\t->" <<cgi_env[j++] << "\n";
 		pid = fork();
 		if (pid < 0)
 		{
 			perror("Client CGI fork error");
-			res.is_finished = 2;
+			fail_in_execution(conf);
 			return ;
 		}
 		out_file = get_file_name("");
-		int out = open(out_file.c_str(), O_RDWR, 0666);
 		if (pid == 0)
-			execute(out, args, cgi_env);
-		close(out);
+			execute(args, cgi_env);
 	}
 	int result = waitpid(pid, 0, WNOHANG);
 	if (result != 0)
@@ -128,9 +177,10 @@ void	Client::execute_cgi(Configuration conf)
 		{
 			res.status_code = 200;
 			res.file_path = out_file;
-			//mazal khas out file ytparsa
-			res.headers["Content-Type"] = get_extension_type(get_extension(res.file_path));
-			res.headers["Content-Length"] = get_file_size(res.file_path);
+			parse_cgi_outfile();
+			if (res.headers.find("Content-Type") == res.headers.end())
+				res.headers["Content-Type"] = "html/txt";
+			res.headers["Content-Length"] = std::to_string(strtol(get_file_size(res.file_path).c_str(), NULL, 10) - res.byte_sent);
 			res.is_cgi = 0;
 		}
 	}

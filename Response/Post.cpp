@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 13:44:03 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/06 19:58:05 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/09 17:52:57 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,20 +19,13 @@ void	Post::implement_method(Response &res, request &req, Server_info server, Loc
 {
 	if  (location.uploads.size())
 	{
-		std::string		file_location = join_paths(location.root, *(location.uploads.begin()));
-		std::string		out_file_path = join_paths(file_location, res.to_fetch + req.get_extension(req.header["Content-Type"]));
-		if (check_path(file_location) != 2)
+		if (check_path(*(location.uploads.begin())) != 2)
 		{
 			res.status_code = 403;
 			res.get_error_response(server, location);
 			return ;
 		}
-		if (check_path(out_file_path) || res.to_fetch == "")
-		{
-			res.status_code = 409;
-			res.get_error_response(server, location);
-			return ;
-		}
+		std::string		out_file_path = join_paths(*(location.uploads.begin()), req.name_file + req.get_extension(req.header["Content-Type"]));
 		std::ifstream	in_file(req.name_file);
 		std::fstream	out_file(out_file_path, std::fstream::out | std::fstream::app);
 		if (!out_file.is_open() || !in_file.is_open())
