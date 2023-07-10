@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 13:44:03 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/09 17:52:57 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/10 15:03:15 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ Post::Post(std::string target): Method(target)
 
 void	Post::implement_method(Response &res, request &req, Server_info server, Location location)
 {
+	if (target_not_good(res, server, location))
+		return ;
 	if  (location.uploads.size())
 	{
 		if (check_path(*(location.uploads.begin())) != 2)
@@ -25,7 +27,7 @@ void	Post::implement_method(Response &res, request &req, Server_info server, Loc
 			res.get_error_response(server, location);
 			return ;
 		}
-		std::string		out_file_path = join_paths(*(location.uploads.begin()), req.name_file + req.get_extension(req.header["Content-Type"]));
+		std::string		out_file_path = join_paths(*(location.uploads.begin()), req.name_file);
 		std::ifstream	in_file(req.name_file);
 		std::fstream	out_file(out_file_path, std::fstream::out | std::fstream::app);
 		if (!out_file.is_open() || !in_file.is_open())
@@ -50,7 +52,6 @@ void	Post::implement_method(Response &res, request &req, Server_info server, Loc
 		res.status_code = 201;
 		return ;
 	}
-	target_not_good(res, server, location);
 	if (check % 2 == 2)
 	{
 		std::vector<std::string>::iterator i = location.indexes.begin();
