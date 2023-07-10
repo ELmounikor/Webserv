@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 13:44:03 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/10 15:03:15 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/10 17:24:30 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,20 @@ void	Post::implement_method(Response &res, request &req, Server_info server, Loc
 {
 	if (target_not_good(res, server, location))
 		return ;
+	if (check == 1 && res.has_cgi(target, location, server))
+			return ;
+	if (check % 2 == 2)
+	{
+		std::vector<std::string>::iterator i = location.indexes.begin();
+		while (i != location.indexes.end())
+		{
+			std::string new_target = join_paths(target, *i);
+			int current = check_path(new_target);
+			if (current == 1 && res.has_cgi(new_target, location, server))
+				return ;
+			i++;
+		}
+	}
 	if  (location.uploads.size())
 	{
 		if (check_path(*(location.uploads.begin())) != 2)
@@ -52,20 +66,6 @@ void	Post::implement_method(Response &res, request &req, Server_info server, Loc
 		res.status_code = 201;
 		return ;
 	}
-	if (check % 2 == 2)
-	{
-		std::vector<std::string>::iterator i = location.indexes.begin();
-		while (i != location.indexes.end())
-		{
-			std::string new_target = join_paths(target, *i);
-			int current = check_path(new_target);
-			if (current == 1 && res.has_cgi(new_target, location, server))
-				return ;
-			i++;
-		}
-	}
-	else if (check == 1 && res.has_cgi(target, location, server))
-			return ;
 	res.status_code = 403;
 	res.get_error_response(server, location);
 }

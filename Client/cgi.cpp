@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 16:18:19 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/10 16:15:23 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/10 17:54:17 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,10 @@ std::string	Client::get_QueryString()
 
 void	Client::get_cgi_env(std::vector<std::string> &env_var, char **cgi_env)
 {
-	std::string server_sofware =  strtok((char *)req.header["User-Agent"].c_str(), " ");
 	env_var.push_back("SCRIPT_FILENAME=" + res.file_path);
 	env_var.push_back("PATH_INFO=" + res.file_path);
-	env_var.push_back("SERVER_SOFTWARE=" + server_sofware);
-	env_var.push_back("SERVER_PROTOCOL=" + req.version);
-	env_var.push_back("SERVER_PORT=" + std::to_string(res.port));
 	env_var.push_back("REQUEST_URI=" + req.path);
 	env_var.push_back("REQUEST_METHOD=" + req.method);
-	env_var.push_back("QUERY_STRING=" + get_QueryString());
 	env_var.push_back("CONTENT_TYPE=" + req.header["Content-Type"]);
 	env_var.push_back("CONTENT_LENGTH=" + req.header["Content-Length"]);
 	env_var.push_back("HTTP_ACCEPT=" + req.header["Accept"]);
@@ -45,7 +40,12 @@ void	Client::get_cgi_env(std::vector<std::string> &env_var, char **cgi_env)
 	env_var.push_back("HTTP_USER_AGENT=" + req.header["User-Agent"]);
 	env_var.push_back("GATEWAY_INTERFACE=CGI/1.1");
 	env_var.push_back("REDIRECT_STATUS=200");
+	env_var.push_back("QUERY_STRING=" + get_QueryString());
+	env_var.push_back("SERVER_PROTOCOL=" + req.version);
+	env_var.push_back("SERVER_PORT=" + std::to_string(res.port));
 	env_var.push_back("SERVER_NAME=" + res.host);
+	std::string server_sofware =  strtok((char *)req.header["User-Agent"].c_str(), " ");
+	env_var.push_back("SERVER_SOFTWARE=" + server_sofware);
 	if (is_ip_address(res.host))
 		env_var.push_back("REMOTE_ADDR=" + res.host);
 	else
@@ -97,7 +97,7 @@ void	cgi_dup(int in, int out)
 void	Client::execute(char **args, char **cgi_env)
 {
 	int in = 0;
-	int out = open(out_file.c_str(), O_RDWR, 0666);
+	int out = open(out_file.c_str(), O_RDWR, 0777);
 	int err = dup(2);
 	if (out < 0)
 	{
@@ -105,7 +105,7 @@ void	Client::execute(char **args, char **cgi_env)
 		exit(1);
 	}
 	if (check_path(req.name_file))
-		in = open(req.name_file.c_str(), O_RDONLY);
+		in = open(req.name_file.c_str(), O_RDONLY, 0777);
 	cgi_dup(in, out);
 	if (execve(args[0], args, cgi_env) == -1)
 	{
@@ -130,11 +130,11 @@ void	Client::parse_cgi_outfile(void)
 			if (sep_pos < content.size())
 			{
 				std::string field = content.substr(0, sep_pos);
-				std::string	value = trim_spaces(content.substr(sep_pos + 1, content.size()));
+				std::string	value = strtok((char *)content.substr(sep_pos + 1, content.size()).c_str(), " ");
 				if (field == "Status")
-					res.status_code = strtol(strtok((char *)value.c_str(), " "), NULL, 10);
+					res.status_code = strtol(value.c_str(), NULL, 10);
 				else
-					res.headers[field] = value;
+					res.headers[field] = value.substr(0, value.size() - 1);
 			}
 			else
 			{
@@ -174,20 +174,17 @@ void	Client::execute_cgi(Configuration conf)
 		if (pid == 0)
 			execute(args, cgi_env);
 	}
-	int result = waitpid(pid, 0, WNOHANG);
-	if (result != 0)
+	int result = waitpid(pid, 0, WNOHANG);\
+	if (result == -1)
+		fail_in_execution(conf);
+	else if (result > 0)
 	{
-		if (result == -1)
-			fail_in_execution(conf);
-		else
-		{
-			res.status_code = 200;
-			res.file_path = out_file;
-			parse_cgi_outfile();
-			if (res.headers.find("Content-Type") == res.headers.end())
-				res.headers["Content-Type"] = "html/txt";
-			res.headers["Content-Length"] = std::to_string(strtol(get_file_size(res.file_path).c_str(), NULL, 10) - res.byte_sent);
-			res.is_cgi = 0;
-		}
+		res.status_code = 200;
+		res.file_path = out_file;
+		parse_cgi_outfile();
+		if (res.headers.find("Content-Type") == res.headers.end())
+			res.headers["Content-Type"] = "html/txt";
+		res.headers["Content-Length"] = std::to_string(strtol(get_file_size(res.file_path).c_str(), NULL, 10) - res.byte_sent);
+		res.is_cgi = 0;
 	}
 }

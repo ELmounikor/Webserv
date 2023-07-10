@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 12:13:15 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/08 20:55:16 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/10 17:29:57 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,9 @@ void	Response::response_fetch(request &req, Configuration conf)
 		else if (std::find(location.methods.begin(), location.methods.end(), req.method) == location.methods.end())
 			status_code = 405;
 	}
+	size_t	sep_pos = to_fetch.find("?");
+	if (sep_pos < to_fetch.size())
+		to_fetch = to_fetch.substr(0, sep_pos);
 	if (status_code != -1)
 		get_error_response(server, location);
 	else
