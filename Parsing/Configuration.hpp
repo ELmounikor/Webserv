@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:16:09 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/05 21:53:26 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/10 16:12:41 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,9 @@ class Configuration
 
 std::ostream	&operator<<( std::ostream &output, const Location &location);
 std::string		get_valid_path(std::string path);
+std::string		trim_spaces(std::string input);
 int				is_ip_address(std::string host);
 int				is_number(std::string input);
-
 template <class T> void print_vector(T container)
 {
 	typename T::iterator i = container.begin();

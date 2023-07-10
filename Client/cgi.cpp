@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 16:18:19 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/09 22:44:30 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/10 16:15:23 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,31 +118,37 @@ void	Client::execute(char **args, char **cgi_env)
 void	Client::parse_cgi_outfile(void)
 {
 	std::ifstream	cgi_outfile(out_file);
-	std::string		header_content;
-
-	// std::getline(cgi_outfile, header_content, '\0');
-	// size_t empty_line_pos  = header_content.find("\n\n");
-	// if (empty_line_pos < header_content.size())
-	// {
-	// 	header_content = header_content.substr(0, empty_line_pos);
-	// 	while (header_content.size())
-	// 	{
-	// 		size_t	nl_pos = header_content.find("\n");
-	// 		if (nl_pos >= empty_line_pos)
-	// 			break ;
-	// 		std::string line = header_content.substr(0, nl_pos);
-	// 		size_t sep_pos = line.find(":");
-	// 		if (sep_pos < line.size())
-	// 			res.headers[line.substr(0, sep_pos)] = line.substr(sep_pos + 1, line.size());
-	// 		else
-	// 		{
-	// 			res.headers.clear();
-	// 			return ;
-	// 		}
-	// 		header_content = header_content.substr(++nl_pos, header_content.size());
-	// 	}
-	// 	res.byte_sent = empty_line_pos;
-	// }
+	std::string		content;
+	
+	if (std::getline(cgi_outfile, content) && content.size() > 0)
+	{
+		while(content.size() > 0)
+		{
+			if (content == "\r")
+				break ;
+			size_t sep_pos = content.find(":");
+			if (sep_pos < content.size())
+			{
+				std::string field = content.substr(0, sep_pos);
+				std::string	value = trim_spaces(content.substr(sep_pos + 1, content.size()));
+				if (field == "Status")
+					res.status_code = strtol(strtok((char *)value.c_str(), " "), NULL, 10);
+				else
+					res.headers[field] = value;
+			}
+			else
+			{
+				res.headers.clear();
+				return ;
+			}
+			std::getline(cgi_outfile, content);
+		}
+	}
+	if (content == "\r")
+	{
+		std::getline(cgi_outfile, content, '\0');
+		res.byte_sent = strtol(get_file_size(res.file_path).c_str(), NULL, 10) - content.size();
+	}
 }
 
 void	Client::execute_cgi(Configuration conf)
