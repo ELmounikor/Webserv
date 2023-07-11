@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 17:33:41 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/10 16:57:42 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/11 09:46:52 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	Client::print_interaction()
 	std::cout << "\033[0;93m[ Request From Socket "<<socket_client<<" ]  Host=<"\
 	<<req.header["Host"].c_str()<<">  Method=<"<<req.method.c_str()<<">  URI=<"\
 	<<req.path.c_str()<<">\033[0m\n";
-	std::cout << "\033[0;96m[ Response To Socket "<<socket_client<<" ]   Status=<"\
+	std::cout << "\033[0;96m[ Response To Socket "<<socket_client<<"  ]  Status=<"\
 	<<res.status_code<<">  Path=<"<<res.file_path.c_str()<<">\033[0m\n";
 }
 
@@ -27,7 +27,10 @@ void	Client::send_response_header(void)
 	std::string res_header = res.get_header(req);
 	print_interaction();
 	if (send(socket_client, res_header.c_str(), res_header.size(), 0) < 0)
+	{
 		perror("client send header error");
+		res.is_finished = 2;
+	}
 }
 
 int	Client::send_response(Configuration conf)
@@ -46,19 +49,16 @@ int	Client::send_response(Configuration conf)
 	else if (res.body != "")
 	{
 		if (send(socket_client, res.body.c_str(), res.body.size(), 0) < 0)
+		{
 			perror("client send body error");
+			res.is_finished = 2;
+		}
 		res.is_finished = 2;
 	}
 	else
 		send_file_chunk();
 	if (res.is_finished == 2)
-	{
-		if (req.name_file.size() && check_path(req.name_file))
-			std::remove(req.name_file.c_str());
-		if (out_file.size() && check_path(out_file))
-			std::remove(out_file.c_str());
 		return (1);
-	}
 	return (0);
 }
 

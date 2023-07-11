@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/21 20:11:15 by sennaama          #+#    #+#             */
-/*   Updated: 2023/07/07 16:25:49 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/11 09:31:47 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ request::request(): method(""),path(""),version(""), status_code(-1), size(0), c
     int rd = rand() % 10000 + 1;
     st << rd;
     st >> l;
-    name_file = "body_file_" + l;
+    name_file = "/tmp/body_file_" + l;
 }
 
 std::string	request::trim(std::string str) {

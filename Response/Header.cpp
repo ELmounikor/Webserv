@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Header.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mac <mac@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 22:14:54 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/06/30 22:12:17 by mac              ###   ########.fr       */
+/*   Updated: 2023/07/11 09:43:25 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 std::string	Response::get_header(request &req)
 {
 	std::string	status_line = req.version + SP + std::to_string(status_code) + SP + get_status_message() + CRLF;
+	if (req.header.find("Cookies") != req.header.end())
+		headers["Set-cookie"] = req.header["Cookies"];
 	headers["Date"] = get_date();
 	std::map<std::string, std::string>::iterator i = headers.begin();
 	while (i != headers.end())
