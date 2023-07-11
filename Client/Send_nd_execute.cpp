@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 17:33:41 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/11 09:46:52 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/11 10:50:29 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int	Client::send_response(Configuration conf)
 
 void	Client::send_file_chunk(void)
 {
-	if (res.byte_sent != (ssize_t) strtol(res.headers["Content-Length"].c_str(), NULL, 10))
+	if (res.byte_sent != strtol(get_file_size(res.file_path).c_str(), NULL, 10))
 	{
 		res.body_file.open(res.file_path);
 		if (res.body_file.is_open())

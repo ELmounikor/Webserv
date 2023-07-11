@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:16:09 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/11 10:44:27 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/11 10:51:35 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ class Configuration
 {
 	public:
 		std::vector<Server_info>	servers;
-		std::set<int>				;
+		std::set<int>				server_ports;
 		Configuration();
 		Configuration(std::string conf_file_name);
 		void		print_config();
