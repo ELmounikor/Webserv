@@ -6,7 +6,7 @@
 /*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 11:40:01 by sennaama          #+#    #+#             */
-/*   Updated: 2023/07/11 12:31:42 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/07/11 14:01:31 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,13 @@ void    server::listener_port(int port)
 	sd >> s;
 	
 	if ((get_add_errno = getaddrinfo(NULL, s.c_str(), &hints, &servinfo)) != 0){
-        std::cerr << (get_add_errno) << std::endl;
+        perror("get add info");
+		exit(1);
     }
 
 	if ((socket_server = socket(servinfo->ai_family,servinfo->ai_socktype,servinfo->ai_protocol)) < 0){
         perror("Server_Socket");
-        exit(EXIT_FAILURE);
+        exit(1);
     }
 	if (setsockopt(socket_server, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)
 	{
