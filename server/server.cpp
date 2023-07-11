@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 11:40:01 by sennaama          #+#    #+#             */
-/*   Updated: 2023/07/11 20:02:22 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/11 20:25:01 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ void    server::listener_port(int port)
 {
 
 	memset(&hints, 0, sizeof(hints));
-    
     hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_flags = AI_PASSIVE;
@@ -90,9 +89,10 @@ void	server::AddClient(int socket)
 
 void	server::DeleteClient(int i)
 {	
-	std::cout << "\033[0;99m[    Client Socket "<<clients[i]->socket_client<<"    ]  Host=<"\
+	if (clients[i]->req.header["Host"] != "" || clients[i]->req.method != ""  || clients[i]->req.path != "")
+	std::cout << "\033[0;99m[Client Socket "<<clients[i]->socket_client<<" closed ]  Host=<"\
 	<<clients[i]->req.header["Host"].c_str()<<">  Method=<"<<clients[i]->req.method.c_str()<<">  URI=<"\
-	<<clients[i]->req.path.c_str()<<">\033[0m\n";
+	<<clients[i]->req.path.c_str()<<">\033[0m\n"<< std::endl;
 	close(clients[i]->socket_client);
 	delete clients[i];
 	clients.erase(clients.begin() + i);
