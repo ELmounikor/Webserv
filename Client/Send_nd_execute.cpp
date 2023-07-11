@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 17:33:41 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/11 10:50:29 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/11 11:44:31 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,19 +105,18 @@ void	Client::send_file_chunk(void)
 
 void	Client::post_file_chunk(Configuration conf)
 {
-	std::fstream	out_file(res.file_path, std::fstream::out | std::fstream::app);
-	std::ifstream	in_file(res.exec_path);
-	
-	if (!out_file.is_open() || !in_file.is_open())
+	if (res.byte_sent != strtol(get_file_size(res.exec_path).c_str(), NULL, 10))
 	{
-		if (in_file.is_open())	in_file.close();
-		if (out_file.is_open())	out_file.close();
-		fail_in_execution(conf);
-		return ;
-	}
-	in_file.seekg(res.byte_sent);
-	if (!in_file.eof())
-	{
+		std::fstream	out_file(res.file_path, std::fstream::out | std::fstream::app);
+		std::ifstream	in_file(res.exec_path);
+		if (!out_file.is_open() || !in_file.is_open())
+		{
+			if (in_file.is_open())	in_file.close();
+			if (out_file.is_open())	out_file.close();
+			fail_in_execution(conf);
+			return ;
+		}
+		in_file.seekg(res.byte_sent);
 		char buf[65536] = {0};
 		in_file.read(buf, 65536);
 		ssize_t read = in_file.gcount();
@@ -133,17 +132,11 @@ void	Client::post_file_chunk(Configuration conf)
 			fail_in_execution(conf);
 			return ;
 		}
+		out_file.close();
+		in_file.close();
 	}
-	bool last_read = in_file.eof();
-	out_file.close();
-	in_file.close();
-	if (last_read)
+	else
 	{
-		if (res.byte_sent != (ssize_t)strtol((get_file_size(res.exec_path)).c_str(), NULL, 10))
-		{
-			fail_in_execution(conf);
-			return ;
-		}
 		send_response_header();
 		res.is_finished = 2;
 	}
