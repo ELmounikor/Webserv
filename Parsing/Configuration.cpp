@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:16:16 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/10 16:17:17 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/11 10:34:31 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ Configuration::Configuration(std::string file_name)
 		ft_exit("Empty configuration file 👽");
 	parse_content(content);
     conf_file.close();
+	print_vector(server_ports);
 }
 
 std::string	trim_spaces(std::string input)
@@ -143,6 +144,7 @@ void	Configuration::parse_server_block(std::string block)
 	}
 	server.server_checker();
 	this->servers.push_back(server);
+	this->server_ports.insert(server.port);
 }
 
 std::string	Configuration::parse_server_line(Server_info &serv, std::string line)
