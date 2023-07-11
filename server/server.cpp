@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 11:40:01 by sennaama          #+#    #+#             */
-/*   Updated: 2023/07/11 11:16:43 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/11 12:10:17 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,7 +143,7 @@ void	server::multiplixing()
 				{
 					FD_CLR(clients[i]->socket_client, &readSet);
 					DeleteClient(i);
-                    perror("recv : ");
+                    //perror("recv");
 				}
                 else
                 {

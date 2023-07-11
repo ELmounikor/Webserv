@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 16:18:19 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/11 10:37:38 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/11 12:07:58 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,12 +62,12 @@ void	cgi_dup(int in, int out)
 {
 	if (in < 0)
 	{
-		perror("Client CGI infile open error");
+		//perror("Client CGI infile open error");
 		exit(1);
 	}
 	if (in && dup2(in, 0) < 0)
 	{
-		perror("Client CGI dup0 fail");
+		//perror("Client CGI dup0 fail");
 		close(out);
 		if(in)
 			close(in);
@@ -75,7 +75,7 @@ void	cgi_dup(int in, int out)
 	}
 	if (dup2(out, 1) < 0)
 	{
-		perror("Client CGI dup1 fail");
+		//perror("Client CGI dup1 fail");
 		close(out);
 		if(in)
 			close(in);
@@ -83,7 +83,7 @@ void	cgi_dup(int in, int out)
 	}
 	if (dup2(out, 2) < 0)
 	{
-		perror("Client CGI dup2 fail");
+		//perror("Client CGI dup2 fail");
 		close(out);
 		if(in)
 			close(in);
@@ -101,7 +101,7 @@ void	Client::execute(char **args, char **cgi_env)
 	int err = dup(2);
 	if (out < 0)
 	{
-		perror("Client CGI outfile open error");
+		//perror("Client CGI outfile open error");
 		exit(1);
 	}
 	if (check_path(req.name_file))
@@ -110,7 +110,7 @@ void	Client::execute(char **args, char **cgi_env)
 	if (execve(args[0], args, cgi_env) == -1)
 	{
 		dup2(err, 2);
-		perror("Client CGI execution fail");
+		//perror("Client CGI execution fail");
 		exit(1);
 	}
 }
@@ -166,7 +166,7 @@ void	Client::execute_cgi(Configuration conf)
 		pid = fork();
 		if (pid < 0)
 		{
-			perror("Client CGI fork error");
+			//perror("Client CGI fork error");
 			fail_in_execution(conf);
 			return ;
 		}
