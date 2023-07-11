@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 12:13:15 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/11 17:10:50 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/11 20:15:42 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,10 @@ void	Response::response_fetch(request &req, Configuration conf)
 		else if (location.autoindex == -1)
 			status_code = 404;
 		else if (location.returns.size() > 0)
-			get_redirection_response(join_paths(location_name, (*location.returns.begin()).second), (*location.returns.begin()).first);
+		{
+			get_redirection_response((*location.returns.begin()).second, (*location.returns.begin()).first);
+			return ;
+		}
 		else if (std::find(location.methods.begin(), location.methods.end(), req.method) == location.methods.end())
 			status_code = 405;
 	}
@@ -144,7 +147,7 @@ void	Response::get_redirection_response(std::string next_location, int redirect_
 {
 	status_code = redirect_code;
 	headers["Location"] = next_location;
-	file_path = "Redirection to '" + next_location + "'";
+	file_path = "Redirection to \"" + next_location + "\"";
 }
 
 void Response::get_auto_index_page_response(std::string dir_path)

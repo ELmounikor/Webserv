@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 11:40:01 by sennaama          #+#    #+#             */
-/*   Updated: 2023/07/11 14:52:46 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/11 20:02:22 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,6 +173,7 @@ void    server::process(char *file)
 	this->conf = Configuration(file);
 	// print_vector(conf.server_ports);
 	std::set<int>::iterator i = conf.server_ports.begin();
+	// conf.print_config();
 	while (i != conf.server_ports.end())
 	{
 		listener_port(*i);

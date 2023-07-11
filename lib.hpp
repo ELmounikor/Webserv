@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 14:13:32 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/11 16:13:39 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/11 18:54:48 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,5 +37,6 @@
 # include   "Parsing/Configuration.hpp"
 # include   "Response/Response.hpp"
 # define    MAX_EVENTS 60000
+# define    CGI_READ_TIMEOUT 60
 void        ft_exit(std::string msg);
 #endif

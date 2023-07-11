@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 16:18:19 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/11 16:54:26 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/11 19:03:37 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,20 @@ void	cgi_dup(int in, int out)
 		close(in);
 }
 
+void	infinite_loop_police(int pid)
+{
+	int ppid = fork();
+	if (ppid == 0)
+	{
+		sleep(CGI_READ_TIMEOUT);
+		if (!waitpid(pid, 0, WNOHANG))
+		{
+			kill(pid, SIGINT);
+			std::cout << "\033[0;96mINFINITE LOOP DETECTED ⌛️\033[0m\n";
+		}
+	}
+}
+
 void	Client::execute(char **args, char **cgi_env)
 {
 	int in = 0;
@@ -107,6 +121,7 @@ void	Client::execute(char **args, char **cgi_env)
 	if (check_path(req.name_file))
 		in = open(req.name_file.c_str(), O_RDONLY, 0777);
 	cgi_dup(in, out);
+	// infinite_loop_police(pid);
 	if (execve(args[0], args, cgi_env) == -1)
 	{
 		dup2(err, 2);
