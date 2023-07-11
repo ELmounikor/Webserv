@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 11:40:01 by sennaama          #+#    #+#             */
-/*   Updated: 2023/07/11 12:10:17 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/11 12:31:42 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,9 @@ void	server::AddClient(int socket)
 
 void	server::DeleteClient(int i)
 {	
+	std::cout << "\033[0;99m[    Client Socket "<<clients[i]->socket_client<<"    ]  Host=<"\
+	<<clients[i]->req.header["Host"].c_str()<<">  Method=<"<<clients[i]->req.method.c_str()<<">  URI=<"\
+	<<clients[i]->req.path.c_str()<<">\033[0m\n";
 	close(clients[i]->socket_client);
 	delete clients[i];
 	clients.erase(clients.begin() + i);
@@ -124,7 +127,6 @@ void	server::multiplixing()
 			socket_server =  *it;
 			if (FD_ISSET(socket_server, &readSet_copy)) 
 			{
-				//std::cout<<"New connection coming in... "<< socket_server << std::endl;
 				socket_client = accept(socket_server, NULL, NULL);
 				if (socket_client == -1)
 				{
@@ -143,7 +145,6 @@ void	server::multiplixing()
 				{
 					FD_CLR(clients[i]->socket_client, &readSet);
 					DeleteClient(i);
-                    //perror("recv");
 				}
                 else
                 {
@@ -157,7 +158,6 @@ void	server::multiplixing()
                 int res = clients[i]->send_response(conf);
 				if (res)
 				{
-					//std::cout << "client dropped " << clients[i]->socket_client << std::endl;
 					FD_CLR(clients[i]->socket_client, &writeSet);
 					DeleteClient(i);
 				}
