@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 12:13:15 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/11 13:10:50 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/11 17:10:50 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,8 @@ void	Response::response_fetch(request &req, Configuration conf)
 	{
 		if (req.header.find("Host") == req.header.end() || !check_request_uri(req.path))
 			status_code = 400;
+		else if (req.method != "GET" && req.method != "POST" && req.method != "DELETE")
+			status_code = 501;
 		else if (req.header.find("Transfer-Encoding") != req.header.end() && \
 		req.header["Transfer-Encoding"] != "chunked")
 			status_code = 501;
@@ -142,7 +144,7 @@ void	Response::get_redirection_response(std::string next_location, int redirect_
 {
 	status_code = redirect_code;
 	headers["Location"] = next_location;
-	file_path = "Redirection to " + next_location;
+	file_path = "Redirection to '" + next_location + "'";
 }
 
 void Response::get_auto_index_page_response(std::string dir_path)

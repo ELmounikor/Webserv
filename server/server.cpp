@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 11:40:01 by sennaama          #+#    #+#             */
-/*   Updated: 2023/07/11 14:01:31 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/07/11 14:52:46 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,6 +171,7 @@ void	server::multiplixing()
 void    server::process(char *file)
 {
 	this->conf = Configuration(file);
+	// print_vector(conf.server_ports);
 	std::set<int>::iterator i = conf.server_ports.begin();
 	while (i != conf.server_ports.end())
 	{

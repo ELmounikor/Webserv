@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 14:13:21 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/05 10:42:36 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/07/11 17:15:04 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,29 +19,23 @@ void	ft_exit(std::string msg)
 	exit(1);
 }
 
-// void get_fake_res_from_fake_req(char **av)
-// {
-// 	Configuration	conf(av[1]);
-// 	request			req;
-// 	Response		res;
-	
-// 	// print_config(conf);
-// 	std::cout << "\n*************SENDING REQUEST *****************\n\n";
-// 	// req.request_parse(av[2], 0);
-// 	req.method = "GET";
-// 	req.path = "/dir/li/3ajbek/ZZZ";
-// 	req.version = "HTTP/1.1";
-// 	req.header["Host"] = "localhost:7623";
-// 	req.status_code = -1;
-// 	req.print_request();
-// 	std::cout << "\n*************GETTING RESPONSE ****************\n\n";
-// 	res.response_fetch(req, conf);
-// 	std::cout << res.response_content;
-// }
+void	death_catcher(int sig_code)
+{
+	if (sig_code == SIGINT || sig_code == SIGQUIT || sig_code == SIGKILL || sig_code == SIGTERM)
+	{
+		kill(0, SIGINT);
+		int pid = getpid();
+		kill(pid, SIGINT);
+	}
+}
 
 int	main(int ac, char **av)
 {
 	std::signal(SIGPIPE, SIG_IGN);
+	std::signal(SIGINT, death_catcher);
+	std::signal(SIGQUIT, death_catcher);
+	std::signal(SIGKILL, death_catcher);
+	std::signal(SIGTERM, death_catcher);
 	if (ac != 2)
 		ft_exit("Either too little or too much arguments 👽");
 	server s;

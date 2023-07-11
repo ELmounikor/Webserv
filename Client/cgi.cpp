@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 16:18:19 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/11 12:07:58 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/11 16:54:26 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,12 +129,20 @@ void	Client::parse_cgi_outfile(void)
 			size_t sep_pos = content.find(":");
 			if (sep_pos < content.size())
 			{
-				std::string field = content.substr(0, sep_pos);
-				std::string	value = strtok((char *)content.substr(sep_pos + 1, content.size()).c_str(), " ");
-				if (field == "Status")
+				std::string field1 = content.substr(0, sep_pos);
+				std::string	field2 = content.substr(sep_pos + 1);
+				std::string value;
+				if (field2.size() > 0)
+					value = strtok((char *)field2.c_str(), " ");
+				else
+				{
+					res.headers.clear();
+					return ;
+				}
+				if (field1 == "Status")
 					res.status_code = strtol(value.c_str(), NULL, 10);
 				else
-					res.headers[field] = value.substr(0, value.size() - 1);
+					res.headers[field1] = value.substr(0, value.size() - 1);
 			}
 			else
 			{
@@ -143,13 +151,16 @@ void	Client::parse_cgi_outfile(void)
 			}
 			std::getline(cgi_outfile, content);
 		}
-	}
-	if (content == "\r")
-	{
-		std::getline(cgi_outfile, content, '\0');
-		res.byte_sent = strtol(get_file_size(res.file_path).c_str(), NULL, 10) - content.size();
+		if (content == "\r")
+		{
+			std::getline(cgi_outfile, content, '\0');
+			res.byte_sent = strtol(get_file_size(res.file_path).c_str(), NULL, 10) - content.size();
+		}
+		else
+			res.headers.clear();
 	}
 }
+
 
 void	Client::execute_cgi(Configuration conf)
 {
@@ -174,10 +185,10 @@ void	Client::execute_cgi(Configuration conf)
 		if (pid == 0)
 			execute(args, cgi_env);
 	}
-	int result = waitpid(pid, 0, WNOHANG);\
+	int result = waitpid(pid, 0, WNOHANG);
 	if (result == -1)
 		fail_in_execution(conf);
-	else if (result > 0)
+	else if (result)
 	{
 		res.status_code = 200;
 		res.file_path = out_file;
