@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 12:13:15 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/10 17:29:57 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/11 13:10:50 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,7 @@ void	Response::response_fetch(request &req, Configuration conf)
 void	Response::get_response(request &req, Server_info server, Location location)
 {
 	file_path = join_paths(location.root, to_fetch);
+	// std::cout << "file_path:" + file_path + "\n";
 	if (req.method == "GET")
 	{
 		Get res(file_path);

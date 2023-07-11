@@ -1,4 +1,11 @@
 #!/usr/local/bin/perl
+
+use CGI;
+
+my $cgi = CGI->new;
+
+print $cgi->header("text/html");
+
 print "<HTML>", "\n";
 print "<HEAD><TITLE>About this Server</TITLE></HEAD>", "\n";
 print "<BODY><H1>About this Server</H1>", "\n";
