@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 11:40:01 by sennaama          #+#    #+#             */
-/*   Updated: 2023/07/11 20:25:01 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/12 10:35:04 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,6 @@ void	server::request_part(Client* cli, std::string assign)
 	cli->req.request_parse(assign, cli->socket_client);
 	if (cli->req.flag == -1)
 	{
-		//cli->req.print_request();
 		cli->res.response_fetch(cli->req, conf);
 		FD_CLR(cli->socket_client, &readSet);
 		FD_SET(cli->socket_client, &writeSet);
@@ -171,9 +170,7 @@ void	server::multiplixing()
 void    server::process(char *file)
 {
 	this->conf = Configuration(file);
-	// print_vector(conf.server_ports);
 	std::set<int>::iterator i = conf.server_ports.begin();
-	// conf.print_config();
 	while (i != conf.server_ports.end())
 	{
 		listener_port(*i);

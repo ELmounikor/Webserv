@@ -6,7 +6,7 @@
 /*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 11:40:27 by sennaama          #+#    #+#             */
-/*   Updated: 2023/07/05 17:57:51 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/07/12 10:35:22 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ class server
 {
 	public:
 		struct addrinfo hints , *servinfo;
-		Configuration			conf;
 		std::vector<Client *>	clients;
+		Configuration			conf;
 		int                 	socket_server;
 		std::vector<int>    	listeners;
         int maxFd, activity, fd;
