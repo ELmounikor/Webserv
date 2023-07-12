@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/21 20:11:15 by sennaama          #+#    #+#             */
-/*   Updated: 2023/07/11 09:31:47 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/12 07:42:33 by sennaama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,9 +145,7 @@ void    request::header_parse(std::string buf)
         if (countcharacter(line, ' ') == 2 && (std::getline(sq, method, ' ') && std::getline(sq, path, ' ')))
         {
             sq >> version;
-            if ((method.empty() || path.empty() || version.empty()) ||\
-               (method != "GET" && method != "POST" && method != "DELETE") || \
-                (version != "HTTP/1.1"))
+            if ((method.empty() || path.empty() || version.empty()) || (version != "HTTP/1.1"))
             {
                 status_code = 400;
                 return ;
@@ -308,7 +306,7 @@ void    request::request_parse(std::string assign, int socket_client)
     if (pos_header_end != std::string::npos && flag == -1)
     {
         header_parse(assign);
-		if (status_code == 400)
+		if (status_code == 400 || (method != "GET" && method != "POST" && method != "DELETE"))
 			return ;
 		assign.erase(0, pos_header_end + strlen("\r\n\r\n"));
         
