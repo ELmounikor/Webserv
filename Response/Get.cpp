@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 13:43:22 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/10 17:53:45 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/13 10:05:10 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,13 @@ void	Get::implement_method(Response &res, request &req, Server_info server, Loca
 		return ;
 	if (check % 2 == 0)
 	{
-		if (req.path.size() > 0 && req.path[req.path.size() - 1] != '/')
+		if (req.path.size() && req.path[req.path.size() - 1] != '/')
 		{
 			res.get_redirection_response(req.path + "/", 301);
 			return ;
 		}
+		if (target.size() && target[target.size() - 1] != '/')
+			target = target + "/";
 		std::vector<std::string>::iterator i = location.indexes.begin();
 		while (i != location.indexes.end())
 		{

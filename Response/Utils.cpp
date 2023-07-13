@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 18:12:02 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/11 09:32:34 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/13 10:05:22 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,9 @@ std::string	get_next_option(std::string path)
 
 std::string join_paths(std::string path1, std::string path2)
 {
-	if (path1.size() > 0 && path1[path1.size() - 1] != '/' && path2 != "" && path2[0] != '/')
+	if (path1.size() && path1[path1.size() - 1] != '/')
 		path1 = path1 + "/" ;
-	else if (path1.size() > 0 && path1[path1.size() - 1] == '/' && path2 != "" && path2[0] == '/')
+	if (path1.size() && path1[path1.size() - 1] == '/' && path2.size() && path2[0] == '/')
 		path1 = path1.substr(0, path1.size() - 1);
 	return (path1 + path2);
 }

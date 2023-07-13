@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 16:18:19 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/13 09:10:37 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/13 11:11:47 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,9 +100,11 @@ void	infinite_loop_police(int pid)
 	if (ppid == 0)
 	{
 		sleep(CGI_READ_TIMEOUT);
-		if (!waitpid(pid, 0, WNOHANG))
+		int result = waitpid(pid, 0, WNOHANG);
+		std::cout << "result:"<<result<<std::endl;
+		if (!result)
 		{
-			kill(pid, SIGINT);
+			kill(pid, SIGKILL);
 			std::cout << "\033[0;96mINFINITE LOOP DETECTED ⌛️\033[0m\n";
 		}
 		return ;
@@ -121,7 +123,6 @@ void	Client::execute(char **args, char **cgi_env)
 	if (check_path(req.name_file))
 		in = open(req.name_file.c_str(), O_RDONLY, 0777);
 	cgi_dup(in, out);
-	// infinite_loop_police(pid);
 	if (execve(args[0], args, cgi_env) == -1)
 	{
 		//perror("Client CGI execution fail");
@@ -158,13 +159,13 @@ void	Client::parse_cgi_outfile(void)
 					res.status_code = strtol(value.c_str(), NULL, 10);
 				else
 					res.headers[field1] = value.substr(0, value.size() - 1);
+				std::getline(cgi_outfile, content);
 			}
 			else
 			{
 				res.headers.clear();
 				return ;
 			}
-			std::getline(cgi_outfile, content);
 		}
 		if (content == "\r")
 		{
@@ -199,6 +200,7 @@ void	Client::execute_cgi(Configuration conf)
 		out_file = get_file_name("");
 		if (pid == 0)
 			execute(args, cgi_env);
+		// infinite_loop_police(pid);
 	}
 	int result = waitpid(pid, 0, WNOHANG);
 	if (result == -1)
