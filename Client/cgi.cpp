@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 16:18:19 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/13 11:15:59 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/13 12:09:27 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,12 +62,10 @@ void	cgi_dup(int in, int out)
 {
 	if (in < 0)
 	{
-		//perror("Client CGI infile open error");
 		exit(1);
 	}
 	if (in && dup2(in, 0) < 0)
 	{
-		//perror("Client CGI dup0 fail");
 		close(out);
 		if(in)
 			close(in);
@@ -75,7 +73,6 @@ void	cgi_dup(int in, int out)
 	}
 	if (dup2(out, 1) < 0)
 	{
-		//perror("Client CGI dup1 fail");
 		close(out);
 		if(in)
 			close(in);
@@ -83,7 +80,6 @@ void	cgi_dup(int in, int out)
 	}
 	if (dup2(out, 2) < 0)
 	{
-		//perror("Client CGI dup2 fail");
 		close(out);
 		if(in)
 			close(in);
@@ -117,7 +113,6 @@ void	Client::execute(char **args, char **cgi_env)
 	int out = open(out_file.c_str(), O_RDWR, 0777);
 	if (out < 0)
 	{
-		//perror("Client CGI outfile open error");
 		exit(1);
 	}
 	if (check_path(req.name_file))
@@ -125,7 +120,6 @@ void	Client::execute(char **args, char **cgi_env)
 	cgi_dup(in, out);
 	if (execve(args[0], args, cgi_env) == -1)
 	{
-		//perror("Client CGI execution fail");
 		exit(2);
 	}
 	exit(0) ;
@@ -186,14 +180,9 @@ void	Client::execute_cgi(Configuration conf)
 	if (pid == -1)
 	{
 		get_cgi_env(env_var, cgi_env);
-		// std::cout << "CGI Environment Variables\n";
-		// int j = 0;
-		// while (cgi_env[j])
-		// 	std::cout << "\t->" <<cgi_env[j++] << "\n";
 		pid = fork();
 		if (pid < 0)
 		{
-			// perror("Client CGI fork error");
 			fail_in_execution(conf);
 			return ;
 		}

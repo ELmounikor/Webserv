@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Name and Age</title>
+    <title>Hobby and Time</title>
 </head>
 <body>
     <form action="" method="POST">
-        <label for="name">Name:</label>
-        <input type="text" name="name" id="name" required><br><br>
+        <label for="hobby">Hobby:</label>
+        <input type="text" name="hobby" id="hobby" required><br><br>
 
-        <label for="age">Age:</label>
-        <input type="number" name="age" id="age" required><br><br>
+        <label for="time">Time:</label>
+        <input type="number" name="time" id="time" required><br><br>
 
         <input type="submit" value="Submit">
     </form>
@@ -17,13 +17,13 @@
     <?php
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Check if the form has been submitted
-        if (isset($_POST['name']) && isset($_POST['age'])) {
-            // Retrieve the submitted name and age
-            $name = $_POST['name'];
-            $age = $_POST['age'];
+        if (isset($_POST['hobby']) && isset($_POST['time'])) {
+            // Retrieve the submitted hobby and time
+            $hobby = $_POST['hobby'];
+            $time = $_POST['time'];
 
             // Display the output
-            echo '<p style="color: green;">The age of ' . $name .  ' is: ' . $age . '</p>';
+            echo '<p style="color: green;">The time of ' . $hobby .  ' is: ' . $time . '</p>';
         }
     }
     ?>

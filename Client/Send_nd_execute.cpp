@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 17:33:41 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/13 08:46:02 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/13 12:08:58 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ void	Client::send_response_header(void)
 	print_interaction();
 	if (send(socket_client, res_header.c_str(), res_header.size(), 0) < 0)
 	{
-		//perror("client send header error");
 		res.is_finished = 2;
 	}
 }
@@ -50,7 +49,6 @@ int	Client::send_response(Configuration conf)
 	{
 		if (send(socket_client, res.body.c_str(), res.body.size(), 0) < 0)
 		{
-			//perror("client send body error");
 			res.is_finished = 2;
 		}
 		res.is_finished = 2;
@@ -79,7 +77,6 @@ void	Client::send_file_chunk(void)
 				ssize_t sent = send(socket_client, data.c_str(), data.size(), 0);
 				if (sent < 0)
 				{
-					//perror("client send file error");
 					res.is_finished = 2;
 				}
 				else
@@ -87,7 +84,6 @@ void	Client::send_file_chunk(void)
 			}
 			else
 			{
-				//perror("client read file error");
 				res.is_finished = 2;
 			}
 			res.body_file.close();
@@ -95,7 +91,6 @@ void	Client::send_file_chunk(void)
 		}
 		else
 		{
-			//perror("client open file error");
 			res.is_finished = 2;
 		}
 	}
@@ -128,7 +123,6 @@ void	Client::post_file_chunk(Configuration conf)
 		}
 		else
 		{
-			//perror("client read bodyfile error");
 			fail_in_execution(conf);
 			return ;
 		}

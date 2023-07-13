@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 13:44:03 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/11 12:01:30 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/13 12:07:46 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +47,10 @@ void	Post::implement_method(Response &res, request &req, Server_info server, Loc
 		std::fstream	out_file(out_file_path, std::fstream::out | std::fstream::app);
 		if (!out_file.is_open() || !in_file.is_open())
 		{
-			if (in_file.is_open())	{in_file.close();
-			// std::cout << "cant open outfile " + out_file_path + "\n";
-			}
-			if (out_file.is_open())	{out_file.close();
-			// std::cout << "cant open infile\n";
-			}
+			if (in_file.is_open())
+				in_file.close();
+			if (out_file.is_open())
+				out_file.close();
 			res.status_code = 500;
 			res.get_error_response(server, location);
 			return ;

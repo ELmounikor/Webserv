@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/07 13:00:51 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/10 17:29:18 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/13 12:08:34 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,10 +140,6 @@ void	Response::print_response_attr(Server_info server, Location location)
 		std::cout << " * client max body size: " << server.body_size << "\n";
 		std::cout << " * error pages:\n";
 		print_map(server.error_pages);
-		// std::cout << " * server names:\n";
-		// print_vector(server.server_names);
-		// std::cout << " * locations:\n";
-		// print_map(server.locations);
 	}
 	else
 		std::cout << "- no server\n";

@@ -4,7 +4,7 @@
     <title>Addition Form</title>
 </head>
 <body>
-    <form action="test5.php" method="GET">
+    <form action="sum.php" method="GET">
         <label for="num1">Number 1:</label>
         <input type="number" name="num1" id="num1" required><br><br>
 
