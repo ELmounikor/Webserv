@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sennaama <sennaama@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 14:13:21 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/12 10:37:21 by sennaama         ###   ########.fr       */
+/*   Updated: 2023/07/13 08:50:23 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,9 @@ void	death_catcher(int sig_code)
 
 int	main(int ac, char **av)
 {
-	std::signal(SIGPIPE, SIG_IGN);
+	// std::signal(SIGPIPE, SIG_IGN);
+	// std::signal(SIGINT, SIG_IGN);
+	std::signal(SIGQUIT, SIG_IGN);
 	if (ac != 2)
 		ft_exit("Either too little or too much arguments 👽");
 	server s;

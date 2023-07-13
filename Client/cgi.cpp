@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 16:18:19 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/13 07:56:03 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/13 09:10:37 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ void	infinite_loop_police(int pid)
 			kill(pid, SIGINT);
 			std::cout << "\033[0;96mINFINITE LOOP DETECTED ⌛️\033[0m\n";
 		}
-		exit(0);
+		return ;
 	}
 }
 
@@ -113,7 +113,6 @@ void	Client::execute(char **args, char **cgi_env)
 {
 	int in = 0;
 	int out = open(out_file.c_str(), O_RDWR, 0777);
-	int err = dup(2);
 	if (out < 0)
 	{
 		//perror("Client CGI outfile open error");
@@ -125,11 +124,10 @@ void	Client::execute(char **args, char **cgi_env)
 	// infinite_loop_police(pid);
 	if (execve(args[0], args, cgi_env) == -1)
 	{
-		dup2(err, 2);
 		//perror("Client CGI execution fail");
-		exit(1);
+		exit(2);
 	}
-	exit(0);
+	return ;
 }
 
 void	Client::parse_cgi_outfile(void)
@@ -139,7 +137,7 @@ void	Client::parse_cgi_outfile(void)
 	
 	if (std::getline(cgi_outfile, content) && content.size() > 0)
 	{
-		while(content.size() > 0)
+		while(content.size() > 0 && content[content.size() - 1] == '\r')
 		{
 			if (content == "\r")
 				break ;
@@ -194,7 +192,7 @@ void	Client::execute_cgi(Configuration conf)
 		pid = fork();
 		if (pid < 0)
 		{
-			//perror("Client CGI fork error");
+			// perror("Client CGI fork error");
 			fail_in_execution(conf);
 			return ;
 		}
@@ -205,7 +203,7 @@ void	Client::execute_cgi(Configuration conf)
 	int result = waitpid(pid, 0, WNOHANG);
 	if (result == -1)
 		fail_in_execution(conf);
-	else if (result)
+	else if (result > 0)
 	{
 		res.status_code = 200;
 		res.file_path = out_file;

@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 17:33:41 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/11 12:07:58 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/13 08:46:02 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int	Client::send_response(Configuration conf)
 	{
 		send_response_header();
 		res.is_finished = 1;
-		if (res.status_code / 100 == 3 || res.status_code == 201)
+		if (res.status_code / 100 == 3 || res.status_code == 204)
 		res.is_finished = 2;
 	} 
 	else if (res.body != "")

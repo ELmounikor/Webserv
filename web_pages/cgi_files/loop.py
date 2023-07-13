@@ -1,2 +1,2 @@
 while true:
-    print "h"
+    pass
