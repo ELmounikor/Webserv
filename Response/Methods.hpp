@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 18:04:19 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/07 16:40:23 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/13 06:41:16 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ class Delete: public Method
 };
 
 int			check_path(std::string path);
+int			check_request_uri(std::string request_uri);
 std::string	get_date(void);
 std::string	get_file_size(std::string path);
 std::string	get_next_option(std::string path);

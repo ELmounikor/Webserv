@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 16:16:16 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/11 20:11:14 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/13 06:45:24 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,13 +132,16 @@ void	Configuration::parse_server_block(std::string block)
 			while (start < block.size() && isspace(block[start]))
 				start++;
 			end = start;
-			while (end < block.size() && !isspace(block[end]))
+			while (end < block.size() && !isspace(block[end]) && block[end] != '{')
 				end++;
 			std::string location_match = get_valid_path(block.substr(start, end - start));
 			if (location_match[0] != '/')
 				location_match = "/" + location_match;
 			start = end;
-			parse_location_block(server, location_match, get_block(block, start, end));
+			if (check_request_uri(location_match))
+				parse_location_block(server, location_match, get_block(block, start, end));
+			else
+				ft_exit("Location name with invalid characters detected 🤖");
 		}
 		block = block.substr(++end, block.size());
 	}

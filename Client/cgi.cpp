@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 16:18:19 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/11 19:03:37 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/13 07:56:03 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,7 @@ void	infinite_loop_police(int pid)
 			kill(pid, SIGINT);
 			std::cout << "\033[0;96mINFINITE LOOP DETECTED ⌛️\033[0m\n";
 		}
+		exit(0);
 	}
 }
 
@@ -128,6 +129,7 @@ void	Client::execute(char **args, char **cgi_env)
 		//perror("Client CGI execution fail");
 		exit(1);
 	}
+	exit(0);
 }
 
 void	Client::parse_cgi_outfile(void)

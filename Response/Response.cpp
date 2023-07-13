@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 12:13:15 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/11 20:15:42 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/07/13 06:43:09 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,13 +86,11 @@ void	Response::response_fetch(request &req, Configuration conf)
 		get_error_response(server, location);
 	else
 		get_response(req, server, location);
-	// print_response_attr(server, location);
 }
 
 void	Response::get_response(request &req, Server_info server, Location location)
 {
 	file_path = join_paths(location.root, to_fetch);
-	// std::cout << "file_path:" + file_path + "\n";
 	if (req.method == "GET")
 	{
 		Get res(file_path);
@@ -206,13 +204,12 @@ int Response::has_cgi(std::string path, Location location, Server_info server)
 		{
 			file_path = path;
 			exec_path = (*i).second;
-			// if (access(exec_path.c_str(), F_OK))
-			// {
-			// 	status_code = 404;
-			// 	get_error_response(server, location);
-			// }
-			// else 
-			if (access(exec_path.c_str(), X_OK))
+			if (access(exec_path.c_str(), F_OK))
+			{
+				status_code = 404;
+				get_error_response(server, location);
+			}
+			else if (access(exec_path.c_str(), X_OK))
 			{
 				status_code = 403;
 				get_error_response(server, location);
