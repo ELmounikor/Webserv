@@ -94,7 +94,8 @@ Server_info	Response::get_server(request &req, Configuration conf)
 Location	Response::get_location(request &req, Server_info server)
 {
 	Location location;
-	std::string request_uri = req.path;
+	size_t end = req.path.find('?');
+	std::string request_uri = req.path.substr(end);
 	if (request_uri.size() == 0 || request_uri[0] != '/')
 		request_uri = "/" + request_uri;
 	std::map<std::string, Location>::iterator location_i  = server.locations.find(request_uri);
