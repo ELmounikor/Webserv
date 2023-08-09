@@ -6,7 +6,7 @@
 /*   By: mel-kora <mel-kora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/07 13:00:51 by mel-kora          #+#    #+#             */
-/*   Updated: 2023/07/13 12:08:34 by mel-kora         ###   ########.fr       */
+/*   Updated: 2023/08/09 14:36:00 by mel-kora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,9 @@ Location	Response::get_location(request &req, Server_info server)
 {
 	Location location;
 	size_t end = req.path.find('?');
-	std::string request_uri = req.path.substr(end);
+	std::string request_uri = req.path;
+	if (end < req.path.size())
+		request_uri = req.path.substr(0, end);
 	if (request_uri.size() == 0 || request_uri[0] != '/')
 		request_uri = "/" + request_uri;
 	std::map<std::string, Location>::iterator location_i  = server.locations.find(request_uri);
